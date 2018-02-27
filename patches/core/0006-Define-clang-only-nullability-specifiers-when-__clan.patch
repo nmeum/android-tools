@@ -1,0 +1,33 @@
+From f88b29295137703f9e36edb90a36854707c277e5 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
+Date: Tue, 27 Feb 2018 17:48:49 +0100
+Subject: [PATCH 6/8] Define clang-only nullability specifiers when __clang__
+ is not defined
+
+---
+ adb/sysdeps.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/adb/sysdeps.h b/adb/sysdeps.h
+index 0abb680d3..f549b0504 100644
+--- a/adb/sysdeps.h
++++ b/adb/sysdeps.h
+@@ -66,11 +66,13 @@
+ #endif
+ #endif
+ 
+-#ifdef _WIN32
+-
+ // Clang-only nullability specifiers
++#ifndef __clang__
+ #define _Nonnull
+ #define _Nullable
++#endif
++
++#ifdef _WIN32
+ 
+ #include <ctype.h>
+ #include <direct.h>
+-- 
+2.16.2
+

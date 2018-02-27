@@ -1,0 +1,30 @@
+From db8cb3a0b125ce6d84bba9876faa58a296197374 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
+Date: Tue, 27 Feb 2018 17:37:12 +0100
+Subject: [PATCH 5/8] fix "initializer element is not constant"-error when
+ building with g++
+
+---
+ liblog/logprint.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/liblog/logprint.c b/liblog/logprint.c
+index b62f8b446..bac242a82 100644
+--- a/liblog/logprint.c
++++ b/liblog/logprint.c
+@@ -925,9 +925,9 @@ static int android_log_printBinaryEvent(const unsigned char** pEventData,
+           }
+           break;
+         case TYPE_MONOTONIC: {
+-          static const uint64_t minute = 60;
+-          static const uint64_t hour = 60 * minute;
+-          static const uint64_t day = 24 * hour;
++          #define minute (60)
++          #define hour (60 * minute)
++          #define day (24 * hour)
+ 
+           /* Repaint as unsigned seconds, minutes, hours ... */
+           outBuf -= outCount;
+-- 
+2.16.2
+

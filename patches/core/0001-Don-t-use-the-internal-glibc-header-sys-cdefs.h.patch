@@ -1,0 +1,1204 @@
+From 88e6fb9ca67903cca1528e6572ba9a4bddc0597c Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
+Date: Tue, 27 Feb 2018 13:33:46 +0100
+Subject: [PATCH 1/8] Don't use the internal glibc header sys/cdefs.h
+
+This patch was created using sed(1) and ag(1) with the following script:
+
+	for file in $(ag -l __BEGIN_DECLS); do
+		sed -i "${file}" \
+			-e 's/__BEGIN_DECLS/#ifdef __cplusplus\nextern C {\n#endif/g' \
+			-e 's/__END_DECLS/#ifdef __cplusplus\n}\n#endif/g' \
+			-e '/#include <sys\/cdefs.h>/d'
+	done
+
+https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-get-error-messages-about-<code>sys/cdefs.h</code>
+---
+ adf/libadf/include/adf/adf.h                               |  9 ++++++---
+ adf/libadfhwc/include/adfhwc/adfhwc.h                      |  9 ++++++---
+ debuggerd/include/debuggerd/handler.h                      |  9 ++++++---
+ fs_mgr/include/fs_mgr.h                                    |  8 ++++++--
+ fs_mgr/include_fstab/fstab/fstab.h                         |  8 ++++++--
+ libbacktrace/backtrace_testlib.h                           |  9 ++++++---
+ libbacktrace/thread_utils.h                                |  8 ++++++--
+ libcutils/include/cutils/android_reboot.h                  |  8 ++++++--
+ libcutils/include/cutils/bitops.h                          |  9 ++++++---
+ libcutils/include/cutils/klog.h                            |  9 ++++++---
+ libcutils/include/cutils/partition_utils.h                 |  8 ++++++--
+ libcutils/include/cutils/str_parms.h                       |  9 ++++++---
+ libcutils/include/cutils/trace.h                           |  9 ++++++---
+ libcutils/include/private/fs_config.h                      |  9 ++++++---
+ libion/include/ion/ion.h                                   |  8 ++++++--
+ libkeyutils/include/keyutils.h                             |  9 ++++++---
+ liblog/config_read.h                                       |  8 ++++++--
+ liblog/config_write.h                                      |  8 ++++++--
+ liblog/include/log/log_main.h                              |  9 ++++++---
+ liblog/log_portability.h                                   | 14 --------------
+ liblog/logd_reader.h                                       |  8 ++++++--
+ liblog/logger.h                                            |  8 ++++++--
+ libmemunreachable/Binder.cpp                               |  9 ++++++---
+ libmemunreachable/bionic.h                                 |  9 ++++++---
+ libmemunreachable/include/memunreachable/memunreachable.h  |  9 ++++++---
+ libnativeloader/include/nativeloader/dlext_namespaces.h    |  8 ++++++--
+ libnetutils/include/netutils/ifc.h                         |  9 ++++++---
+ .../include/packagelistparser/packagelistparser.h          |  9 ++++++---
+ libprocessgroup/include/processgroup/processgroup.h        |  9 ++++++---
+ libsuspend/include/suspend/autosuspend.h                   |  9 ++++++---
+ libsync/include/android/sync.h                             |  8 ++++++--
+ libsync/include/ndk/sync.h                                 |  8 ++++++--
+ libsync/sw_sync.h                                          |  8 ++++++--
+ libsystem/include/system/camera.h                          |  9 ++++++---
+ libutils/tests/Singleton_test.h                            |  9 ++++++---
+ logcat/include/log/getopt.h                                |  9 ++++++---
+ logd/libaudit.h                                            |  9 ++++++---
+ logwrapper/include/logwrap/logwrap.h                       |  8 ++++++--
+ toolbox/bsd-compatibility.h                                |  8 ++++++--
+ trusty/gatekeeper/trusty_gatekeeper_ipc.h                  |  8 ++++++--
+ trusty/keymaster/trusty_keymaster_ipc.h                    |  8 ++++++--
+ trusty/storage/lib/include/trusty/lib/storage.h            |  8 ++++++--
+ 42 files changed, 246 insertions(+), 118 deletions(-)
+
+diff --git a/adf/libadf/include/adf/adf.h b/adf/libadf/include/adf/adf.h
+index e4c7b28cc..41b3da475 100644
+--- a/adf/libadf/include/adf/adf.h
++++ b/adf/libadf/include/adf/adf.h
+@@ -19,7 +19,6 @@
+ 
+ #include <stdint.h>
+ #include <stdbool.h>
+-#include <sys/cdefs.h>
+ #include <sys/types.h>
+ #include <video/adf.h>
+ 
+@@ -30,7 +29,9 @@ struct adf_device {
+     int fd;
+ };
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ /**
+  * Enumerates all ADF devices.
+@@ -290,6 +291,8 @@ int adf_find_simple_post_configuration(struct adf_device *dev,
+         const __u32 *formats, size_t n_formats,
+         adf_id_t *interface, adf_id_t *overlay_engine);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* _LIBADF_ADF_H_ */
+diff --git a/adf/libadfhwc/include/adfhwc/adfhwc.h b/adf/libadfhwc/include/adfhwc/adfhwc.h
+index 4f7092507..97beb2f71 100644
+--- a/adf/libadfhwc/include/adfhwc/adfhwc.h
++++ b/adf/libadfhwc/include/adfhwc/adfhwc.h
+@@ -19,7 +19,6 @@
+ 
+ #include <stdbool.h>
+ #include <stdint.h>
+-#include <sys/cdefs.h>
+ #include <video/adf.h>
+ 
+ #include <hardware/hwcomposer.h>
+@@ -86,7 +85,9 @@ static inline uint32_t adf_hwc_interface_flag_for_disp(int disp)
+     }
+ }
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ /**
+  * Create a HWC helper for the specified ADF interfaces.
+@@ -135,6 +136,8 @@ int adf_getDisplayAttributes_hwc2(struct adf_hwc_helper *dev, int disp,
+ int adf_set_active_config_hwc2(struct adf_hwc_helper *dev, int disp,
+         uint32_t config);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* _LIBADFHWC_ADFHWC_H_ */
+diff --git a/debuggerd/include/debuggerd/handler.h b/debuggerd/include/debuggerd/handler.h
+index 7196e0ad4..9ba20db19 100644
+--- a/debuggerd/include/debuggerd/handler.h
++++ b/debuggerd/include/debuggerd/handler.h
+@@ -18,10 +18,11 @@
+ 
+ #include <signal.h>
+ #include <stdint.h>
+-#include <sys/cdefs.h>
+ #include <sys/types.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ // These callbacks are called in a signal handler, and thus must be async signal safe.
+ // If null, the callbacks will not be called.
+@@ -53,4 +54,6 @@ static void __attribute__((__unused__)) debuggerd_register_handlers(struct sigac
+   sigaction(DEBUGGER_SIGNAL, action, nullptr);
+ }
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+diff --git a/fs_mgr/include/fs_mgr.h b/fs_mgr/include/fs_mgr.h
+index c74f6c85c..87e72f41f 100644
+--- a/fs_mgr/include/fs_mgr.h
++++ b/fs_mgr/include/fs_mgr.h
+@@ -31,7 +31,9 @@
+ // turn verity off in userdebug builds.
+ #define VERITY_METADATA_MAGIC_DISABLE 0x46464f56 // "VOFF"
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ // Verity modes
+ enum verity_mode {
+@@ -87,6 +89,8 @@ int fs_mgr_do_format(struct fstab_rec *fstab, bool reserve_footer);
+ #define FS_MGR_SETUP_VERITY_SUCCESS 0
+ int fs_mgr_setup_verity(struct fstab_rec *fstab, bool wait_for_verity_dev);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* __CORE_FS_MGR_H */
+diff --git a/fs_mgr/include_fstab/fstab/fstab.h b/fs_mgr/include_fstab/fstab/fstab.h
+index 15c8cafe6..2680f9db7 100644
+--- a/fs_mgr/include_fstab/fstab/fstab.h
++++ b/fs_mgr/include_fstab/fstab/fstab.h
+@@ -28,7 +28,9 @@
+ #include <string>
+ #endif
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ /*
+  * The entries must be kept in the same order as they were seen in the fstab.
+@@ -90,7 +92,9 @@ int fs_mgr_is_nofail(const struct fstab_rec* fstab);
+ int fs_mgr_is_latemount(const struct fstab_rec* fstab);
+ int fs_mgr_is_quota(const struct fstab_rec* fstab);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ // C++ only functions
+ // TODO: move this into separate header files under include/fs_mgr/*.h
+diff --git a/libbacktrace/backtrace_testlib.h b/libbacktrace/backtrace_testlib.h
+index 16fedc436..64f5673d2 100644
+--- a/libbacktrace/backtrace_testlib.h
++++ b/libbacktrace/backtrace_testlib.h
+@@ -17,11 +17,12 @@
+ #ifndef _LIBBACKTRACE_BACKTRACE_TESTLIB_H
+ #define _LIBBACKTRACE_BACKTRACE_TESTLIB_H
+ 
+-#include <sys/cdefs.h>
+ 
+ #include <libunwind.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ void test_loop_forever();
+ void test_signal_handler(int);
+@@ -33,6 +34,8 @@ int test_level_one(int, int, int, int, void (*)(void*), void*);
+ int test_recursive_call(int, void (*)(void*), void*);
+ void test_get_context_and_wait(unw_context_t*, volatile int*);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif  // _LIBBACKTRACE_BACKTRACE_TESTLIB_H
+diff --git a/libbacktrace/thread_utils.h b/libbacktrace/thread_utils.h
+index 9590657e3..2438aa157 100644
+--- a/libbacktrace/thread_utils.h
++++ b/libbacktrace/thread_utils.h
+@@ -23,10 +23,14 @@
+ #include <cutils/threads.h>
+ #endif
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ int tgkill(int tgid, int tid, int sig);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* _LIBBACKTRACE_THREAD_UTILS_H */
+diff --git a/libcutils/include/cutils/android_reboot.h b/libcutils/include/cutils/android_reboot.h
+index 716567a2b..a8361da28 100644
+--- a/libcutils/include/cutils/android_reboot.h
++++ b/libcutils/include/cutils/android_reboot.h
+@@ -18,7 +18,9 @@
+ #define __CUTILS_ANDROID_REBOOT_H__
+ 
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ /* Commands */
+ #define ANDROID_RB_RESTART 0xDEAD0001 /* deprecated. Use RESTART2. */
+@@ -39,6 +41,8 @@ __BEGIN_DECLS
+  */
+ int android_reboot(int cmd, int flags, const char *arg);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* __CUTILS_ANDROID_REBOOT_H__ */
+diff --git a/libcutils/include/cutils/bitops.h b/libcutils/include/cutils/bitops.h
+index 38d284039..79193b589 100644
+--- a/libcutils/include/cutils/bitops.h
++++ b/libcutils/include/cutils/bitops.h
+@@ -20,9 +20,10 @@
+ #include <stdbool.h>
+ #include <string.h>
+ #include <strings.h>
+-#include <sys/cdefs.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ static inline int popcount(unsigned int x) {
+     return __builtin_popcount(x);
+@@ -36,6 +37,8 @@ static inline int popcountll(unsigned long long x) {
+     return __builtin_popcountll(x);
+ }
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* __CUTILS_BITOPS_H */
+diff --git a/libcutils/include/cutils/klog.h b/libcutils/include/cutils/klog.h
+index 5ae6216eb..8006be730 100644
+--- a/libcutils/include/cutils/klog.h
++++ b/libcutils/include/cutils/klog.h
+@@ -17,11 +17,12 @@
+ #ifndef _CUTILS_KLOG_H_
+ #define _CUTILS_KLOG_H_
+ 
+-#include <sys/cdefs.h>
+ #include <sys/uio.h>
+ #include <stdarg.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ void klog_set_level(int level);
+ 
+@@ -29,7 +30,9 @@ void klog_write(int level, const char *fmt, ...)
+     __attribute__ ((format(printf, 2, 3)));
+ void klog_writev(int level, const struct iovec* iov, int iov_count);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #define KLOG_ERROR_LEVEL   3
+ #define KLOG_WARNING_LEVEL 4
+diff --git a/libcutils/include/cutils/partition_utils.h b/libcutils/include/cutils/partition_utils.h
+index 72ca80d35..91266f7d5 100644
+--- a/libcutils/include/cutils/partition_utils.h
++++ b/libcutils/include/cutils/partition_utils.h
+@@ -17,10 +17,14 @@
+ #ifndef __CUTILS_PARTITION_WIPED_H__
+ #define __CUTILS_PARTITION_WIPED_H__
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ int partition_wiped(char *source);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* __CUTILS_PARTITION_WIPED_H__ */
+diff --git a/libcutils/include/cutils/str_parms.h b/libcutils/include/cutils/str_parms.h
+index aa1435a08..160792a37 100644
+--- a/libcutils/include/cutils/str_parms.h
++++ b/libcutils/include/cutils/str_parms.h
+@@ -18,9 +18,10 @@
+ #define __CUTILS_STR_PARMS_H
+ 
+ #include <stdint.h>
+-#include <sys/cdefs.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ struct str_parms;
+ 
+@@ -55,6 +56,8 @@ char *str_parms_to_str(struct str_parms *str_parms);
+ /* debug */
+ void str_parms_dump(struct str_parms *str_parms);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* __CUTILS_STR_PARMS_H */
+diff --git a/libcutils/include/cutils/trace.h b/libcutils/include/cutils/trace.h
+index fcbdc9b79..4c70a2dad 100644
+--- a/libcutils/include/cutils/trace.h
++++ b/libcutils/include/cutils/trace.h
+@@ -22,13 +22,14 @@
+ #include <stdbool.h>
+ #include <stdint.h>
+ #include <stdio.h>
+-#include <sys/cdefs.h>
+ #include <sys/types.h>
+ #include <unistd.h>
+ 
+ #include <cutils/compiler.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ /**
+  * The ATRACE_TAG macro can be defined before including this header to trace
+@@ -252,6 +253,8 @@ static inline void atrace_int64(uint64_t tag, const char* name, int64_t value)
+     }
+ }
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif // _LIBS_CUTILS_TRACE_H
+diff --git a/libcutils/include/private/fs_config.h b/libcutils/include/private/fs_config.h
+index aab504281..3db0d6981 100644
+--- a/libcutils/include/private/fs_config.h
++++ b/libcutils/include/private/fs_config.h
+@@ -23,7 +23,6 @@
+ #define _LIBS_CUTILS_PRIVATE_FS_CONFIG_H
+ 
+ #include <stdint.h>
+-#include <sys/cdefs.h>
+ 
+ #if defined(__BIONIC__)
+ #include <linux/capability.h>
+@@ -58,7 +57,9 @@ struct fs_path_config {
+ 
+ /* Rules for directories and files has moved to system/code/libcutils/fs_config.c */
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ /*
+  * Used in:
+@@ -75,6 +76,8 @@ void fs_config(const char* path, int dir, const char* target_out_path, unsigned*
+ 
+ ssize_t fs_config_generate(char* buffer, size_t length, const struct fs_path_config* pc);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* _LIBS_CUTILS_PRIVATE_FS_CONFIG_H */
+diff --git a/libion/include/ion/ion.h b/libion/include/ion/ion.h
+index f47793d27..d8f0d32b8 100644
+--- a/libion/include/ion/ion.h
++++ b/libion/include/ion/ion.h
+@@ -24,7 +24,9 @@
+ #include <sys/types.h>
+ #include <linux/ion.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ struct ion_handle;
+ 
+@@ -41,6 +43,8 @@ int ion_map(int fd, ion_user_handle_t handle, size_t length, int prot,
+ int ion_share(int fd, ion_user_handle_t handle, int *share_fd);
+ int ion_import(int fd, int share_fd, ion_user_handle_t *handle);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* __SYS_CORE_ION_H */
+diff --git a/libkeyutils/include/keyutils.h b/libkeyutils/include/keyutils.h
+index 585767d7a..d8b103c7e 100644
+--- a/libkeyutils/include/keyutils.h
++++ b/libkeyutils/include/keyutils.h
+@@ -31,9 +31,10 @@
+ 
+ #include <linux/keyctl.h>
+ #include <stdint.h>
+-#include <sys/cdefs.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ typedef int32_t key_serial_t;
+ 
+@@ -51,6 +52,8 @@ long keyctl_setperm(key_serial_t id, int permissions);
+ 
+ long keyctl_unlink(key_serial_t key, key_serial_t keyring);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif
+diff --git a/liblog/config_read.h b/liblog/config_read.h
+index 7b29fa4c2..dcf5a8365 100644
+--- a/liblog/config_read.h
++++ b/liblog/config_read.h
+@@ -21,7 +21,9 @@
+ 
+ #include "log_portability.h"
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ extern LIBLOG_HIDDEN struct listnode __android_log_transport_read;
+ extern LIBLOG_HIDDEN struct listnode __android_log_persist_read;
+@@ -50,6 +52,8 @@ extern LIBLOG_HIDDEN struct listnode __android_log_persist_read;
+ LIBLOG_HIDDEN void __android_log_config_read();
+ LIBLOG_HIDDEN void __android_log_config_read_close();
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* _LIBLOG_CONFIG_READ_H__ */
+diff --git a/liblog/config_write.h b/liblog/config_write.h
+index db1a08314..66088b387 100644
+--- a/liblog/config_write.h
++++ b/liblog/config_write.h
+@@ -21,7 +21,9 @@
+ 
+ #include "log_portability.h"
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ extern LIBLOG_HIDDEN struct listnode __android_log_transport_write;
+ extern LIBLOG_HIDDEN struct listnode __android_log_persist_write;
+@@ -50,6 +52,8 @@ extern LIBLOG_HIDDEN struct listnode __android_log_persist_write;
+ LIBLOG_HIDDEN void __android_log_config_write();
+ LIBLOG_HIDDEN void __android_log_config_write_close();
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* _LIBLOG_CONFIG_WRITE_H__ */
+diff --git a/liblog/include/log/log_main.h b/liblog/include/log/log_main.h
+index 68c2e9af6..da1615828 100644
+--- a/liblog/include/log/log_main.h
++++ b/liblog/include/log/log_main.h
+@@ -18,9 +18,10 @@
+ #define _LIBS_LOG_LOG_MAIN_H
+ 
+ #include <android/log.h>
+-#include <sys/cdefs.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ /*
+  * Normally we strip the effects of ALOGV (VERBOSE messages),
+@@ -384,6 +385,8 @@ int __android_log_is_loggable_len(int prio, const char* tag, size_t len,
+ #pragma clang diagnostic pop
+ #endif
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* _LIBS_LOG_LOG_MAIN_H */
+diff --git a/liblog/log_portability.h b/liblog/log_portability.h
+index 88805c75f..66b82f313 100644
+--- a/liblog/log_portability.h
++++ b/liblog/log_portability.h
+@@ -17,7 +17,6 @@
+ #ifndef _LIBLOG_PORTABILITY_H__
+ #define _LIBLOG_PORTABILITY_H__
+ 
+-#include <sys/cdefs.h>
+ #include <unistd.h>
+ 
+ /* Helpful private sys/cdefs.h like definitions */
+@@ -49,19 +48,6 @@
+ #define LIBLOG_WEAK __attribute__((weak, visibility("default")))
+ #endif
+ 
+-/* possible missing definitions in sys/cdefs.h */
+-
+-/* DECLS */
+-#ifndef __BEGIN_DECLS
+-#if defined(__cplusplus)
+-#define __BEGIN_DECLS extern "C" {
+-#define __END_DECLS }
+-#else
+-#define __BEGIN_DECLS
+-#define __END_DECLS
+-#endif
+-#endif
+-
+ /* Unused argument. For C code only, remove symbol name for C++ */
+ #ifndef __unused
+ #define __unused __attribute__((__unused__))
+diff --git a/liblog/logd_reader.h b/liblog/logd_reader.h
+index 8ebb1aee1..adcbdc450 100644
+--- a/liblog/logd_reader.h
++++ b/liblog/logd_reader.h
+@@ -21,10 +21,14 @@
+ 
+ #include "log_portability.h"
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ LIBLOG_HIDDEN ssize_t __send_log_msg(char* buf, size_t buf_size);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* _LIBLOG_LOGD_READER_H__ */
+diff --git a/liblog/logger.h b/liblog/logger.h
+index 246b33ccc..cf2452451 100644
+--- a/liblog/logger.h
++++ b/liblog/logger.h
+@@ -26,7 +26,9 @@
+ 
+ #include "log_portability.h"
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ /* Union, sock or fd of zero is not allowed unless static initialized */
+ union android_log_context {
+@@ -195,6 +197,8 @@ LIBLOG_HIDDEN void __android_log_unlock();
+ 
+ LIBLOG_HIDDEN int __android_log_transport;
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* _LIBLOG_LOGGER_H__ */
+diff --git a/libmemunreachable/Binder.cpp b/libmemunreachable/Binder.cpp
+index 60512a3f8..834507459 100644
+--- a/libmemunreachable/Binder.cpp
++++ b/libmemunreachable/Binder.cpp
+@@ -14,7 +14,6 @@
+  * limitations under the License.
+  */
+ 
+-#include <sys/cdefs.h>
+ #include <unistd.h>
+ 
+ #include <functional>
+@@ -22,7 +21,9 @@
+ #include "Binder.h"
+ #include "log.h"
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ // Weak undefined references to the symbols in libbinder and libhwbinder
+ // so that libmemunreachable can call them in processes that have them
+@@ -30,7 +31,9 @@ __BEGIN_DECLS
+ ssize_t __attribute__((weak)) getBinderKernelReferences(size_t, uintptr_t*);
+ ssize_t __attribute__((weak)) getHWBinderKernelReferences(size_t, uintptr_t*);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ namespace android {
+ 
+diff --git a/libmemunreachable/bionic.h b/libmemunreachable/bionic.h
+index dd1ec79d6..cc7374d07 100644
+--- a/libmemunreachable/bionic.h
++++ b/libmemunreachable/bionic.h
+@@ -19,9 +19,10 @@
+ 
+ #include <stdint.h>
+ #include <stdlib.h>
+-#include <sys/cdefs.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ /* Exported from bionic */
+ extern void malloc_disable();
+@@ -30,6 +31,8 @@ extern int malloc_iterate(uintptr_t base, size_t size,
+                           void (*callback)(uintptr_t base, size_t size, void* arg), void* arg);
+ extern ssize_t malloc_backtrace(void* pointer, uintptr_t* frames, size_t frame_count);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif  // LIBMEMUNREACHABLE_BIONIC_H_
+diff --git a/libmemunreachable/include/memunreachable/memunreachable.h b/libmemunreachable/include/memunreachable/memunreachable.h
+index 438fcafe1..63f80571c 100644
+--- a/libmemunreachable/include/memunreachable/memunreachable.h
++++ b/libmemunreachable/include/memunreachable/memunreachable.h
+@@ -18,7 +18,6 @@
+ #define LIBMEMUNREACHABLE_MEMUNREACHABLE_H_
+ 
+ #include <string.h>
+-#include <sys/cdefs.h>
+ 
+ #ifdef __cplusplus
+ 
+@@ -80,12 +79,16 @@ std::string GetUnreachableMemoryString(bool log_contents = false, size_t limit =
+ 
+ #endif
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ bool LogUnreachableMemory(bool log_contents, size_t limit);
+ 
+ bool NoLeaks();
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif  // LIBMEMUNREACHABLE_MEMUNREACHABLE_H_
+diff --git a/libnativeloader/include/nativeloader/dlext_namespaces.h b/libnativeloader/include/nativeloader/dlext_namespaces.h
+index 43c932978..b04de6a72 100644
+--- a/libnativeloader/include/nativeloader/dlext_namespaces.h
++++ b/libnativeloader/include/nativeloader/dlext_namespaces.h
+@@ -19,7 +19,9 @@
+ 
+ #include <android/dlext.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ /*
+  * Initializes anonymous namespaces. The shared_libs_sonames is the list of sonames
+@@ -126,6 +128,8 @@ extern void android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size);
+ 
+ extern android_namespace_t* android_get_exported_namespace(const char* name);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* __ANDROID_DLEXT_NAMESPACES_H__ */
+diff --git a/libnetutils/include/netutils/ifc.h b/libnetutils/include/netutils/ifc.h
+index 3b272343d..60c68d76c 100644
+--- a/libnetutils/include/netutils/ifc.h
++++ b/libnetutils/include/netutils/ifc.h
+@@ -17,10 +17,11 @@
+ #ifndef _NETUTILS_IFC_H_
+ #define _NETUTILS_IFC_H_
+ 
+-#include <sys/cdefs.h>
+ #include <arpa/inet.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ extern int ifc_init(void);
+ extern void ifc_close(void);
+@@ -61,6 +62,8 @@ extern int ifc_configure(const char *ifname, in_addr_t address,
+ 
+ extern in_addr_t prefixLengthToIpv4Netmask(int prefix_length);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* _NETUTILS_IFC_H_ */
+diff --git a/libpackagelistparser/include/packagelistparser/packagelistparser.h b/libpackagelistparser/include/packagelistparser/packagelistparser.h
+index d602c26dc..45c0763ac 100644
+--- a/libpackagelistparser/include/packagelistparser/packagelistparser.h
++++ b/libpackagelistparser/include/packagelistparser/packagelistparser.h
+@@ -29,10 +29,11 @@
+ #define PACKAGELISTPARSER_H_
+ 
+ #include <stdbool.h>
+-#include <sys/cdefs.h>
+ #include <sys/types.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ /** The file containing the list of installed packages on the system */
+ #define PACKAGES_LIST_FILE  "/data/system/packages.list"
+@@ -87,6 +88,8 @@ extern bool packagelist_parse(pfn_on_package callback, void *userdata);
+  */
+ extern void packagelist_free(pkg_info *info);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* PACKAGELISTPARSER_H_ */
+diff --git a/libprocessgroup/include/processgroup/processgroup.h b/libprocessgroup/include/processgroup/processgroup.h
+index 9fa4154ab..cc8e432f9 100644
+--- a/libprocessgroup/include/processgroup/processgroup.h
++++ b/libprocessgroup/include/processgroup/processgroup.h
+@@ -17,10 +17,11 @@
+ #ifndef _PROCESSGROUP_H_
+ #define _PROCESSGROUP_H_
+ 
+-#include <sys/cdefs.h>
+ #include <sys/types.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ // Return 0 and removes the cgroup if there are no longer any processes in it.
+ // Returns -1 in the case of an error occurring or if there are processes still running
+@@ -39,6 +40,8 @@ bool setProcessGroupLimit(uid_t uid, int initialPid, int64_t limitInBytes);
+ 
+ void removeAllProcessGroups(void);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif
+diff --git a/libsuspend/include/suspend/autosuspend.h b/libsuspend/include/suspend/autosuspend.h
+index 59188a804..2a50e66e6 100644
+--- a/libsuspend/include/suspend/autosuspend.h
++++ b/libsuspend/include/suspend/autosuspend.h
+@@ -17,10 +17,11 @@
+ #ifndef _LIBSUSPEND_AUTOSUSPEND_H_
+ #define _LIBSUSPEND_AUTOSUSPEND_H_
+ 
+-#include <sys/cdefs.h>
+ #include <stdbool.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ /*
+  * autosuspend_enable
+@@ -53,6 +54,8 @@ int autosuspend_disable(void);
+  */
+ void set_wakeup_callback(void (*func)(bool success));
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif
+diff --git a/libsync/include/android/sync.h b/libsync/include/android/sync.h
+index 68f74a0b2..7508b4cec 100644
+--- a/libsync/include/android/sync.h
++++ b/libsync/include/android/sync.h
+@@ -39,7 +39,9 @@
+ 
+ #include "../ndk/sync.h"
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ struct sync_fence_info_data {
+  uint32_t len;
+@@ -64,6 +66,8 @@ struct sync_pt_info *sync_pt_info(struct sync_fence_info_data *info,
+                                   struct sync_pt_info *itr);
+ void sync_fence_info_free(struct sync_fence_info_data *info);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* __SYS_CORE_SYNC_H */
+diff --git a/libsync/include/ndk/sync.h b/libsync/include/ndk/sync.h
+index 3c5578313..d31039085 100644
+--- a/libsync/include/ndk/sync.h
++++ b/libsync/include/ndk/sync.h
+@@ -21,7 +21,9 @@
+ 
+ #include <linux/sync_file.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ #if __ANDROID_API__ >= __ANDROID_API_O__
+ 
+@@ -83,6 +85,8 @@ void sync_file_info_free(struct sync_file_info *info);
+ 
+ #endif // __ANDROID_API__ >= __ANDROID_API_O__
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* ANDROID_SYNC_H */
+diff --git a/libsync/sw_sync.h b/libsync/sw_sync.h
+index fda1c4c57..395c38072 100644
+--- a/libsync/sw_sync.h
++++ b/libsync/sw_sync.h
+@@ -19,7 +19,9 @@
+ #ifndef __SYS_CORE_SW_SYNC_H
+ #define __SYS_CORE_SW_SYNC_H
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ /*
+  * sw_sync is mainly intended for testing and should not be compiled into
+@@ -30,6 +32,8 @@ int sw_sync_timeline_create(void);
+ int sw_sync_timeline_inc(int fd, unsigned count);
+ int sw_sync_fence_create(int fd, const char *name, unsigned value);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* __SYS_CORE_SW_SYNC_H */
+diff --git a/libsystem/include/system/camera.h b/libsystem/include/system/camera.h
+index 5d0873ac4..76dfb65c2 100644
+--- a/libsystem/include/system/camera.h
++++ b/libsystem/include/system/camera.h
+@@ -18,13 +18,14 @@
+ #define SYSTEM_CORE_INCLUDE_ANDROID_CAMERA_H
+ 
+ #include <stdint.h>
+-#include <sys/cdefs.h>
+ #include <sys/types.h>
+ #include <cutils/native_handle.h>
+ #include <hardware/hardware.h>
+ #include <hardware/gralloc.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ /**
+  * A set of bit masks for specifying how the received preview frames are
+@@ -293,6 +294,8 @@ typedef struct camera_frame_metadata {
+     camera_face_t *faces;
+ } camera_frame_metadata_t;
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* SYSTEM_CORE_INCLUDE_ANDROID_CAMERA_H */
+diff --git a/libutils/tests/Singleton_test.h b/libutils/tests/Singleton_test.h
+index c77d9ffe6..00bd56242 100644
+--- a/libutils/tests/Singleton_test.h
++++ b/libutils/tests/Singleton_test.h
+@@ -17,7 +17,6 @@
+ #ifndef ANDROID_UTILS_SINGLETON_TEST_H
+ #define ANDROID_UTILS_SINGLETON_TEST_H
+ 
+-#include <sys/cdefs.h>
+ 
+ #include "Singleton_test.h"
+ 
+@@ -27,13 +26,17 @@ struct SingletonTestData : Singleton<SingletonTestData> {
+     unsigned int contents;
+ };
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ unsigned int singletonGetInstanceContents();
+ void singletonSetInstanceContents(unsigned int);
+ bool singletonHasInstance();
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ }
+ 
+diff --git a/logcat/include/log/getopt.h b/logcat/include/log/getopt.h
+index 0da2b1027..a23e21cc6 100644
+--- a/logcat/include/log/getopt.h
++++ b/logcat/include/log/getopt.h
+@@ -30,7 +30,6 @@
+ #if __ANDROID_USE_LIBLOG_LOGCAT_INTERFACE
+ 
+ #include <getopt.h>
+-#include <sys/cdefs.h>
+ 
+ struct getopt_context {
+     int opterr;
+@@ -55,12 +54,16 @@ struct getopt_context {
+ #define INIT_GETOPT_CONTEXT(context) \
+     context = { 1, 1, '?', 0, NULL, NULL, EMSG, -1, -1, NO_PREFIX, 0, NULL }
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ int getopt_long_r(int nargc, char* const* nargv, const char* options,
+                   const struct option* long_options, int* idx,
+                   struct getopt_context* context);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* __ANDROID_USE_LIBLOG_LOGCAT_INTERFACE */
+ 
+diff --git a/logd/libaudit.h b/logd/libaudit.h
+index a2afe47b4..8aacce374 100644
+--- a/logd/libaudit.h
++++ b/logd/libaudit.h
+@@ -21,14 +21,15 @@
+ #define _LIBAUDIT_H_
+ 
+ #include <stdint.h>
+-#include <sys/cdefs.h>
+ #include <sys/socket.h>
+ #include <sys/types.h>
+ 
+ #include <linux/audit.h>
+ #include <linux/netlink.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ #define MAX_AUDIT_MESSAGE_LENGTH 8970
+ 
+@@ -106,6 +107,8 @@ extern int audit_setup(int fd, pid_t pid);
+ 
+ extern int audit_rate_limit(int fd, unsigned rate_limit);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif
+diff --git a/logwrapper/include/logwrap/logwrap.h b/logwrapper/include/logwrap/logwrap.h
+index d3538b30c..1fe8e0309 100644
+--- a/logwrapper/include/logwrap/logwrap.h
++++ b/logwrapper/include/logwrap/logwrap.h
+@@ -21,7 +21,9 @@
+ #include <stdbool.h>
+ #include <stdint.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ /*
+  * Run a command while logging its stdout and stderr
+@@ -88,6 +90,8 @@ static inline int android_fork_execvp(int argc, char* argv[], int *status,
+                                    NULL, 0);
+ }
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* __LIBS_LOGWRAP_H */
+diff --git a/toolbox/bsd-compatibility.h b/toolbox/bsd-compatibility.h
+index 7c3ddd452..78ac825b1 100644
+--- a/toolbox/bsd-compatibility.h
++++ b/toolbox/bsd-compatibility.h
+@@ -50,7 +50,9 @@
+ 
+ #define S_ISWHT(x) false
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ /* From NetBSD <stdlib.h>. */
+ #define HN_DECIMAL              0x01
+@@ -81,4 +83,6 @@ void	swab(const void * __restrict, void * __restrict, ssize_t);
+ /* From NetBSD <util.h>. */
+ int		raise_default_signal(int);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+diff --git a/trusty/gatekeeper/trusty_gatekeeper_ipc.h b/trusty/gatekeeper/trusty_gatekeeper_ipc.h
+index f8de7f873..fa8fd4019 100644
+--- a/trusty/gatekeeper/trusty_gatekeeper_ipc.h
++++ b/trusty/gatekeeper/trusty_gatekeeper_ipc.h
+@@ -14,11 +14,15 @@
+  * limitations under the License.
+  */
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ int trusty_gatekeeper_connect();
+ int trusty_gatekeeper_call(uint32_t cmd, void *in, uint32_t in_size, uint8_t *out,
+                            uint32_t *out_size);
+ void trusty_gatekeeper_disconnect();
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+diff --git a/trusty/keymaster/trusty_keymaster_ipc.h b/trusty/keymaster/trusty_keymaster_ipc.h
+index c15f7c1da..797e1f005 100644
+--- a/trusty/keymaster/trusty_keymaster_ipc.h
++++ b/trusty/keymaster/trusty_keymaster_ipc.h
+@@ -17,13 +17,17 @@
+ #ifndef TRUSTY_KEYMASTER_TRUSTY_KEYMASTER_IPC_H_
+ #define TRUSTY_KEYMASTER_TRUSTY_KEYMASTER_IPC_H_
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ int trusty_keymaster_connect(void);
+ int trusty_keymaster_call(uint32_t cmd, void* in, uint32_t in_size, uint8_t* out,
+                           uint32_t* out_size);
+ void trusty_keymaster_disconnect(void);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif  // TRUSTY_KEYMASTER_TRUSTY_KEYMASTER_IPC_H_
+diff --git a/trusty/storage/lib/include/trusty/lib/storage.h b/trusty/storage/lib/include/trusty/lib/storage.h
+index b8ddf67d8..6cac8750c 100644
+--- a/trusty/storage/lib/include/trusty/lib/storage.h
++++ b/trusty/storage/lib/include/trusty/lib/storage.h
+@@ -21,7 +21,9 @@
+ 
+ #define STORAGE_MAX_NAME_LENGTH_BYTES 159
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ typedef uint32_t storage_session_t;
+ typedef uint64_t file_handle_t;
+@@ -151,4 +153,6 @@ int storage_get_file_size(file_handle_t handle, storage_off_t *size);
+ int storage_end_transaction(storage_session_t session, bool complete);
+ 
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+-- 
+2.16.2
+

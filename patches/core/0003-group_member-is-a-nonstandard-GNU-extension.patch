@@ -1,0 +1,26 @@
+From a04aecc16eaad94ca6baacb33757a75d9a385bdb Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
+Date: Tue, 27 Feb 2018 17:24:05 +0100
+Subject: [PATCH 3/8] group_member is a nonstandard GNU extension
+
+Only use that function if __GLIBC__ is defined.
+---
+ adb/diagnose_usb.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/adb/diagnose_usb.cpp b/adb/diagnose_usb.cpp
+index 9f721bf5f..976c1a216 100644
+--- a/adb/diagnose_usb.cpp
++++ b/adb/diagnose_usb.cpp
+@@ -33,7 +33,7 @@ static const char kPermissionsHelpUrl[] = "http://developer.android.com/tools/de
+ // Returns a message describing any potential problems we find with udev, or an empty string if we
+ // can't find plugdev information (i.e. udev is not installed).
+ static std::string GetUdevProblem() {
+-#if defined(__linux__)
++#if defined(__GLIBC__)
+     errno = 0;
+     group* plugdev_group = getgrnam("plugdev");
+ 
+-- 
+2.16.2
+

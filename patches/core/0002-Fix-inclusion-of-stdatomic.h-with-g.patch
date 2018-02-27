@@ -1,0 +1,30 @@
+From 5f8148fecf59191151ec29d8f4f55658194b4783 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
+Date: Tue, 27 Feb 2018 16:30:30 +0100
+Subject: [PATCH 2/8] Fix inclusion of stdatomic.h with g++
+
+See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=60932#c5
+---
+ libcutils/include/cutils/trace.h | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/libcutils/include/cutils/trace.h b/libcutils/include/cutils/trace.h
+index 4c70a2dad..e6327ddba 100644
+--- a/libcutils/include/cutils/trace.h
++++ b/libcutils/include/cutils/trace.h
+@@ -18,7 +18,12 @@
+ #define _LIBS_CUTILS_TRACE_H
+ 
+ #include <inttypes.h>
++#ifdef __cplusplus
++#include <atomic>
++using namespace std;
++#else
+ #include <stdatomic.h>
++#endif
+ #include <stdbool.h>
+ #include <stdint.h>
+ #include <stdio.h>
+-- 
+2.16.2
+
