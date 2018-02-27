@@ -1,0 +1,18 @@
+[submodule "core"]
+	path = core
+	url = https://android.googlesource.com/platform/system/core.git
+[submodule "extras"]
+	path = extras
+	url = https://android.googlesource.com/platform/system/extras.git
+[submodule "selinux"]
+	path = selinux
+	url = https://android.googlesource.com/platform/external/selinux.git
+[submodule "f2fs-tools"]
+	path = f2fs-tools
+	url = https://android.googlesource.com/platform/external/f2fs-tools.git
+[submodule "e2fsprogs"]
+	path = e2fsprogs
+	url = https://android.googlesource.com/platform/external/e2fsprogs.git
+[submodule "boringssl"]
+	path = boringssl
+	url = https://boringssl.googlesource.com/boringssl.git
