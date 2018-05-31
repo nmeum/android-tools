@@ -9,19 +9,21 @@ set(android-vendored
 	f2fs-tools
 	e2fsprogs)
 
-execute_process(COMMAND git -C ${CMAKE_CURRENT_SOURCE_DIR}/boringssl
-	reset -q --hard ${BORINGSSL_VERSION})
-foreach(v ${android-vendored})
-	execute_process(COMMAND git -C ${CMAKE_CURRENT_SOURCE_DIR}/${v}
-		reset -q --hard android-${ANDROID_VERSION})
+if(EXISTS "${ANDROID_PATCH_DIR}/")
+	execute_process(COMMAND git -C ${CMAKE_CURRENT_SOURCE_DIR}/boringssl
+		reset -q --hard ${BORINGSSL_VERSION})
+	foreach(v ${android-vendored})
+		execute_process(COMMAND git -C ${CMAKE_CURRENT_SOURCE_DIR}/${v}
+			reset -q --hard android-${ANDROID_VERSION})
 
-	file(GLOB patches ${ANDROID_PATCH_DIR}/${v}/*.patch)
-	if(patches)
-		message(STATUS "Applying patches for: ${v}")
-		execute_process(COMMAND git -C
-			${CMAKE_CURRENT_SOURCE_DIR}/${v} am ${patches})
-	endif(patches)
-endforeach(v)
+		file(GLOB patches ${ANDROID_PATCH_DIR}/${v}/*.patch)
+		if(patches)
+			message(STATUS "Applying patches for: ${v}")
+			execute_process(COMMAND git -C
+				${CMAKE_CURRENT_SOURCE_DIR}/${v} am ${patches})
+		endif(patches)
+	endforeach(v)
+endif()
 
 include(CMakeLists.adb.txt)
 include(CMakeLists.fastboot.txt)
