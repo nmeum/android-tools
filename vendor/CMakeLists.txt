@@ -128,25 +128,6 @@ target_include_directories(adb PRIVATE
 target_link_libraries(adb libbase liblog libadb
 	libdiagnoseusb libcrypto crypto pthread usb-1.0 libcutils)
 
-add_library(libfastboot STATIC
-	core/fastboot/protocol.cpp
-	core/fastboot/engine.cpp
-	core/fastboot/bootimg_utils.cpp
-	core/fastboot/fastboot.cpp
-	core/fastboot/util.cpp
-	core/fastboot/fs.cpp
-	core/fastboot/usb_linux.cpp
-	core/fastboot/socket.cpp
-	core/fastboot/tcp.cpp
-	core/fastboot/udp.cpp)
-
-target_include_directories(libfastboot PUBLIC
-	core/base/include core/include core/adb core/libsparse/include
-	core/mkbootimg extras/ext4_utils/include extras/f2fs_utils
-	core/libziparchive/include)
-target_compile_definitions(libfastboot PRIVATE
-	-D_GNU_SOURCE -D_XOPEN_SOURCE=700 -DUSE_F2FS)
-
 add_library(libsparse STATIC
 	core/libsparse/backed_block.c
 	core/libsparse/output_file.c
@@ -269,7 +250,13 @@ add_executable(fastboot
 	core/fastboot/tcp.cpp
 	core/fastboot/udp.cpp)
 
+target_include_directories(fastboot PRIVATE
+	core/base/include core/include core/adb core/libsparse/include
+	core/mkbootimg extras/ext4_utils/include extras/f2fs_utils
+	core/libziparchive/include)
+target_compile_definitions(fastboot PRIVATE
+	-D_GNU_SOURCE -D_XOPEN_SOURCE=700 -DUSE_F2FS)
 target_link_libraries(fastboot
 	libsparse libzip libcutils liblog libutil libbase libext4
-	libf2fs libselinux libsepol libfastboot libdiagnoseusb
+	libf2fs libselinux libsepol libdiagnoseusb
 	z pcre2-8 pthread dl)
