@@ -3,6 +3,18 @@
 Git repository to make it easier to package certain command line
 utilities provided by [android-tools][android-tools].
 
+# Status
+
+This is currently work in progress and more of an experiment. The
+following tools can currently be build under Alpine Linux:
+
+	* [x] adb
+	* [x] fastboot
+	* [ ] e2fsdroid
+	* [ ] mkbootimg
+	* [ ] mke2fs.android
+	* [ ] ext2simg
+
 # Motivation
 
 [Many][void-linux] [Linux][arch-linux] [distribution][alpine-linux] have
