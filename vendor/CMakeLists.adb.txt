@@ -1,6 +1,3 @@
-add_definitions(-DADB_VERSION=${ANDROID_VERSION} -DADB_HOST=1
-	-DFASTBOOT_VERSION=${ANDROID_VERSION})
-
 add_library(libadb STATIC
 	core/adb/console.cpp
 	core/adb/socket_spec.cpp
@@ -17,6 +14,7 @@ add_library(libadb STATIC
 	core/adb/sysdeps/posix/network.cpp)
 
 target_compile_definitions(libadb PRIVATE -D_GNU_SOURCE)
+target_compile_definitions(libadb PUBLIC -DADB_HOST=1)
 target_include_directories(libadb PUBLIC
 	core/include core/base/include core/adb)
 
@@ -97,6 +95,7 @@ add_executable(adb
 	  core/adb/adb_auth_host.cpp
 	  core/adb/shell_service_protocol.cpp)
 
+target_compile_definitions(adb PRIVATE -DADB_VERSION=${ANDROID_VERSION})
 target_include_directories(adb PRIVATE
 	core/include core/base/include core/adb
 	core/libcrypto_utils/include boringssl/include)
