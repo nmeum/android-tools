@@ -39,9 +39,26 @@ TODO
 
 # Packaging
 
-TODO
+Source tarballs containing an already patched version of all vendored
+dependencies are available on the [GitHub Release Page][android-tools].
+
+These tarballs should be used for packaging. After the tarball was
+downloaded and extracted android-tools can be build and installed as
+follows:
+
+	$ mkdir build && cd build
+	$ cmake ..
+	$ make
+	$ make install
+
+New source tarballs can be created from the Git repository using:
+
+	$ mkdir build && cd build
+	$ cmake ..
+	$ make package_source
 
 [android-tools]: https://sites.google.com/a/android.com/tools/
 [void-linux]: https://github.com/voidlinux/void-packages/tree/master/srcpkgs/android-tools
 [arch-linux]: https://www.archlinux.org/packages/community/x86_64/android-tools/
 [alpine-linux]: https://pkgs.alpinelinux.org/package/edge/testing/x86_64/android-tools
+[release-page]: https://github.com/nmeum/android-tools/releases
