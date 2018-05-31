@@ -1,7 +1,7 @@
-From 791c13e61e9c7fda10c2c1d200d239f717fc99a5 Mon Sep 17 00:00:00 2001
+From 2b98a9517093561520433a214bdbe58ecc18330f Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 17:49:52 +0100
-Subject: [PATCH 7/8] Include libusb-1.0/libusb.h instead of libusb/libusb.h
+Subject: [PATCH 07/10] Include libusb-1.0/libusb.h instead of libusb/libusb.h
 
 ---
  adb/client/usb_libusb.cpp | 2 +-

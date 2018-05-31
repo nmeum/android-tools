@@ -1,7 +1,7 @@
-From 88e6fb9ca67903cca1528e6572ba9a4bddc0597c Mon Sep 17 00:00:00 2001
+From e636c3d56b397fe4b62b9cc22fd53a8dcfd0d69e Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 13:33:46 +0100
-Subject: [PATCH 1/8] Don't use the internal glibc header sys/cdefs.h
+Subject: [PATCH 01/10] Don't use the internal glibc header sys/cdefs.h
 
 This patch was created using sed(1) and ag(1) with the following script:
 
@@ -16,15 +16,22 @@ https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-
 ---
  adf/libadf/include/adf/adf.h                               |  9 ++++++---
  adf/libadfhwc/include/adfhwc/adfhwc.h                      |  9 ++++++---
+ base/include/android-base/properties.h                     |  1 -
+ debuggerd/include/debuggerd/client.h                       |  1 -
  debuggerd/include/debuggerd/handler.h                      |  9 ++++++---
+ debuggerd/util.h                                           |  1 -
+ fs_mgr/fs_mgr_priv_boot_config.h                           |  1 -
  fs_mgr/include/fs_mgr.h                                    |  8 ++++++--
  fs_mgr/include_fstab/fstab/fstab.h                         |  8 ++++++--
+ init/log.h                                                 |  1 -
+ init/reboot.cpp                                            |  1 -
  libbacktrace/backtrace_testlib.h                           |  9 ++++++---
  libbacktrace/thread_utils.h                                |  8 ++++++--
  libcutils/include/cutils/android_reboot.h                  |  8 ++++++--
  libcutils/include/cutils/bitops.h                          |  9 ++++++---
  libcutils/include/cutils/klog.h                            |  9 ++++++---
  libcutils/include/cutils/partition_utils.h                 |  8 ++++++--
+ libcutils/include/cutils/properties.h                      |  1 -
  libcutils/include/cutils/str_parms.h                       |  9 ++++++---
  libcutils/include/cutils/trace.h                           |  9 ++++++---
  libcutils/include/private/fs_config.h                      |  9 ++++++---
@@ -36,27 +43,57 @@ https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-
  liblog/log_portability.h                                   | 14 --------------
  liblog/logd_reader.h                                       |  8 ++++++--
  liblog/logger.h                                            |  8 ++++++--
+ libmemunreachable/Allocator.cpp                            |  1 -
  libmemunreachable/Binder.cpp                               |  9 ++++++---
  libmemunreachable/bionic.h                                 |  9 ++++++---
  libmemunreachable/include/memunreachable/memunreachable.h  |  9 ++++++---
  libnativeloader/include/nativeloader/dlext_namespaces.h    |  8 ++++++--
  libnetutils/include/netutils/ifc.h                         |  9 ++++++---
  .../include/packagelistparser/packagelistparser.h          |  9 ++++++---
+ libpixelflinger/codeflinger/disassem.c                     |  1 -
+ libpixelflinger/codeflinger/mips64_disassem.c              |  1 -
+ libpixelflinger/codeflinger/mips_disassem.c                |  1 -
  libprocessgroup/include/processgroup/processgroup.h        |  9 ++++++---
  libsuspend/include/suspend/autosuspend.h                   |  9 ++++++---
  libsync/include/android/sync.h                             |  8 ++++++--
  libsync/include/ndk/sync.h                                 |  8 ++++++--
  libsync/sw_sync.h                                          |  8 ++++++--
  libsystem/include/system/camera.h                          |  9 ++++++---
+ libsystem/include/system/radio.h                           |  1 -
  libutils/tests/Singleton_test.h                            |  9 ++++++---
+ libziparchive/include/ziparchive/zip_archive.h             |  1 -
+ lmkd/lmkd.c                                                |  1 -
+ logcat/getopt_long.cpp                                     |  1 -
  logcat/include/log/getopt.h                                |  9 ++++++---
+ logcat/logcat.cpp                                          |  1 -
+ logcat/tests/logcat_test.cpp                               |  1 -
+ logd/LogBuffer.cpp                                         |  1 -
+ logd/LogListener.cpp                                       |  1 -
+ logd/LogUtils.h                                            |  1 -
  logd/libaudit.h                                            |  9 ++++++---
  logwrapper/include/logwrap/logwrap.h                       |  8 ++++++--
  toolbox/bsd-compatibility.h                                |  8 ++++++--
+ toolbox/upstream-netbsd/bin/dd/args.c                      |  1 -
+ toolbox/upstream-netbsd/bin/dd/conv.c                      |  1 -
+ toolbox/upstream-netbsd/bin/dd/dd.c                        |  1 -
+ toolbox/upstream-netbsd/bin/dd/dd_hostops.c                |  1 -
+ toolbox/upstream-netbsd/bin/dd/extern.h                    |  1 -
+ toolbox/upstream-netbsd/bin/dd/misc.c                      |  1 -
+ toolbox/upstream-netbsd/bin/dd/position.c                  |  1 -
+ toolbox/upstream-netbsd/lib/libc/gen/getbsize.c            |  1 -
+ toolbox/upstream-netbsd/lib/libc/gen/humanize_number.c     |  1 -
+ toolbox/upstream-netbsd/lib/libc/stdlib/strsuftoll.c       |  1 -
+ toolbox/upstream-netbsd/lib/libc/string/swab.c             |  1 -
+ toolbox/upstream-netbsd/lib/libutil/raise_default_signal.c |  1 -
+ toolbox/upstream-netbsd/usr.bin/grep/fastgrep.c            |  1 -
+ toolbox/upstream-netbsd/usr.bin/grep/file.c                |  1 -
+ toolbox/upstream-netbsd/usr.bin/grep/grep.c                |  1 -
+ toolbox/upstream-netbsd/usr.bin/grep/queue.c               |  1 -
+ toolbox/upstream-netbsd/usr.bin/grep/util.c                |  1 -
  trusty/gatekeeper/trusty_gatekeeper_ipc.h                  |  8 ++++++--
  trusty/keymaster/trusty_keymaster_ipc.h                    |  8 ++++++--
  trusty/storage/lib/include/trusty/lib/storage.h            |  8 ++++++--
- 42 files changed, 246 insertions(+), 118 deletions(-)
+ 79 files changed, 246 insertions(+), 155 deletions(-)
 
 diff --git a/adf/libadf/include/adf/adf.h b/adf/libadf/include/adf/adf.h
 index e4c7b28cc..41b3da475 100644
@@ -124,6 +161,30 @@ index 4f7092507..97beb2f71 100644
 +#endif
  
  #endif /* _LIBADFHWC_ADFHWC_H_ */
+diff --git a/base/include/android-base/properties.h b/base/include/android-base/properties.h
+index 041586c2c..7af782dec 100644
+--- a/base/include/android-base/properties.h
++++ b/base/include/android-base/properties.h
+@@ -17,7 +17,6 @@
+ #ifndef ANDROID_BASE_PROPERTIES_H
+ #define ANDROID_BASE_PROPERTIES_H
+ 
+-#include <sys/cdefs.h>
+ 
+ #if !defined(__BIONIC__)
+ #error Only bionic supports system properties.
+diff --git a/debuggerd/include/debuggerd/client.h b/debuggerd/include/debuggerd/client.h
+index b7284b08e..b85b6e542 100644
+--- a/debuggerd/include/debuggerd/client.h
++++ b/debuggerd/include/debuggerd/client.h
+@@ -17,7 +17,6 @@
+ #pragma once
+ 
+ #include <stdbool.h>
+-#include <sys/cdefs.h>
+ #include <unistd.h>
+ 
+ #include <android-base/unique_fd.h>
 diff --git a/debuggerd/include/debuggerd/handler.h b/debuggerd/include/debuggerd/handler.h
 index 7196e0ad4..9ba20db19 100644
 --- a/debuggerd/include/debuggerd/handler.h
@@ -150,6 +211,30 @@ index 7196e0ad4..9ba20db19 100644
 +#ifdef __cplusplus
 +}
 +#endif
+diff --git a/debuggerd/util.h b/debuggerd/util.h
+index 60517146b..69a1d6746 100644
+--- a/debuggerd/util.h
++++ b/debuggerd/util.h
+@@ -16,7 +16,6 @@
+ 
+ #pragma once
+ 
+-#include <sys/cdefs.h>
+ #include <sys/types.h>
+ 
+ #include <android-base/unique_fd.h>
+diff --git a/fs_mgr/fs_mgr_priv_boot_config.h b/fs_mgr/fs_mgr_priv_boot_config.h
+index d98dc02c1..d0a66ea32 100644
+--- a/fs_mgr/fs_mgr_priv_boot_config.h
++++ b/fs_mgr/fs_mgr_priv_boot_config.h
+@@ -17,7 +17,6 @@
+ #ifndef __CORE_FS_MGR_PRIV_BOOTCONFIG_H
+ #define __CORE_FS_MGR_PRIV_BOOTCONFIG_H
+ 
+-#include <sys/cdefs.h>
+ #include <string>
+ 
+ bool fs_mgr_get_boot_config_from_kernel_cmdline(const std::string& key, std::string* out_val);
 diff --git a/fs_mgr/include/fs_mgr.h b/fs_mgr/include/fs_mgr.h
 index c74f6c85c..87e72f41f 100644
 --- a/fs_mgr/include/fs_mgr.h
@@ -201,6 +286,30 @@ index 15c8cafe6..2680f9db7 100644
  
  // C++ only functions
  // TODO: move this into separate header files under include/fs_mgr/*.h
+diff --git a/init/log.h b/init/log.h
+index 5a4eba6b5..6a1ab2197 100644
+--- a/init/log.h
++++ b/init/log.h
+@@ -17,7 +17,6 @@
+ #ifndef _INIT_LOG_H_
+ #define _INIT_LOG_H_
+ 
+-#include <sys/cdefs.h>
+ 
+ namespace android {
+ namespace init {
+diff --git a/init/reboot.cpp b/init/reboot.cpp
+index 5c7ddf185..969277221 100644
+--- a/init/reboot.cpp
++++ b/init/reboot.cpp
+@@ -21,7 +21,6 @@
+ #include <linux/fs.h>
+ #include <mntent.h>
+ #include <sys/capability.h>
+-#include <sys/cdefs.h>
+ #include <sys/ioctl.h>
+ #include <sys/mount.h>
+ #include <sys/reboot.h>
 diff --git a/libbacktrace/backtrace_testlib.h b/libbacktrace/backtrace_testlib.h
 index 16fedc436..64f5673d2 100644
 --- a/libbacktrace/backtrace_testlib.h
@@ -354,6 +463,18 @@ index 72ca80d35..91266f7d5 100644
 +#endif
  
  #endif /* __CUTILS_PARTITION_WIPED_H__ */
+diff --git a/libcutils/include/cutils/properties.h b/libcutils/include/cutils/properties.h
+index b45f58f49..a283c8027 100644
+--- a/libcutils/include/cutils/properties.h
++++ b/libcutils/include/cutils/properties.h
+@@ -17,7 +17,6 @@
+ #ifndef __CUTILS_PROPERTIES_H
+ #define __CUTILS_PROPERTIES_H
+ 
+-#include <sys/cdefs.h>
+ #include <stddef.h>
+ #include <sys/system_properties.h>
+ #include <stdint.h>
 diff --git a/libcutils/include/cutils/str_parms.h b/libcutils/include/cutils/str_parms.h
 index aa1435a08..160792a37 100644
 --- a/libcutils/include/cutils/str_parms.h
@@ -652,6 +773,18 @@ index 246b33ccc..cf2452451 100644
 +#endif
  
  #endif /* _LIBLOG_LOGGER_H__ */
+diff --git a/libmemunreachable/Allocator.cpp b/libmemunreachable/Allocator.cpp
+index 213be1733..a9713381a 100644
+--- a/libmemunreachable/Allocator.cpp
++++ b/libmemunreachable/Allocator.cpp
+@@ -22,7 +22,6 @@
+ #include <assert.h>
+ #include <stdlib.h>
+ 
+-#include <sys/cdefs.h>
+ #include <sys/mman.h>
+ 
+ #include <cmath>
 diff --git a/libmemunreachable/Binder.cpp b/libmemunreachable/Binder.cpp
 index 60512a3f8..834507459 100644
 --- a/libmemunreachable/Binder.cpp
@@ -825,6 +958,42 @@ index d602c26dc..45c0763ac 100644
 +#endif
  
  #endif /* PACKAGELISTPARSER_H_ */
+diff --git a/libpixelflinger/codeflinger/disassem.c b/libpixelflinger/codeflinger/disassem.c
+index 5cbd63db8..294b13800 100644
+--- a/libpixelflinger/codeflinger/disassem.c
++++ b/libpixelflinger/codeflinger/disassem.c
+@@ -47,7 +47,6 @@
+  * This code is not complete. Not all instructions are disassembled.
+  */
+ 
+-#include <sys/cdefs.h>
+ //__FBSDID("$FreeBSD: /repoman/r/ncvs/src/sys/arm/arm/disassem.c,v 1.2 2005/01/05 21:58:47 imp Exp $");
+ #include <sys/param.h>
+ #include <stdio.h>
+diff --git a/libpixelflinger/codeflinger/mips64_disassem.c b/libpixelflinger/codeflinger/mips64_disassem.c
+index 1856e5c0e..04e6540ba 100644
+--- a/libpixelflinger/codeflinger/mips64_disassem.c
++++ b/libpixelflinger/codeflinger/mips64_disassem.c
+@@ -38,7 +38,6 @@
+ #include <stdbool.h>
+ #include <stdint.h>
+ #include <stdio.h>
+-#include <sys/cdefs.h>
+ #include <sys/types.h>
+ 
+ #include <android/log.h>
+diff --git a/libpixelflinger/codeflinger/mips_disassem.c b/libpixelflinger/codeflinger/mips_disassem.c
+index 83a9740ed..e19b08d7a 100644
+--- a/libpixelflinger/codeflinger/mips_disassem.c
++++ b/libpixelflinger/codeflinger/mips_disassem.c
+@@ -38,7 +38,6 @@
+ #include <stdint.h>
+ #include <stdarg.h>
+ #include <stdbool.h>
+-#include <sys/cdefs.h>
+ 
+ #include <sys/types.h>
+ #include "mips_opcode.h"
 diff --git a/libprocessgroup/include/processgroup/processgroup.h b/libprocessgroup/include/processgroup/processgroup.h
 index 9fa4154ab..cc8e432f9 100644
 --- a/libprocessgroup/include/processgroup/processgroup.h
@@ -987,6 +1156,18 @@ index 5d0873ac4..76dfb65c2 100644
 +#endif
  
  #endif /* SYSTEM_CORE_INCLUDE_ANDROID_CAMERA_H */
+diff --git a/libsystem/include/system/radio.h b/libsystem/include/system/radio.h
+index acf3ea787..dfd254fc6 100644
+--- a/libsystem/include/system/radio.h
++++ b/libsystem/include/system/radio.h
+@@ -20,7 +20,6 @@
+ #include <stdbool.h>
+ #include <stdint.h>
+ #include <stdio.h>
+-#include <sys/cdefs.h>
+ #include <sys/types.h>
+ 
+ 
 diff --git a/libutils/tests/Singleton_test.h b/libutils/tests/Singleton_test.h
 index c77d9ffe6..00bd56242 100644
 --- a/libutils/tests/Singleton_test.h
@@ -1019,6 +1200,42 @@ index c77d9ffe6..00bd56242 100644
  
  }
  
+diff --git a/libziparchive/include/ziparchive/zip_archive.h b/libziparchive/include/ziparchive/zip_archive.h
+index 73ae68d3f..b8a7d7c06 100644
+--- a/libziparchive/include/ziparchive/zip_archive.h
++++ b/libziparchive/include/ziparchive/zip_archive.h
+@@ -22,7 +22,6 @@
+ 
+ #include <stdint.h>
+ #include <string.h>
+-#include <sys/cdefs.h>
+ #include <sys/types.h>
+ #include <utils/Compat.h>
+ 
+diff --git a/lmkd/lmkd.c b/lmkd/lmkd.c
+index 5cfa2c887..425e29a81 100644
+--- a/lmkd/lmkd.c
++++ b/lmkd/lmkd.c
+@@ -23,7 +23,6 @@
+ #include <signal.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#include <sys/cdefs.h>
+ #include <sys/epoll.h>
+ #include <sys/eventfd.h>
+ #include <sys/mman.h>
+diff --git a/logcat/getopt_long.cpp b/logcat/getopt_long.cpp
+index 5f8dd66e3..29cd09a8e 100644
+--- a/logcat/getopt_long.cpp
++++ b/logcat/getopt_long.cpp
+@@ -53,7 +53,6 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#include <sys/cdefs.h>
+ 
+ #include <log/getopt.h>
+ 
 diff --git a/logcat/include/log/getopt.h b/logcat/include/log/getopt.h
 index 0da2b1027..a23e21cc6 100644
 --- a/logcat/include/log/getopt.h
@@ -1050,6 +1267,66 @@ index 0da2b1027..a23e21cc6 100644
  
  #endif /* __ANDROID_USE_LIBLOG_LOGCAT_INTERFACE */
  
+diff --git a/logcat/logcat.cpp b/logcat/logcat.cpp
+index f64196f32..968ec7cfd 100644
+--- a/logcat/logcat.cpp
++++ b/logcat/logcat.cpp
+@@ -27,7 +27,6 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#include <sys/cdefs.h>
+ #include <sys/resource.h>
+ #include <sys/socket.h>
+ #include <sys/stat.h>
+diff --git a/logcat/tests/logcat_test.cpp b/logcat/tests/logcat_test.cpp
+index 786fb147a..3f19f92e1 100644
+--- a/logcat/tests/logcat_test.cpp
++++ b/logcat/tests/logcat_test.cpp
+@@ -21,7 +21,6 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#include <sys/cdefs.h>
+ #include <sys/stat.h>
+ #include <sys/types.h>
+ #include <sys/wait.h>
+diff --git a/logd/LogBuffer.cpp b/logd/LogBuffer.cpp
+index 749832530..5a3df38cd 100644
+--- a/logd/LogBuffer.cpp
++++ b/logd/LogBuffer.cpp
+@@ -21,7 +21,6 @@
+ #include <errno.h>
+ #include <stdio.h>
+ #include <string.h>
+-#include <sys/cdefs.h>
+ #include <sys/user.h>
+ #include <time.h>
+ #include <unistd.h>
+diff --git a/logd/LogListener.cpp b/logd/LogListener.cpp
+index d2df68eef..42832f3bf 100644
+--- a/logd/LogListener.cpp
++++ b/logd/LogListener.cpp
+@@ -17,7 +17,6 @@
+ #include <ctype.h>
+ #include <limits.h>
+ #include <stdio.h>
+-#include <sys/cdefs.h>
+ #include <sys/prctl.h>
+ #include <sys/socket.h>
+ #include <sys/types.h>
+diff --git a/logd/LogUtils.h b/logd/LogUtils.h
+index 4dcd3e7f9..ca32bd331 100644
+--- a/logd/LogUtils.h
++++ b/logd/LogUtils.h
+@@ -17,7 +17,6 @@
+ #ifndef _LOGD_LOG_UTILS_H__
+ #define _LOGD_LOG_UTILS_H__
+ 
+-#include <sys/cdefs.h>
+ #include <sys/types.h>
+ 
+ #include <private/android_logger.h>
 diff --git a/logd/libaudit.h b/logd/libaudit.h
 index a2afe47b4..8aacce374 100644
 --- a/logd/libaudit.h
@@ -1130,6 +1407,210 @@ index 7c3ddd452..78ac825b1 100644
 +#ifdef __cplusplus
 +}
 +#endif
+diff --git a/toolbox/upstream-netbsd/bin/dd/args.c b/toolbox/upstream-netbsd/bin/dd/args.c
+index 207e30081..812db5c4f 100644
+--- a/toolbox/upstream-netbsd/bin/dd/args.c
++++ b/toolbox/upstream-netbsd/bin/dd/args.c
+@@ -33,7 +33,6 @@
+  * SUCH DAMAGE.
+  */
+ 
+-#include <sys/cdefs.h>
+ #ifndef lint
+ #if 0
+ static char sccsid[] = "@(#)args.c	8.3 (Berkeley) 4/2/94";
+diff --git a/toolbox/upstream-netbsd/bin/dd/conv.c b/toolbox/upstream-netbsd/bin/dd/conv.c
+index d4a8a0952..1b6577357 100644
+--- a/toolbox/upstream-netbsd/bin/dd/conv.c
++++ b/toolbox/upstream-netbsd/bin/dd/conv.c
+@@ -33,7 +33,6 @@
+  * SUCH DAMAGE.
+  */
+ 
+-#include <sys/cdefs.h>
+ #ifndef lint
+ #if 0
+ static char sccsid[] = "@(#)conv.c	8.3 (Berkeley) 4/2/94";
+diff --git a/toolbox/upstream-netbsd/bin/dd/dd.c b/toolbox/upstream-netbsd/bin/dd/dd.c
+index 03d080cd4..27eac999e 100644
+--- a/toolbox/upstream-netbsd/bin/dd/dd.c
++++ b/toolbox/upstream-netbsd/bin/dd/dd.c
+@@ -33,7 +33,6 @@
+  * SUCH DAMAGE.
+  */
+ 
+-#include <sys/cdefs.h>
+ #ifndef lint
+ __COPYRIGHT("@(#) Copyright (c) 1991, 1993, 1994\
+  The Regents of the University of California.  All rights reserved.");
+diff --git a/toolbox/upstream-netbsd/bin/dd/dd_hostops.c b/toolbox/upstream-netbsd/bin/dd/dd_hostops.c
+index d6e7a89e7..fbf39324a 100644
+--- a/toolbox/upstream-netbsd/bin/dd/dd_hostops.c
++++ b/toolbox/upstream-netbsd/bin/dd/dd_hostops.c
+@@ -26,7 +26,6 @@
+  * POSSIBILITY OF SUCH DAMAGE.
+  */
+ 
+-#include <sys/cdefs.h>
+ #ifndef lint
+ __RCSID("$NetBSD: dd_hostops.c,v 1.1 2011/02/04 19:42:12 pooka Exp $");
+ #endif /* !lint */
+diff --git a/toolbox/upstream-netbsd/bin/dd/extern.h b/toolbox/upstream-netbsd/bin/dd/extern.h
+index 9c5902186..25d58cd86 100644
+--- a/toolbox/upstream-netbsd/bin/dd/extern.h
++++ b/toolbox/upstream-netbsd/bin/dd/extern.h
+@@ -35,7 +35,6 @@
+  *	@(#)extern.h	8.3 (Berkeley) 4/2/94
+  */
+ 
+-#include <sys/cdefs.h>
+ 
+ #ifdef NO_CONV
+ __dead void block(void);
+diff --git a/toolbox/upstream-netbsd/bin/dd/misc.c b/toolbox/upstream-netbsd/bin/dd/misc.c
+index 0fac98bed..352fb1a64 100644
+--- a/toolbox/upstream-netbsd/bin/dd/misc.c
++++ b/toolbox/upstream-netbsd/bin/dd/misc.c
+@@ -33,7 +33,6 @@
+  * SUCH DAMAGE.
+  */
+ 
+-#include <sys/cdefs.h>
+ #ifndef lint
+ #if 0
+ static char sccsid[] = "@(#)misc.c	8.3 (Berkeley) 4/2/94";
+diff --git a/toolbox/upstream-netbsd/bin/dd/position.c b/toolbox/upstream-netbsd/bin/dd/position.c
+index 36dd580a3..fade4507d 100644
+--- a/toolbox/upstream-netbsd/bin/dd/position.c
++++ b/toolbox/upstream-netbsd/bin/dd/position.c
+@@ -33,7 +33,6 @@
+  * SUCH DAMAGE.
+  */
+ 
+-#include <sys/cdefs.h>
+ #ifndef lint
+ #if 0
+ static char sccsid[] = "@(#)position.c	8.3 (Berkeley) 4/2/94";
+diff --git a/toolbox/upstream-netbsd/lib/libc/gen/getbsize.c b/toolbox/upstream-netbsd/lib/libc/gen/getbsize.c
+index a9ce2c14e..b7bf1ae96 100644
+--- a/toolbox/upstream-netbsd/lib/libc/gen/getbsize.c
++++ b/toolbox/upstream-netbsd/lib/libc/gen/getbsize.c
+@@ -29,7 +29,6 @@
+  * SUCH DAMAGE.
+  */
+ 
+-#include <sys/cdefs.h>
+ #if defined(LIBC_SCCS) && !defined(lint)
+ #if 0
+ static char sccsid[] = "@(#)getbsize.c	8.1 (Berkeley) 6/4/93";
+diff --git a/toolbox/upstream-netbsd/lib/libc/gen/humanize_number.c b/toolbox/upstream-netbsd/lib/libc/gen/humanize_number.c
+index 533560f31..29af3b628 100644
+--- a/toolbox/upstream-netbsd/lib/libc/gen/humanize_number.c
++++ b/toolbox/upstream-netbsd/lib/libc/gen/humanize_number.c
+@@ -30,7 +30,6 @@
+  * POSSIBILITY OF SUCH DAMAGE.
+  */
+ 
+-#include <sys/cdefs.h>
+ #if defined(LIBC_SCCS) && !defined(lint)
+ __RCSID("$NetBSD: humanize_number.c,v 1.16 2012/03/17 20:01:14 christos Exp $");
+ #endif /* LIBC_SCCS and not lint */
+diff --git a/toolbox/upstream-netbsd/lib/libc/stdlib/strsuftoll.c b/toolbox/upstream-netbsd/lib/libc/stdlib/strsuftoll.c
+index 80fc52fc9..54ed15fc4 100644
+--- a/toolbox/upstream-netbsd/lib/libc/stdlib/strsuftoll.c
++++ b/toolbox/upstream-netbsd/lib/libc/stdlib/strsuftoll.c
+@@ -64,7 +64,6 @@
+ #include "nbtool_config.h"
+ #endif
+ 
+-#include <sys/cdefs.h>
+ 
+ #if defined(LIBC_SCCS) && !defined(lint)
+ __RCSID("$NetBSD: strsuftoll.c,v 1.9 2011/10/22 22:08:47 christos Exp $");
+diff --git a/toolbox/upstream-netbsd/lib/libc/string/swab.c b/toolbox/upstream-netbsd/lib/libc/string/swab.c
+index 392b1868e..c656aacb9 100644
+--- a/toolbox/upstream-netbsd/lib/libc/string/swab.c
++++ b/toolbox/upstream-netbsd/lib/libc/string/swab.c
+@@ -32,7 +32,6 @@
+  * SUCH DAMAGE.
+  */
+ 
+-#include <sys/cdefs.h>
+ #if defined(LIBC_SCCS) && !defined(lint)
+ #if 0
+ static char sccsid[] = "@(#)swab.c	8.1 (Berkeley) 6/4/93";
+diff --git a/toolbox/upstream-netbsd/lib/libutil/raise_default_signal.c b/toolbox/upstream-netbsd/lib/libutil/raise_default_signal.c
+index 50cffd440..2becee1e4 100644
+--- a/toolbox/upstream-netbsd/lib/libutil/raise_default_signal.c
++++ b/toolbox/upstream-netbsd/lib/libutil/raise_default_signal.c
+@@ -33,7 +33,6 @@
+ #include "nbtool_config.h"
+ #endif
+ 
+-#include <sys/cdefs.h>
+ #if defined(LIBC_SCCS) && !defined(lint)
+ __RCSID("$NetBSD: raise_default_signal.c,v 1.3 2008/04/28 20:23:03 martin Exp $");
+ #endif
+diff --git a/toolbox/upstream-netbsd/usr.bin/grep/fastgrep.c b/toolbox/upstream-netbsd/usr.bin/grep/fastgrep.c
+index 2fcd864e2..b8b229b2c 100644
+--- a/toolbox/upstream-netbsd/usr.bin/grep/fastgrep.c
++++ b/toolbox/upstream-netbsd/usr.bin/grep/fastgrep.c
+@@ -39,7 +39,6 @@
+ #include "nbtool_config.h"
+ #endif
+ 
+-#include <sys/cdefs.h>
+ __RCSID("$NetBSD: fastgrep.c,v 1.5 2011/04/18 03:27:40 joerg Exp $");
+ 
+ #include <limits.h>
+diff --git a/toolbox/upstream-netbsd/usr.bin/grep/file.c b/toolbox/upstream-netbsd/usr.bin/grep/file.c
+index cf4a0fa4e..31013a511 100644
+--- a/toolbox/upstream-netbsd/usr.bin/grep/file.c
++++ b/toolbox/upstream-netbsd/usr.bin/grep/file.c
+@@ -34,7 +34,6 @@
+ #include "nbtool_config.h"
+ #endif
+ 
+-#include <sys/cdefs.h>
+ __RCSID("$NetBSD: file.c,v 1.7 2011/04/18 22:46:48 joerg Exp $");
+ 
+ #include <sys/param.h>
+diff --git a/toolbox/upstream-netbsd/usr.bin/grep/grep.c b/toolbox/upstream-netbsd/usr.bin/grep/grep.c
+index 1ea6ed3aa..45ed2bded 100644
+--- a/toolbox/upstream-netbsd/usr.bin/grep/grep.c
++++ b/toolbox/upstream-netbsd/usr.bin/grep/grep.c
+@@ -33,7 +33,6 @@
+ #include "nbtool_config.h"
+ #endif
+ 
+-#include <sys/cdefs.h>
+ __RCSID("$NetBSD: grep.c,v 1.12 2014/07/11 16:30:45 christos Exp $");
+ 
+ #include <sys/stat.h>
+diff --git a/toolbox/upstream-netbsd/usr.bin/grep/queue.c b/toolbox/upstream-netbsd/usr.bin/grep/queue.c
+index e3c6be17a..f1fecf279 100644
+--- a/toolbox/upstream-netbsd/usr.bin/grep/queue.c
++++ b/toolbox/upstream-netbsd/usr.bin/grep/queue.c
+@@ -35,7 +35,6 @@
+ #include "nbtool_config.h"
+ #endif
+ 
+-#include <sys/cdefs.h>
+ __RCSID("$NetBSD: queue.c,v 1.5 2011/08/31 16:24:57 plunky Exp $");
+ 
+ #include <sys/param.h>
+diff --git a/toolbox/upstream-netbsd/usr.bin/grep/util.c b/toolbox/upstream-netbsd/usr.bin/grep/util.c
+index ecd948da4..8b1384076 100644
+--- a/toolbox/upstream-netbsd/usr.bin/grep/util.c
++++ b/toolbox/upstream-netbsd/usr.bin/grep/util.c
+@@ -33,7 +33,6 @@
+ #include "nbtool_config.h"
+ #endif
+ 
+-#include <sys/cdefs.h>
+ __RCSID("$NetBSD: util.c,v 1.17 2013/01/21 03:24:43 msaitoh Exp $");
+ 
+ #include <sys/stat.h>
 diff --git a/trusty/gatekeeper/trusty_gatekeeper_ipc.h b/trusty/gatekeeper/trusty_gatekeeper_ipc.h
 index f8de7f873..fa8fd4019 100644
 --- a/trusty/gatekeeper/trusty_gatekeeper_ipc.h

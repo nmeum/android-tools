@@ -1,7 +1,7 @@
-From db8cb3a0b125ce6d84bba9876faa58a296197374 Mon Sep 17 00:00:00 2001
+From 675feb1b1cdeb55e590a707281a699df8d12eb36 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 17:37:12 +0100
-Subject: [PATCH 5/8] fix "initializer element is not constant"-error when
+Subject: [PATCH 05/10] fix "initializer element is not constant"-error when
  building with g++
 
 ---

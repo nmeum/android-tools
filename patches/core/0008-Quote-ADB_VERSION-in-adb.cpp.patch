@@ -1,7 +1,7 @@
-From 3af415ef5ef979010b26e7be90721169f9082d44 Mon Sep 17 00:00:00 2001
+From ba99655c178e590c7cb1653de14e0e4d9353e593 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 17:51:52 +0100
-Subject: [PATCH 8/8] Quote ADB_VERSION in adb.cpp
+Subject: [PATCH 08/10] Quote ADB_VERSION in adb.cpp
 
 ---
  adb/adb.cpp | 2 +-
