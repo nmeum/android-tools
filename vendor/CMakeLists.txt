@@ -26,27 +26,6 @@ endforeach(v)
 add_definitions(-DADB_VERSION=${ANDROID_VERSION} -DADB_HOST=1
 	-DFASTBOOT_VERSION=${ANDROID_VERSION})
 
-add_library(libadbd STATIC
-	core/adb/adb.cpp
-	core/adb/adb_io.cpp
-	core/adb/adb_listeners.cpp
-	core/adb/adb_trace.cpp
-	core/adb/adb_utils.cpp
-	core/adb/bugreport.cpp
-	core/adb/line_printer.cpp
-	core/adb/sockets.cpp
-	core/adb/transport.cpp
-	core/adb/transport_local.cpp
-	core/adb/transport_usb.cpp
-	core/adb/transport_mdns_unsupported.cpp
-	core/adb/fdevent.cpp
-	core/adb/adb_auth_host.cpp
-	core/adb/shell_service_protocol.cpp)
-
-target_include_directories(libadbd PUBLIC
-	core/include core/base/include core/adb
-	core/libcrypto_utils/include boringssl/include)
-
 add_library(libadb STATIC
 	core/adb/console.cpp
 	core/adb/socket_spec.cpp
@@ -143,7 +122,10 @@ add_executable(adb
 	  core/adb/adb_auth_host.cpp
 	  core/adb/shell_service_protocol.cpp)
 
-target_link_libraries(adb libbase liblog libadbd libadb
+target_include_directories(adb PRIVATE
+	core/include core/base/include core/adb
+	core/libcrypto_utils/include boringssl/include)
+target_link_libraries(adb libbase liblog libadb
 	libdiagnoseusb libcrypto crypto pthread usb-1.0 libcutils)
 
 add_library(libfastboot STATIC
