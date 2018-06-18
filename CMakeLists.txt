@@ -14,8 +14,9 @@ set(ANDROID_MKE2FS_NAME "mke2fs.android")
 set(ANDROID_VERSION 8.1.0_r7)
 set(BORINGSSL_VERSION 14308731e5446a73ac2258688a9688b524483cb6)
 
+# The CMakeLists.txt in the vendor subdirectory is responsible for
+# patching, building and installing the software.
 set(ANDROID_PATCH_DIR ${CMAKE_CURRENT_SOURCE_DIR}/patches)
-
 add_subdirectory(vendor)
 
 # CPack configuration for creating source tarballs which already include
