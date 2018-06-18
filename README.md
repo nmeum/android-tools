@@ -31,7 +31,13 @@ require cloning all of the required git repositories manually.
 
 # Dependencies
 
-TODO
+The following libraries are required by android-tools:
+
+1. [libusb][libusb]
+2. [PCRE][PCRE]
+3. [Google Test][gtest]
+
+*Currently the build system doesn't check whether this are installed.*
 
 # Compilation
 
@@ -62,3 +68,6 @@ New source tarballs can be created from the Git repository using:
 [arch-linux]: https://www.archlinux.org/packages/community/x86_64/android-tools/
 [alpine-linux]: https://pkgs.alpinelinux.org/package/edge/testing/x86_64/android-tools
 [release-page]: https://github.com/nmeum/android-tools/releases
+[libusb]: http://libusb.info/
+[PCRE]: http://pcre.sourceforge.net/
+[gtest]: https://github.com/google/googletest
