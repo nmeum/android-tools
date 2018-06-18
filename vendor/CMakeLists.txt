@@ -28,3 +28,6 @@ endif()
 include(CMakeLists.adb.txt)
 include(CMakeLists.fastboot.txt)
 include(CMakeLists.mke2fs.txt)
+
+# Targets which should be installed by `make install`.
+install(TARGETS adb fastboot "${ANDROID_MKE2FS_NAME}" DESTINATION bin)
