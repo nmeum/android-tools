@@ -44,7 +44,7 @@ The following libraries are required by android-tools:
 2. [PCRE][PCRE]
 3. [Google Test][gtest]
 
-*Currently the build system doesn't check whether this are installed.*
+*Currently the build system doesn't check whether these are installed.*
 
 # Installation
 
