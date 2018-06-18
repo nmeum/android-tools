@@ -27,3 +27,4 @@ endif()
 
 include(CMakeLists.adb.txt)
 include(CMakeLists.fastboot.txt)
+include(CMakeLists.mke2fs.txt)

@@ -1,6 +1,14 @@
 project (android-tools)
 cmake_minimum_required(VERSION 3.1.0)
 
+# Android provides it's own version of mke2fs which is incompatible with
+# the version shipped by e2fsprogs. To prevent a name clash we install
+# androids version of mke2fs under a different name. This name can be
+# configured here.
+#
+# See also: https://bugs.archlinux.org/task/56955
+set(ANDROID_MKE2FS_NAME "mke2fs.android")
+
 # Version of android-tools and the version of boringssl being used.
 # See: https://android.googlesource.com/platform/external/boringssl/+/${ANDROID_VERSION}/BORINGSSL_REVISION
 set(ANDROID_VERSION 8.1.0_r7)

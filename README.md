@@ -12,7 +12,7 @@ following tools can currently be build under Alpine Linux:
 	* [x] fastboot
 	* [ ] e2fsdroid
 	* [ ] mkbootimg
-	* [ ] mke2fs.android
+	* [x] mke2fs.android
 	* [ ] ext2simg
 
 # Motivation
