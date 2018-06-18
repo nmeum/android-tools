@@ -1,6 +1,6 @@
-From e83f1e48b02652089d75a00e0ee9ea49cbf940cc Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
-Date: Tue, 27 Feb 2018 17:49:52 +0100
+From 3fb5d89d9c07df052d8c47437b8a441082e53396 Mon Sep 17 00:00:00 2001
+From: Anatol Pomozov <anatol.pomozov@gmail.com>
+Date: Fri, 25 Aug 2017 23:30:34 +0000
 Subject: [PATCH 07/11] Include libusb-1.0/libusb.h instead of libusb/libusb.h
 
 ---

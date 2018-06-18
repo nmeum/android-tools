@@ -1,6 +1,6 @@
-From a5ef1b15b8427187053f683a112989d3d8d57bd3 Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
-Date: Mon, 18 Jun 2018 18:53:21 +0200
+From 162e6eb7deffdc265ee973c74b2b6ca6554be855 Mon Sep 17 00:00:00 2001
+From: Anatol Pomozov <anatol.pomozov@gmail.com>
+Date: Fri, 25 Aug 2017 23:30:34 +0000
 Subject: [PATCH 11/11] Include string.h in various file missing it
 
 Most of these need string.h for strerror(3).

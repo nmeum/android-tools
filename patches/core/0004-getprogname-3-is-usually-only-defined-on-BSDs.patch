@@ -1,4 +1,4 @@
-From 4ca612e7d448f23cb52fb3587655e4992cdc3960 Mon Sep 17 00:00:00 2001
+From aea9bedbf1b6ddc37f2d4ffc22a94ca29f700e5b Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 17:27:39 +0100
 Subject: [PATCH 04/11] getprogname(3) is usually only defined on BSDs

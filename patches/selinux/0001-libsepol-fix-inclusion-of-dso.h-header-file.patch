@@ -1,6 +1,6 @@
-From 3c10808a80f50863bab88c16ab9434ea5f56f204 Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
-Date: Thu, 31 May 2018 22:19:28 +0200
+From 3d314db17316d3716b6d1f810066621bf6b30ba1 Mon Sep 17 00:00:00 2001
+From: Anatol Pomozov <anatol.pomozov@gmail.com>
+Date: Fri, 25 Aug 2017 23:30:34 +0000
 Subject: [PATCH] libsepol: fix inclusion of dso.h header file
 
 ---
@@ -35,5 +35,5 @@ index b00251c6..68e7c6a0 100644
  struct val_to_name {
  	unsigned int val;
 -- 
-2.17.0
+2.17.1
 

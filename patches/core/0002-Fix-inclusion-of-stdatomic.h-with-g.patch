@@ -1,4 +1,4 @@
-From ce15500df3bc366b5f6d25a9187e1fe95c70c0ae Mon Sep 17 00:00:00 2001
+From 406773231ca1112c4667aa17973a8a5a6b350f97 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 16:30:30 +0100
 Subject: [PATCH 02/11] Fix inclusion of stdatomic.h with g++
