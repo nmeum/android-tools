@@ -41,29 +41,31 @@ The following libraries are required by android-tools:
 
 *Currently the build system doesn't check whether this are installed.*
 
-# Compilation
-
-TODO
-
-# Packaging
+# Installation
 
 Source tarballs containing an already patched version of all vendored
-dependencies are available on the [GitHub Release Page][android-tools].
+dependencies are available on the [GitHub Release Page][release-page].
 
-These tarballs should be used for packaging. After the tarball was
-downloaded and extracted android-tools can be build and installed as
-follows:
+These tarballs should be used for packaging and general installation.
+After the tarball was downloaded and extracted android-tools can be
+build and installed as follows:
 
 	$ mkdir build && cd build
 	$ cmake ..
 	$ make
 	$ make install
 
+# Generating tarballs
+
 New source tarballs can be created from the Git repository using:
 
 	$ mkdir build && cd build
 	$ cmake ..
 	$ make package_source
+
+Before a new release is uploaded a new `git-tag(1)` should be created
+for the release. Afterwards the tarball can be uploaded to the [GitHub
+Release Page][release-page].
 
 # See also
 
