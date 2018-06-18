@@ -27,7 +27,9 @@ Linux Distribution therefore mostly ship their own build systems for
 building the command line utilities. This Repository aims to make
 packaging of android command utilities easier by providing a simple
 CMake based build system and a ready-to-use tarball which doesn't
-require cloning all of the required git repositories manually.
+require cloning all of the required git repositories manually. Besides
+this makes it easy to collect all patches required to build standalone
+android command line utilities in a central place.
 
 # Dependencies
 
