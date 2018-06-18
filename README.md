@@ -5,8 +5,13 @@ utilities provided by [android-tools][android-tools].
 
 # Status
 
-This is currently work in progress and more of an experiment. The
-following tools can currently be build under Alpine Linux:
+This is currently work in progress and there is still a lot of work to
+do. Nonetheless, this build system is already used for the android-tools
+[Alpine Linux package][alpine-linux].
+
+The following tools can currently be build on Alpine Linux Edge but have
+not been tested on different distributions and probably do not build on
+them without additional patches:
 
 	* [x] adb
 	* [x] fastboot
