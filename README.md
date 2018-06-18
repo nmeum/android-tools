@@ -63,6 +63,12 @@ New source tarballs can be created from the Git repository using:
 	$ cmake ..
 	$ make package_source
 
+# See also
+
+The Arch Linux [android-tools package] by Anatol Pomozov which
+inspired this project. Most definitions in the `CMakeLists.txt`
+have been copied from Anatol's ruby script.
+
 [android-tools]: https://sites.google.com/a/android.com/tools/
 [void-linux]: https://github.com/voidlinux/void-packages/tree/master/srcpkgs/android-tools
 [arch-linux]: https://www.archlinux.org/packages/community/x86_64/android-tools/
