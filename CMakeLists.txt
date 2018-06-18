@@ -18,6 +18,8 @@ set(ANDROID_PATCH_DIR ${CMAKE_CURRENT_SOURCE_DIR}/patches)
 
 add_subdirectory(vendor)
 
+# CPack configuration for creating source tarballs which already include
+# patched versions of the vendored dependencies.
 set(CPACK_SOURCE_GENERATOR "TXZ")
 set(CPACK_SOURCE_PACKAGE_FILE_NAME "${PROJECT_NAME}-${ANDROID_VERSION}")
 set(CPACK_SOURCE_IGNORE_FILES "/patches/" "/build/" "/.git/")
