@@ -1,7 +1,7 @@
-From 388c437644d8691531762ef4a4c1bb99f907d0ed Mon Sep 17 00:00:00 2001
+From 7ae56c9426a527af9608e094dac206e0efc252e0 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Wed, 28 Feb 2018 20:22:09 +0100
-Subject: [PATCH 09/10] socket.h: include sys/select.h for fd_set used in
+Subject: [PATCH 09/11] socket.h: include sys/select.h for fd_set used in
  socket.cpp
 
 ---
@@ -21,5 +21,5 @@ index 7eaa0ab2c..a772b1227 100644
  #include <cutils/sockets.h>
  #include <gtest/gtest_prod.h>
 -- 
-2.16.2
+2.17.1
 

@@ -1,7 +1,7 @@
-From 5b7ac9378592b03884f12935c7ffdce067f4e95f Mon Sep 17 00:00:00 2001
+From 4ca612e7d448f23cb52fb3587655e4992cdc3960 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 17:27:39 +0100
-Subject: [PATCH 04/10] getprogname(3) is usually only defined on BSDs
+Subject: [PATCH 04/11] getprogname(3) is usually only defined on BSDs
 
 musl libc doesn't have it either, therefore just check for __linux__
 instead of __GLIBC__.
@@ -23,5 +23,5 @@ index 6357b4ba7..b8b1ad025 100644
    return program_invocation_short_name;
  }
 -- 
-2.16.2
+2.17.1
 

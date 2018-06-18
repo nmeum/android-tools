@@ -1,7 +1,7 @@
-From 69e52ea5aa0994622b78b76f275fd358c43f097d Mon Sep 17 00:00:00 2001
+From 6dc358c441f6f5aa70c7f83ba06c69d0baa3ada1 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 17:24:05 +0100
-Subject: [PATCH 03/10] group_member is a nonstandard GNU extension
+Subject: [PATCH 03/11] group_member is a nonstandard GNU extension
 
 Only use that function if __GLIBC__ is defined.
 ---
@@ -22,5 +22,5 @@ index 9f721bf5f..976c1a216 100644
      group* plugdev_group = getgrnam("plugdev");
  
 -- 
-2.16.2
+2.17.1
 

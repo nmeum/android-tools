@@ -1,0 +1,77 @@
+From a5ef1b15b8427187053f683a112989d3d8d57bd3 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
+Date: Mon, 18 Jun 2018 18:53:21 +0200
+Subject: [PATCH 11/11] Include string.h in various file missing it
+
+Most of these need string.h for strerror(3).
+---
+ adb/sysdeps/posix/network.cpp | 1 +
+ base/errors_unix.cpp          | 1 +
+ base/file.cpp                 | 1 +
+ base/logging.cpp              | 1 +
+ libsparse/sparse_read.cpp     | 1 +
+ 5 files changed, 5 insertions(+)
+
+diff --git a/adb/sysdeps/posix/network.cpp b/adb/sysdeps/posix/network.cpp
+index 45da5af4a..ee3bf0699 100644
+--- a/adb/sysdeps/posix/network.cpp
++++ b/adb/sysdeps/posix/network.cpp
+@@ -21,6 +21,7 @@
+ #include <sys/socket.h>
+ 
+ #include <string>
++#include <string.h>
+ 
+ #include "adb_unique_fd.h"
+ 
+diff --git a/base/errors_unix.cpp b/base/errors_unix.cpp
+index 296995efe..48269b675 100644
+--- a/base/errors_unix.cpp
++++ b/base/errors_unix.cpp
+@@ -17,6 +17,7 @@
+ #include "android-base/errors.h"
+ 
+ #include <errno.h>
++#include <string.h>
+ 
+ namespace android {
+ namespace base {
+diff --git a/base/file.cpp b/base/file.cpp
+index a2f28878e..0aa185e97 100644
+--- a/base/file.cpp
++++ b/base/file.cpp
+@@ -22,6 +22,7 @@
+ #include <sys/stat.h>
+ #include <sys/types.h>
+ #include <unistd.h>
++#include <string.h>
+ 
+ #include <memory>
+ #include <mutex>
+diff --git a/base/logging.cpp b/base/logging.cpp
+index b8b1ad025..890312fa2 100644
+--- a/base/logging.cpp
++++ b/base/logging.cpp
+@@ -23,6 +23,7 @@
+ #include <fcntl.h>
+ #include <libgen.h>
+ #include <time.h>
++#include <string.h>
+ 
+ // For getprogname(3) or program_invocation_short_name.
+ #if defined(__ANDROID__) || defined(__APPLE__)
+diff --git a/libsparse/sparse_read.cpp b/libsparse/sparse_read.cpp
+index bd668735a..6168f2e24 100644
+--- a/libsparse/sparse_read.cpp
++++ b/libsparse/sparse_read.cpp
+@@ -26,6 +26,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string>
++#include <string.h>
+ #include <unistd.h>
+ 
+ #include <sparse/sparse.h>
+-- 
+2.17.1
+

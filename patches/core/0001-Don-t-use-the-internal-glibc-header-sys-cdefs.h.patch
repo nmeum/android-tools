@@ -1,7 +1,7 @@
-From e636c3d56b397fe4b62b9cc22fd53a8dcfd0d69e Mon Sep 17 00:00:00 2001
+From 20f910170cbc9ff674e89c8db7aa3670d3edc13e Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 13:33:46 +0100
-Subject: [PATCH 01/10] Don't use the internal glibc header sys/cdefs.h
+Subject: [PATCH 01/11] Don't use the internal glibc header sys/cdefs.h
 
 This patch was created using sed(1) and ag(1) with the following script:
 
@@ -14,85 +14,85 @@ This patch was created using sed(1) and ag(1) with the following script:
 
 https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-get-error-messages-about-<code>sys/cdefs.h</code>
 ---
- adf/libadf/include/adf/adf.h                               |  9 ++++++---
- adf/libadfhwc/include/adfhwc/adfhwc.h                      |  9 ++++++---
- base/include/android-base/properties.h                     |  1 -
- debuggerd/include/debuggerd/client.h                       |  1 -
- debuggerd/include/debuggerd/handler.h                      |  9 ++++++---
- debuggerd/util.h                                           |  1 -
- fs_mgr/fs_mgr_priv_boot_config.h                           |  1 -
- fs_mgr/include/fs_mgr.h                                    |  8 ++++++--
- fs_mgr/include_fstab/fstab/fstab.h                         |  8 ++++++--
- init/log.h                                                 |  1 -
- init/reboot.cpp                                            |  1 -
- libbacktrace/backtrace_testlib.h                           |  9 ++++++---
- libbacktrace/thread_utils.h                                |  8 ++++++--
- libcutils/include/cutils/android_reboot.h                  |  8 ++++++--
- libcutils/include/cutils/bitops.h                          |  9 ++++++---
- libcutils/include/cutils/klog.h                            |  9 ++++++---
- libcutils/include/cutils/partition_utils.h                 |  8 ++++++--
- libcutils/include/cutils/properties.h                      |  1 -
- libcutils/include/cutils/str_parms.h                       |  9 ++++++---
- libcutils/include/cutils/trace.h                           |  9 ++++++---
- libcutils/include/private/fs_config.h                      |  9 ++++++---
- libion/include/ion/ion.h                                   |  8 ++++++--
- libkeyutils/include/keyutils.h                             |  9 ++++++---
- liblog/config_read.h                                       |  8 ++++++--
- liblog/config_write.h                                      |  8 ++++++--
- liblog/include/log/log_main.h                              |  9 ++++++---
- liblog/log_portability.h                                   | 14 --------------
- liblog/logd_reader.h                                       |  8 ++++++--
- liblog/logger.h                                            |  8 ++++++--
- libmemunreachable/Allocator.cpp                            |  1 -
- libmemunreachable/Binder.cpp                               |  9 ++++++---
- libmemunreachable/bionic.h                                 |  9 ++++++---
- libmemunreachable/include/memunreachable/memunreachable.h  |  9 ++++++---
- libnativeloader/include/nativeloader/dlext_namespaces.h    |  8 ++++++--
- libnetutils/include/netutils/ifc.h                         |  9 ++++++---
- .../include/packagelistparser/packagelistparser.h          |  9 ++++++---
- libpixelflinger/codeflinger/disassem.c                     |  1 -
- libpixelflinger/codeflinger/mips64_disassem.c              |  1 -
- libpixelflinger/codeflinger/mips_disassem.c                |  1 -
- libprocessgroup/include/processgroup/processgroup.h        |  9 ++++++---
- libsuspend/include/suspend/autosuspend.h                   |  9 ++++++---
- libsync/include/android/sync.h                             |  8 ++++++--
- libsync/include/ndk/sync.h                                 |  8 ++++++--
- libsync/sw_sync.h                                          |  8 ++++++--
- libsystem/include/system/camera.h                          |  9 ++++++---
- libsystem/include/system/radio.h                           |  1 -
- libutils/tests/Singleton_test.h                            |  9 ++++++---
- libziparchive/include/ziparchive/zip_archive.h             |  1 -
- lmkd/lmkd.c                                                |  1 -
- logcat/getopt_long.cpp                                     |  1 -
- logcat/include/log/getopt.h                                |  9 ++++++---
- logcat/logcat.cpp                                          |  1 -
- logcat/tests/logcat_test.cpp                               |  1 -
- logd/LogBuffer.cpp                                         |  1 -
- logd/LogListener.cpp                                       |  1 -
- logd/LogUtils.h                                            |  1 -
- logd/libaudit.h                                            |  9 ++++++---
- logwrapper/include/logwrap/logwrap.h                       |  8 ++++++--
- toolbox/bsd-compatibility.h                                |  8 ++++++--
- toolbox/upstream-netbsd/bin/dd/args.c                      |  1 -
- toolbox/upstream-netbsd/bin/dd/conv.c                      |  1 -
- toolbox/upstream-netbsd/bin/dd/dd.c                        |  1 -
- toolbox/upstream-netbsd/bin/dd/dd_hostops.c                |  1 -
- toolbox/upstream-netbsd/bin/dd/extern.h                    |  1 -
- toolbox/upstream-netbsd/bin/dd/misc.c                      |  1 -
- toolbox/upstream-netbsd/bin/dd/position.c                  |  1 -
- toolbox/upstream-netbsd/lib/libc/gen/getbsize.c            |  1 -
- toolbox/upstream-netbsd/lib/libc/gen/humanize_number.c     |  1 -
- toolbox/upstream-netbsd/lib/libc/stdlib/strsuftoll.c       |  1 -
- toolbox/upstream-netbsd/lib/libc/string/swab.c             |  1 -
- toolbox/upstream-netbsd/lib/libutil/raise_default_signal.c |  1 -
- toolbox/upstream-netbsd/usr.bin/grep/fastgrep.c            |  1 -
- toolbox/upstream-netbsd/usr.bin/grep/file.c                |  1 -
- toolbox/upstream-netbsd/usr.bin/grep/grep.c                |  1 -
- toolbox/upstream-netbsd/usr.bin/grep/queue.c               |  1 -
- toolbox/upstream-netbsd/usr.bin/grep/util.c                |  1 -
- trusty/gatekeeper/trusty_gatekeeper_ipc.h                  |  8 ++++++--
- trusty/keymaster/trusty_keymaster_ipc.h                    |  8 ++++++--
- trusty/storage/lib/include/trusty/lib/storage.h            |  8 ++++++--
+ adf/libadf/include/adf/adf.h                       |  9 ++++++---
+ adf/libadfhwc/include/adfhwc/adfhwc.h              |  9 ++++++---
+ base/include/android-base/properties.h             |  1 -
+ debuggerd/include/debuggerd/client.h               |  1 -
+ debuggerd/include/debuggerd/handler.h              |  9 ++++++---
+ debuggerd/util.h                                   |  1 -
+ fs_mgr/fs_mgr_priv_boot_config.h                   |  1 -
+ fs_mgr/include/fs_mgr.h                            |  8 ++++++--
+ fs_mgr/include_fstab/fstab/fstab.h                 |  8 ++++++--
+ init/log.h                                         |  1 -
+ init/reboot.cpp                                    |  1 -
+ libbacktrace/backtrace_testlib.h                   |  9 ++++++---
+ libbacktrace/thread_utils.h                        |  8 ++++++--
+ libcutils/include/cutils/android_reboot.h          |  8 ++++++--
+ libcutils/include/cutils/bitops.h                  |  9 ++++++---
+ libcutils/include/cutils/klog.h                    |  9 ++++++---
+ libcutils/include/cutils/partition_utils.h         |  8 ++++++--
+ libcutils/include/cutils/properties.h              |  1 -
+ libcutils/include/cutils/str_parms.h               |  9 ++++++---
+ libcutils/include/cutils/trace.h                   |  9 ++++++---
+ libcutils/include/private/fs_config.h              |  9 ++++++---
+ libion/include/ion/ion.h                           |  8 ++++++--
+ libkeyutils/include/keyutils.h                     |  9 ++++++---
+ liblog/config_read.h                               |  8 ++++++--
+ liblog/config_write.h                              |  8 ++++++--
+ liblog/include/log/log_main.h                      |  9 ++++++---
+ liblog/log_portability.h                           | 14 --------------
+ liblog/logd_reader.h                               |  8 ++++++--
+ liblog/logger.h                                    |  8 ++++++--
+ libmemunreachable/Allocator.cpp                    |  1 -
+ libmemunreachable/Binder.cpp                       |  9 ++++++---
+ libmemunreachable/bionic.h                         |  9 ++++++---
+ .../include/memunreachable/memunreachable.h        |  9 ++++++---
+ .../include/nativeloader/dlext_namespaces.h        |  8 ++++++--
+ libnetutils/include/netutils/ifc.h                 |  9 ++++++---
+ .../include/packagelistparser/packagelistparser.h  |  9 ++++++---
+ libpixelflinger/codeflinger/disassem.c             |  1 -
+ libpixelflinger/codeflinger/mips64_disassem.c      |  1 -
+ libpixelflinger/codeflinger/mips_disassem.c        |  1 -
+ .../include/processgroup/processgroup.h            |  9 ++++++---
+ libsuspend/include/suspend/autosuspend.h           |  9 ++++++---
+ libsync/include/android/sync.h                     |  8 ++++++--
+ libsync/include/ndk/sync.h                         |  8 ++++++--
+ libsync/sw_sync.h                                  |  8 ++++++--
+ libsystem/include/system/camera.h                  |  9 ++++++---
+ libsystem/include/system/radio.h                   |  1 -
+ libutils/tests/Singleton_test.h                    |  9 ++++++---
+ libziparchive/include/ziparchive/zip_archive.h     |  1 -
+ lmkd/lmkd.c                                        |  1 -
+ logcat/getopt_long.cpp                             |  1 -
+ logcat/include/log/getopt.h                        |  9 ++++++---
+ logcat/logcat.cpp                                  |  1 -
+ logcat/tests/logcat_test.cpp                       |  1 -
+ logd/LogBuffer.cpp                                 |  1 -
+ logd/LogListener.cpp                               |  1 -
+ logd/LogUtils.h                                    |  1 -
+ logd/libaudit.h                                    |  9 ++++++---
+ logwrapper/include/logwrap/logwrap.h               |  8 ++++++--
+ toolbox/bsd-compatibility.h                        |  8 ++++++--
+ toolbox/upstream-netbsd/bin/dd/args.c              |  1 -
+ toolbox/upstream-netbsd/bin/dd/conv.c              |  1 -
+ toolbox/upstream-netbsd/bin/dd/dd.c                |  1 -
+ toolbox/upstream-netbsd/bin/dd/dd_hostops.c        |  1 -
+ toolbox/upstream-netbsd/bin/dd/extern.h            |  1 -
+ toolbox/upstream-netbsd/bin/dd/misc.c              |  1 -
+ toolbox/upstream-netbsd/bin/dd/position.c          |  1 -
+ toolbox/upstream-netbsd/lib/libc/gen/getbsize.c    |  1 -
+ .../upstream-netbsd/lib/libc/gen/humanize_number.c |  1 -
+ .../upstream-netbsd/lib/libc/stdlib/strsuftoll.c   |  1 -
+ toolbox/upstream-netbsd/lib/libc/string/swab.c     |  1 -
+ .../lib/libutil/raise_default_signal.c             |  1 -
+ toolbox/upstream-netbsd/usr.bin/grep/fastgrep.c    |  1 -
+ toolbox/upstream-netbsd/usr.bin/grep/file.c        |  1 -
+ toolbox/upstream-netbsd/usr.bin/grep/grep.c        |  1 -
+ toolbox/upstream-netbsd/usr.bin/grep/queue.c       |  1 -
+ toolbox/upstream-netbsd/usr.bin/grep/util.c        |  1 -
+ trusty/gatekeeper/trusty_gatekeeper_ipc.h          |  8 ++++++--
+ trusty/keymaster/trusty_keymaster_ipc.h            |  8 ++++++--
+ trusty/storage/lib/include/trusty/lib/storage.h    |  8 ++++++--
  79 files changed, 246 insertions(+), 155 deletions(-)
 
 diff --git a/adf/libadf/include/adf/adf.h b/adf/libadf/include/adf/adf.h
@@ -1681,5 +1681,5 @@ index b8ddf67d8..6cac8750c 100644
 +}
 +#endif
 -- 
-2.16.2
+2.17.1
 

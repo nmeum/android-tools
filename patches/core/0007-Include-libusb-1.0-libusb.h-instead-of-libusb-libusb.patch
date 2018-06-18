@@ -1,7 +1,7 @@
-From 2b98a9517093561520433a214bdbe58ecc18330f Mon Sep 17 00:00:00 2001
+From e83f1e48b02652089d75a00e0ee9ea49cbf940cc Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 17:49:52 +0100
-Subject: [PATCH 07/10] Include libusb-1.0/libusb.h instead of libusb/libusb.h
+Subject: [PATCH 07/11] Include libusb-1.0/libusb.h instead of libusb/libusb.h
 
 ---
  adb/client/usb_libusb.cpp | 2 +-
@@ -21,5 +21,5 @@ index 81201995a..c3b9c543e 100644
  #include <android-base/file.h>
  #include <android-base/logging.h>
 -- 
-2.16.2
+2.17.1
 
