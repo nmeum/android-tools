@@ -1,7 +1,7 @@
-From 4d15ae32282fe131cf02208a9b4a985fcbb19f1f Mon Sep 17 00:00:00 2001
+From 96ab337820329f2ca9367307c38a99b44f040425 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 17:48:49 +0100
-Subject: [PATCH 06/11] Define clang-only nullability specifiers when __clang__
+Subject: [PATCH 06/12] Define clang-only nullability specifiers when __clang__
  is not defined
 
 ---

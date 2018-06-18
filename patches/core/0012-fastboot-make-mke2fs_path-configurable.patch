@@ -1,0 +1,28 @@
+From d063fbc2773eced92187381386ddef3eb8563caa Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
+Date: Mon, 18 Jun 2018 23:25:14 +0200
+Subject: [PATCH 12/12] fastboot: make mke2fs_path configurable
+
+fastboot isn't compatible with the vanilla mke2fs from e2fsprogs.
+
+See: https://bugs.archlinux.org/task/56955
+---
+ fastboot/fs.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fastboot/fs.cpp b/fastboot/fs.cpp
+index 709f061bd..77719aa39 100644
+--- a/fastboot/fs.cpp
++++ b/fastboot/fs.cpp
+@@ -108,7 +108,7 @@ static int generate_ext4_image(const char* fileName, long long partSize,
+     static constexpr int block_size = 4096;
+     const std::string exec_dir = android::base::GetExecutableDirectory();
+ 
+-    const std::string mke2fs_path = exec_dir + "/mke2fs";
++    const std::string mke2fs_path = exec_dir + "/" + ANDROID_MKE2FS_NAME;
+     std::vector<const char*> mke2fs_args = {mke2fs_path.c_str(), "-t", "ext4", "-b"};
+ 
+     std::string block_size_str = std::to_string(block_size);
+-- 
+2.17.1
+

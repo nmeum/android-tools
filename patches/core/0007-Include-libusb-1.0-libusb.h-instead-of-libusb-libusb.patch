@@ -1,7 +1,7 @@
-From 3fb5d89d9c07df052d8c47437b8a441082e53396 Mon Sep 17 00:00:00 2001
+From d134b3e89ff11b3a0bc1efa906dd4e0c6a3171a4 Mon Sep 17 00:00:00 2001
 From: Anatol Pomozov <anatol.pomozov@gmail.com>
 Date: Fri, 25 Aug 2017 23:30:34 +0000
-Subject: [PATCH 07/11] Include libusb-1.0/libusb.h instead of libusb/libusb.h
+Subject: [PATCH 07/12] Include libusb-1.0/libusb.h instead of libusb/libusb.h
 
 ---
  adb/client/usb_libusb.cpp | 2 +-
