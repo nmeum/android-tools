@@ -13,12 +13,12 @@ The following tools can currently be build on Alpine Linux Edge but have
 not been tested on different distributions and probably do not build on
 them without additional patches:
 
-	* [x] adb
-	* [x] fastboot
-	* [ ] e2fsdroid
-	* [ ] mkbootimg
-	* [x] mke2fs.android
-	* [ ] ext2simg
+* [x] adb
+* [x] fastboot
+* [ ] e2fsdroid
+* [ ] mkbootimg
+* [x] mke2fs.android
+* [ ] ext2simg
 
 # Motivation
 
