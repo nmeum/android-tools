@@ -81,8 +81,8 @@ Release Page][release-page].
 
 # See also
 
-The Arch Linux [android-tools package] by Anatol Pomozov which
-inspired this project. Most definitions in the `CMakeLists.txt`
+The Arch Linux [android-tools package][arch-linux] by Anatol Pomozov
+which inspired this project. Most definitions in the `CMakeLists.txt`
 have been copied from Anatol's ruby script.
 
 [android-tools]: https://sites.google.com/a/android.com/tools/
