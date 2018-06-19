@@ -29,7 +29,7 @@ those tools is rather complex and doesn't allow building the command
 line tools only.
 
 Linux Distribution therefore mostly ship their own build systems for
-building the command line utilities. This Repository aims to make
+building the command line utilities. This repository aims to make
 packaging of android command utilities easier by providing a simple
 CMake based build system and a ready-to-use tarball which doesn't
 require cloning all of the required git repositories manually. Besides
