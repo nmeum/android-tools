@@ -1,7 +1,7 @@
 From f19b006b6753abb07e74c5f727066941516ece19 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 19 Jun 2018 09:39:47 +0200
-Subject: [PATCH] sparse_io.c: Fix format string
+Subject: [PATCH 1/2] sparse_io.c: Fix format string
 
 Without this patch a warning is emitted by GCC:
 
