@@ -16,7 +16,7 @@ add_library(libadb STATIC
 target_compile_definitions(libadb PRIVATE -D_GNU_SOURCE)
 target_compile_definitions(libadb PUBLIC -DADB_HOST=1)
 target_include_directories(libadb PUBLIC
-	core/include core/base/include core/adb)
+	core/include core/base/include core/adb boringssl/include)
 
 add_library(libbase STATIC
 	core/base/file.cpp
