@@ -44,6 +44,13 @@ The following libraries are required by android-tools:
 2. [PCRE][PCRE]
 3. [Google Test][gtest]
 
+Additionally the following software is required:
+
+1. A C compiler (either [GCC][gcc] or [clang][clang])
+2. The [Go compiler][golang]
+3. [CMake][cmake]
+4. [Perl][perl]
+
 *Currently the build system doesn't check whether these are installed.*
 
 # Installation
@@ -86,3 +93,8 @@ have been copied from Anatol's ruby script.
 [libusb]: http://libusb.info/
 [PCRE]: http://pcre.sourceforge.net/
 [gtest]: https://github.com/google/googletest
+[gcc]: https://gcc.gnu.org/
+[clang]: https://llvm.org/
+[golang]: https://golang.org/
+[cmake]: https://cmake.org/
+[perl]: https://www.perl.org/
