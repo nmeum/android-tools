@@ -1,7 +1,7 @@
 From 3f97a2707704b248ce90b62b84811b799477be1f Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 19 Jun 2018 09:44:06 +0200
-Subject: [PATCH 13/13] adb.cpp: fix warning regarding execl(3) invocation
+Subject: [PATCH 13/14] adb.cpp: fix warning regarding execl(3) invocation
 
 Without this patch the following warning is emitted by GCC:
 

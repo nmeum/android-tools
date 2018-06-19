@@ -1,7 +1,7 @@
 From 115e9da315cbaf7bd72d1501c6b0c9331274e501 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Mon, 18 Jun 2018 23:25:14 +0200
-Subject: [PATCH 12/13] fastboot: make mke2fs_path configurable
+Subject: [PATCH 12/14] fastboot: make mke2fs_path configurable
 
 fastboot isn't compatible with the vanilla mke2fs from e2fsprogs.
 

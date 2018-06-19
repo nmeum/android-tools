@@ -1,7 +1,7 @@
 From 7c439f6f00a06e1fdfb28a8c2b2dea4b031f49e7 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 16:30:30 +0100
-Subject: [PATCH 02/13] Fix inclusion of stdatomic.h with g++
+Subject: [PATCH 02/14] Fix inclusion of stdatomic.h with g++
 
 See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=60932#c5
 ---

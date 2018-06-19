@@ -1,7 +1,7 @@
 From e86c923fb45b0383cdab8fe64c43896bd82f5818 Mon Sep 17 00:00:00 2001
 From: Anatol Pomozov <anatol.pomozov@gmail.com>
 Date: Fri, 25 Aug 2017 23:30:34 +0000
-Subject: [PATCH 11/13] Include string.h in various file missing it
+Subject: [PATCH 11/14] Include string.h in various file missing it
 
 Most of these need string.h for strerror(3).
 ---

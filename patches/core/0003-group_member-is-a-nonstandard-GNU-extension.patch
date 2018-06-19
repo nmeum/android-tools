@@ -1,7 +1,7 @@
 From 910362bf7667ccad2c60959207246f9eed8eca32 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 17:24:05 +0100
-Subject: [PATCH 03/13] group_member is a nonstandard GNU extension
+Subject: [PATCH 03/14] group_member is a nonstandard GNU extension
 
 Only use that function if __GLIBC__ is defined.
 ---
