@@ -1,7 +1,7 @@
-From 01a2eeca89cf92e420077f5c2a7146b1fbc9f8a5 Mon Sep 17 00:00:00 2001
+From b5beeea6fcb926cbdab173670d02b2431adbb8e9 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 13:33:46 +0100
-Subject: [PATCH 01/12] Don't use the internal glibc header sys/cdefs.h
+Subject: [PATCH 01/13] Don't use the internal glibc header sys/cdefs.h
 
 This patch was created using sed(1) and ag(1) with the following script:
 

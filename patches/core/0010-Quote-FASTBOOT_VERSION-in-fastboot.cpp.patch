@@ -1,7 +1,7 @@
-From 92e91e4fc056eef400d1140633c2355c1e98ba11 Mon Sep 17 00:00:00 2001
+From bd79ce4d085ffbfe7af20cb9a6722293ecbe9712 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Wed, 28 Feb 2018 20:24:57 +0100
-Subject: [PATCH 10/12] Quote FASTBOOT_VERSION in fastboot.cpp
+Subject: [PATCH 10/13] Quote FASTBOOT_VERSION in fastboot.cpp
 
 ---
  fastboot/fastboot.cpp | 2 +-
