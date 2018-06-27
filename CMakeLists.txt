@@ -10,8 +10,8 @@ cmake_minimum_required(VERSION 3.1.0)
 set(ANDROID_MKE2FS_NAME "mke2fs.android")
 
 # Version of android-tools and the version of boringssl being used.
-# See: https://android.googlesource.com/platform/external/boringssl/+/${ANDROID_VERSION}/BORINGSSL_REVISION
-set(ANDROID_VERSION 8.1.0_r7)
+# See: https://android.googlesource.com/platform/external/boringssl/+/android-${ANDROID_VERSION}/BORINGSSL_REVISION
+set(ANDROID_VERSION 8.1.0_r33)
 set(BORINGSSL_VERSION 14308731e5446a73ac2258688a9688b524483cb6)
 
 # The CMakeLists.txt in the vendor subdirectory is responsible for
