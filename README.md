@@ -3,6 +3,22 @@
 Git repository to make it easier to package certain command line
 utilities provided by [android-tools][android-tools].
 
+# Motivation
+
+[Many][void-linux] [Linux][arch-linux] [distribution][alpine-linux] have
+a package called android-tools which ships essential android command
+line tools like adb or fastboot. Sadly the upstream build system for
+those tools is rather complex and doesn't allow building the command
+line tools only.
+
+Linux Distribution therefore mostly ship their own build systems for
+building the command line utilities. This repository aims to make
+packaging of android command utilities easier by providing a simple
+CMake based build system and a ready-to-use tarball which doesn't
+require cloning all of the required git repositories manually. Besides
+this makes it easy to collect all patches required to build standalone
+android command line utilities in a central place.
+
 # Status
 
 Currently the following tools are supported:
@@ -19,22 +35,6 @@ my motivation to add support for additional tools is rather low at the
 moment. However, patches adding support for new tools in a clean way are
 welcome. Additionally, patches needed to make the software compile on
 other Linux distributions are welcome as well.
-
-# Motivation
-
-[Many][void-linux] [Linux][arch-linux] [distribution][alpine-linux] have
-a package called android-tools which ships essential android command
-line tools like adb or fastboot. Sadly the upstream build system for
-those tools is rather complex and doesn't allow building the command
-line tools only.
-
-Linux Distribution therefore mostly ship their own build systems for
-building the command line utilities. This repository aims to make
-packaging of android command utilities easier by providing a simple
-CMake based build system and a ready-to-use tarball which doesn't
-require cloning all of the required git repositories manually. Besides
-this makes it easy to collect all patches required to build standalone
-android command line utilities in a central place.
 
 # Dependencies
 
