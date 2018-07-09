@@ -5,20 +5,20 @@ utilities provided by [android-tools][android-tools].
 
 # Status
 
-This is currently work in progress and there is still a lot of work to
-do. Nonetheless, this build system is already used for the android-tools
-[Alpine Linux package][alpine-linux].
+Currently the following tools are supported:
 
-The following tools can currently be build on Alpine Linux Edge but have
-not been tested on different distributions and probably do not build on
-them without additional patches:
+* adb
+* fastboot
+* mke2fs.android (required by fastboot)
 
-* [x] adb
-* [x] fastboot
-* [ ] e2fsdroid
-* [ ] mkbootimg
-* [x] mke2fs.android
-* [ ] ext2simg
+The build system itself works quite well and is already being used for
+the Alpine Linux [android-tools package][alpine-linux] which I maintain.
+
+I personally don't use any android-tools except adb and fastboot. Thus
+my motivation to add support for additional tools is rather low at the
+moment. However, patches adding support for new tools in a clean way are
+welcome. Additionally, patches needed to make the software compile on
+other Linux distributions are welcome as well.
 
 # Motivation
 
