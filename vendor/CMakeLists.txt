@@ -16,7 +16,11 @@ if(EXISTS "${ANDROID_PATCH_DIR}/")
 		if(patches)
 			message(STATUS "Applying patches for: ${v}")
 			execute_process(COMMAND git -C
-				${CMAKE_CURRENT_SOURCE_DIR}/${v} am ${patches})
+				${CMAKE_CURRENT_SOURCE_DIR}/${v} am ${patches}
+				RESULT_VARIABLE ret)
+			if(NOT "${ret}" STREQUAL "0")
+				message(FATAL_ERROR "Couldn't apply patches for ${v}")
+			endif()
 		endif(patches)
 	endforeach(v)
 endif()
