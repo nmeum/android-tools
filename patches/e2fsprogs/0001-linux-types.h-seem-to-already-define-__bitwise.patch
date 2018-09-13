@@ -1,7 +1,7 @@
-From d685819e54e7b1e100e8a7391616e2f2da80d0b7 Mon Sep 17 00:00:00 2001
+From 5dfa895fe4b4aa45c73dbfa3b231e1fdf7d00135 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 19 Jun 2018 12:44:59 +0000
-Subject: [PATCH 2/2] linux/types.h seem to already define __bitwise
+Subject: [PATCH] linux/types.h seem to already define __bitwise
 
 Thus #undef it before defining it again.
 ---
@@ -10,7 +10,7 @@ Thus #undef it before defining it again.
  2 files changed, 8 insertions(+)
 
 diff --git a/lib/blkid/blkid_types.h b/lib/blkid/blkid_types.h
-index 9c3f7149..df17c692 100644
+index a43ed2fe..4a800adb 100644
 --- a/lib/blkid/blkid_types.h
 +++ b/lib/blkid/blkid_types.h
 @@ -23,6 +23,10 @@ typedef __signed__ long long __s64;
@@ -25,7 +25,7 @@ index 9c3f7149..df17c692 100644
  #define __bitwise		__attribute__((bitwise))
  #define __force			__attribute__((force))
 diff --git a/lib/ext2fs/ext2_types.h b/lib/ext2fs/ext2_types.h
-index 9c3f7149..df17c692 100644
+index a43ed2fe..4a800adb 100644
 --- a/lib/ext2fs/ext2_types.h
 +++ b/lib/ext2fs/ext2_types.h
 @@ -23,6 +23,10 @@ typedef __signed__ long long __s64;
@@ -39,6 +39,3 @@ index 9c3f7149..df17c692 100644
  #ifdef __CHECKER__
  #define __bitwise		__attribute__((bitwise))
  #define __force			__attribute__((force))
--- 
-2.17.1
-

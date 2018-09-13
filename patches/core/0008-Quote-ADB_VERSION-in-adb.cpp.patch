@@ -1,17 +1,17 @@
-From 4fd4a8d88a0026669ebe5a581675ae17e70a2d7b Mon Sep 17 00:00:00 2001
+From 06cb515fc4e52bdbb67c43938f4aed4bcfb47f9d Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 17:51:52 +0100
-Subject: [PATCH 08/14] Quote ADB_VERSION in adb.cpp
+Subject: [PATCH] Quote ADB_VERSION in adb.cpp
 
 ---
  adb/adb.cpp | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/adb/adb.cpp b/adb/adb.cpp
-index 6b30be884..04ba85c2d 100644
+index c791c7b6c..a62d368a2 100644
 --- a/adb/adb.cpp
 +++ b/adb/adb.cpp
-@@ -67,7 +67,7 @@ std::string adb_version() {
+@@ -66,7 +66,7 @@ std::string adb_version() {
          "Android Debug Bridge version %d.%d.%d\n"
          "Version %s\n"
          "Installed as %s\n",
@@ -20,6 +20,3 @@ index 6b30be884..04ba85c2d 100644
          android::base::GetExecutablePath().c_str());
  }
  
--- 
-2.17.1
-

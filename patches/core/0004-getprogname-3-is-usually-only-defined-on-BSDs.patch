@@ -1,7 +1,7 @@
-From e5b40cba5d2f01b466d5ec964e76b3fe115af49e Mon Sep 17 00:00:00 2001
+From b34f018c53f6b3d38bd8406ba24430779b64d6b8 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 17:27:39 +0100
-Subject: [PATCH 04/14] getprogname(3) is usually only defined on BSDs
+Subject: [PATCH] getprogname(3) is usually only defined on BSDs
 
 musl libc doesn't have it either, therefore just check for __linux__
 instead of __GLIBC__.
@@ -10,10 +10,10 @@ instead of __GLIBC__.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/base/logging.cpp b/base/logging.cpp
-index 6357b4ba7..b8b1ad025 100644
+index a31feefab..8b933622d 100644
 --- a/base/logging.cpp
 +++ b/base/logging.cpp
-@@ -89,7 +89,7 @@ static thread_id GetThreadId() {
+@@ -91,7 +91,7 @@ static thread_id GetThreadId() {
  }
  
  namespace {
@@ -22,6 +22,3 @@ index 6357b4ba7..b8b1ad025 100644
  const char* getprogname() {
    return program_invocation_short_name;
  }
--- 
-2.17.1
-

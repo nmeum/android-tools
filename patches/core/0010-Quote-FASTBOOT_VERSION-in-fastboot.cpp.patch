@@ -1,17 +1,17 @@
-From bd79ce4d085ffbfe7af20cb9a6722293ecbe9712 Mon Sep 17 00:00:00 2001
+From bc175b337d0e61e6bec624f816d53694596d4b0d Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Wed, 28 Feb 2018 20:24:57 +0100
-Subject: [PATCH 10/14] Quote FASTBOOT_VERSION in fastboot.cpp
+Subject: [PATCH] Quote FASTBOOT_VERSION in fastboot.cpp
 
 ---
  fastboot/fastboot.cpp | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/fastboot/fastboot.cpp b/fastboot/fastboot.cpp
-index 5f2267c63..c81671365 100644
+index e89586f15..097eba551 100644
 --- a/fastboot/fastboot.cpp
 +++ b/fastboot/fastboot.cpp
-@@ -1600,7 +1600,7 @@ int main(int argc, char **argv)
+@@ -1604,7 +1604,7 @@ int main(int argc, char **argv)
                  setvbuf(stdout, nullptr, _IONBF, 0);
                  setvbuf(stderr, nullptr, _IONBF, 0);
              } else if (strcmp("version", longopts[longindex].name) == 0) {
@@ -20,6 +20,3 @@ index 5f2267c63..c81671365 100644
                  fprintf(stdout, "Installed as %s\n", android::base::GetExecutablePath().c_str());
                  return 0;
              } else if (strcmp("slot", longopts[longindex].name) == 0) {
--- 
-2.17.1
-

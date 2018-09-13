@@ -1,7 +1,7 @@
-From 7c439f6f00a06e1fdfb28a8c2b2dea4b031f49e7 Mon Sep 17 00:00:00 2001
+From 8537b265ff1c091376e200448929ebe1610d0f85 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 16:30:30 +0100
-Subject: [PATCH 02/14] Fix inclusion of stdatomic.h with g++
+Subject: [PATCH] Fix inclusion of stdatomic.h with g++
 
 See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=60932#c5
 ---
@@ -9,7 +9,7 @@ See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=60932#c5
  1 file changed, 5 insertions(+)
 
 diff --git a/libcutils/include/cutils/trace.h b/libcutils/include/cutils/trace.h
-index 4c70a2dad..e6327ddba 100644
+index 504e0ee88..a64c2b672 100644
 --- a/libcutils/include/cutils/trace.h
 +++ b/libcutils/include/cutils/trace.h
 @@ -18,7 +18,12 @@
@@ -25,6 +25,3 @@ index 4c70a2dad..e6327ddba 100644
  #include <stdbool.h>
  #include <stdint.h>
  #include <stdio.h>
--- 
-2.17.1
-

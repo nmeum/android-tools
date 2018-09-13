@@ -1,7 +1,7 @@
-From e86c923fb45b0383cdab8fe64c43896bd82f5818 Mon Sep 17 00:00:00 2001
+From a2a5e85e8c0638a4f039063bd43c0b8ccb72583f Mon Sep 17 00:00:00 2001
 From: Anatol Pomozov <anatol.pomozov@gmail.com>
 Date: Fri, 25 Aug 2017 23:30:34 +0000
-Subject: [PATCH 11/14] Include string.h in various file missing it
+Subject: [PATCH] Include string.h in various file missing it
 
 Most of these need string.h for strerror(3).
 ---
@@ -13,7 +13,7 @@ Most of these need string.h for strerror(3).
  5 files changed, 5 insertions(+)
 
 diff --git a/adb/sysdeps/posix/network.cpp b/adb/sysdeps/posix/network.cpp
-index 45da5af4a..ee3bf0699 100644
+index ecd1fd24e..86166c0e2 100644
 --- a/adb/sysdeps/posix/network.cpp
 +++ b/adb/sysdeps/posix/network.cpp
 @@ -21,6 +21,7 @@
@@ -37,7 +37,7 @@ index 296995efe..48269b675 100644
  namespace android {
  namespace base {
 diff --git a/base/file.cpp b/base/file.cpp
-index a2f28878e..0aa185e97 100644
+index 2f697a1cc..81aef5758 100644
 --- a/base/file.cpp
 +++ b/base/file.cpp
 @@ -22,6 +22,7 @@
@@ -49,7 +49,7 @@ index a2f28878e..0aa185e97 100644
  #include <memory>
  #include <mutex>
 diff --git a/base/logging.cpp b/base/logging.cpp
-index b8b1ad025..890312fa2 100644
+index 8b933622d..c74fc6273 100644
 --- a/base/logging.cpp
 +++ b/base/logging.cpp
 @@ -23,6 +23,7 @@
@@ -61,17 +61,14 @@ index b8b1ad025..890312fa2 100644
  // For getprogname(3) or program_invocation_short_name.
  #if defined(__ANDROID__) || defined(__APPLE__)
 diff --git a/libsparse/sparse_read.cpp b/libsparse/sparse_read.cpp
-index bd668735a..6168f2e24 100644
+index 437963527..ccb565bb6 100644
 --- a/libsparse/sparse_read.cpp
 +++ b/libsparse/sparse_read.cpp
 @@ -26,6 +26,7 @@
- #include <stdio.h>
  #include <stdlib.h>
+ #include <string.h>
  #include <string>
 +#include <string.h>
  #include <unistd.h>
  
  #include <sparse/sparse.h>
--- 
-2.17.1
-

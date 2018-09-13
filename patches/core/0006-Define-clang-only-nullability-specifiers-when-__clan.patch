@@ -1,18 +1,18 @@
-From eab5bec0b5e4c485488f09f95e5271b92374435e Mon Sep 17 00:00:00 2001
+From be4e489b9d8d84964b34f7fbb3b4fbae993b4f8f Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 17:48:49 +0100
-Subject: [PATCH 06/14] Define clang-only nullability specifiers when __clang__
- is not defined
+Subject: [PATCH] Define clang-only nullability specifiers when __clang__ is
+ not defined
 
 ---
  adb/sysdeps.h | 6 ++++--
  1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/adb/sysdeps.h b/adb/sysdeps.h
-index 0abb680d3..f549b0504 100644
+index edeacc116..3df19dd2f 100644
 --- a/adb/sysdeps.h
 +++ b/adb/sysdeps.h
-@@ -66,11 +66,13 @@
+@@ -52,11 +52,13 @@
  #endif
  #endif
  
@@ -28,6 +28,3 @@ index 0abb680d3..f549b0504 100644
  
  #include <ctype.h>
  #include <direct.h>
--- 
-2.17.1
-

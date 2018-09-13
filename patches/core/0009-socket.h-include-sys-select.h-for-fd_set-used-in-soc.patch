@@ -1,8 +1,7 @@
-From f27701927b9ee580848127b6d5fb69cfc9601c84 Mon Sep 17 00:00:00 2001
+From 44a8e5a2d61ad8e2ea0c714625b94dc48440afe8 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Wed, 28 Feb 2018 20:22:09 +0100
-Subject: [PATCH 09/14] socket.h: include sys/select.h for fd_set used in
- socket.cpp
+Subject: [PATCH] socket.h: include sys/select.h for fd_set used in socket.cpp
 
 ---
  fastboot/socket.h | 1 +
@@ -20,6 +19,3 @@ index 7eaa0ab2c..a772b1227 100644
  #include <android-base/macros.h>
  #include <cutils/sockets.h>
  #include <gtest/gtest_prod.h>
--- 
-2.17.1
-

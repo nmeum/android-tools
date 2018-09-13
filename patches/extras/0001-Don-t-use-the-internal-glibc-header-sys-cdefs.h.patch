@@ -1,29 +1,27 @@
-From 4b6d509feb5b8bdc05df02d792816672aa7de3d9 Mon Sep 17 00:00:00 2001
+From f20a0e43789aa20102a9c4b8f78ac670e7123b79 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
-Date: Tue, 19 Jun 2018 09:27:54 +0200
+Date: Thu, 13 Sep 2018 23:19:07 +0200
 Subject: [PATCH] Don't use the internal glibc header sys/cdefs.h
 
 This patch was created using sed(1) and ag(1) with the following script:
 
-        for file in $(ag -l __BEGIN_DECLS); do
-                sed -i "${file}" \
-                        -e 's/__BEGIN_DECLS/#ifdef __cplusplus\nextern C {\n#endif/g' \
-                        -e 's/__END_DECLS/#ifdef __cplusplus\n}\n#endif/g' \
-                        -e '/#include <sys\/cdefs.h>/d'
-        done
+	for file in $(ag -l __BEGIN_DECLS); do
+		sed -i "${file}" \
+			-e 's/__BEGIN_DECLS/#ifdef __cplusplus\nextern "C" {\n#endif/g' \
+			-e 's/__END_DECLS/#ifdef __cplusplus\n}\n#endif/g' \
+			-e '/#include <sys\/cdefs.h>/d'
+	done
 
 https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-get-error-messages-about-<code>sys/cdefs.h</code>
 ---
- ext4_utils/include/ext4_utils/ext4_crypt.h          |  9 ++++++---
- .../include/ext4_utils/ext4_crypt_init_extensions.h |  9 ++++++---
- ext4_utils/sha1.h                                   | 13 ++++++-------
- libpagemap/include/pagemap/pagemap.h                |  9 ++++++---
- perfprofd/perfprofdutils.h                          |  9 ++++++---
- tests/lib/testUtil/include/testUtil.h               |  8 ++++++--
- 6 files changed, 36 insertions(+), 21 deletions(-)
+ ext4_utils/include/ext4_utils/ext4_crypt.h               | 9 ++++++---
+ .../include/ext4_utils/ext4_crypt_init_extensions.h      | 9 ++++++---
+ libpagemap/include/pagemap/pagemap.h                     | 9 ++++++---
+ tests/lib/testUtil/include/testUtil.h                    | 8 ++++++--
+ 4 files changed, 24 insertions(+), 11 deletions(-)
 
 diff --git a/ext4_utils/include/ext4_utils/ext4_crypt.h b/ext4_utils/include/ext4_utils/ext4_crypt.h
-index d410ccfd..e4c828be 100644
+index d410ccfd..29e161f4 100644
 --- a/ext4_utils/include/ext4_utils/ext4_crypt.h
 +++ b/ext4_utils/include/ext4_utils/ext4_crypt.h
 @@ -17,11 +17,12 @@
@@ -36,7 +34,7 @@ index d410ccfd..e4c828be 100644
  
 -__BEGIN_DECLS
 +#ifdef __cplusplus
-+extern C {
++extern "C" {
 +#endif
  
  bool e4crypt_is_native();
@@ -52,7 +50,7 @@ index d410ccfd..e4c828be 100644
  
  #endif // _EXT4_CRYPT_H_
 diff --git a/ext4_utils/include/ext4_utils/ext4_crypt_init_extensions.h b/ext4_utils/include/ext4_utils/ext4_crypt_init_extensions.h
-index f14d4a99..f2a536a2 100644
+index f14d4a99..13873296 100644
 --- a/ext4_utils/include/ext4_utils/ext4_crypt_init_extensions.h
 +++ b/ext4_utils/include/ext4_utils/ext4_crypt_init_extensions.h
 @@ -17,17 +17,20 @@
@@ -65,7 +63,7 @@ index f14d4a99..f2a536a2 100644
  
 -__BEGIN_DECLS
 +#ifdef __cplusplus
-+extern C {
++extern "C" {
 +#endif
  
  // These functions assume they are being called from init
@@ -79,42 +77,8 @@ index f14d4a99..f2a536a2 100644
 +#endif
  
  #endif // _EXT4_CRYPT_INIT_EXTENSIONS_H_
-diff --git a/ext4_utils/sha1.h b/ext4_utils/sha1.h
-index 40e9acf5..3da13792 100644
---- a/ext4_utils/sha1.h
-+++ b/ext4_utils/sha1.h
-@@ -17,11 +17,6 @@ typedef unsigned char u_char;
- typedef unsigned int uint32_t;
- typedef unsigned int u_int32_t;
- typedef unsigned int u_int;
--
--#define __BEGIN_DECLS
--#define __END_DECLS
--#else
--#include <sys/cdefs.h>
- #endif
- 
- #define SHA1_DIGEST_LENGTH		20
-@@ -33,11 +28,15 @@ typedef struct {
- 	u_char buffer[64];
- } SHA1_CTX;
- 
--__BEGIN_DECLS
-+#ifdef __cplusplus
-+extern C {
-+#endif
- void	SHA1Transform(uint32_t[5], const u_char[64]);
- void	SHA1Init(SHA1_CTX *);
- void	SHA1Update(SHA1_CTX *, const u_char *, u_int);
- void	SHA1Final(u_char[SHA1_DIGEST_LENGTH], SHA1_CTX *);
--__END_DECLS
-+#ifdef __cplusplus
-+}
-+#endif
- 
- #endif /* _SYS_SHA1_H_ */
 diff --git a/libpagemap/include/pagemap/pagemap.h b/libpagemap/include/pagemap/pagemap.h
-index b03614e8..c4211f28 100644
+index b03614e8..80da8485 100644
 --- a/libpagemap/include/pagemap/pagemap.h
 +++ b/libpagemap/include/pagemap/pagemap.h
 @@ -19,13 +19,14 @@
@@ -129,7 +93,7 @@ index b03614e8..c4211f28 100644
  
 -__BEGIN_DECLS
 +#ifdef __cplusplus
-+extern C {
++extern "C" {
 +#endif
  
  typedef struct pm_proportional_swap pm_proportional_swap_t;
@@ -144,33 +108,8 @@ index b03614e8..c4211f28 100644
 +#endif
  
  #endif
-diff --git a/perfprofd/perfprofdutils.h b/perfprofd/perfprofdutils.h
-index a17356bc..e6dfaf18 100644
---- a/perfprofd/perfprofdutils.h
-+++ b/perfprofd/perfprofdutils.h
-@@ -15,9 +15,10 @@
- ** limitations under the License.
- */
- 
--#include <sys/cdefs.h>
- 
--__BEGIN_DECLS
-+#ifdef __cplusplus
-+extern C {
-+#endif
- 
- //
- // These routines are separated out from the core perfprofd so
-@@ -33,4 +34,6 @@ extern void perfprofd_sleep(int seconds);
- #define W_ALOGW perfprofd_log_warning
- #define W_ALOGI perfprofd_log_info
- 
--__END_DECLS
-+#ifdef __cplusplus
-+}
-+#endif
 diff --git a/tests/lib/testUtil/include/testUtil.h b/tests/lib/testUtil/include/testUtil.h
-index 3b75914d..8bc2a582 100644
+index 3b75914d..bdef437d 100644
 --- a/tests/lib/testUtil/include/testUtil.h
 +++ b/tests/lib/testUtil/include/testUtil.h
 @@ -22,7 +22,9 @@
@@ -179,7 +118,7 @@ index 3b75914d..8bc2a582 100644
  
 -__BEGIN_DECLS
 +#ifdef __cplusplus
-+extern C {
++extern "C" {
 +#endif
  
  // Time Utilities
@@ -194,6 +133,3 @@ index 3b75914d..8bc2a582 100644
 +#endif
  
  #endif
--- 
-2.17.1
-

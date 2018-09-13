@@ -1,17 +1,17 @@
-From c9657f5146ad058e8f53cfb468dc7a93e7e17e1c Mon Sep 17 00:00:00 2001
+From 8b825c819b625e0dd0d22bee4ef6870f8cbc6868 Mon Sep 17 00:00:00 2001
 From: Anatol Pomozov <anatol.pomozov@gmail.com>
 Date: Fri, 25 Aug 2017 23:30:34 +0000
-Subject: [PATCH 07/14] Include libusb-1.0/libusb.h instead of libusb/libusb.h
+Subject: [PATCH] Include libusb-1.0/libusb.h instead of libusb/libusb.h
 
 ---
  adb/client/usb_libusb.cpp | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/adb/client/usb_libusb.cpp b/adb/client/usb_libusb.cpp
-index 81201995a..c3b9c543e 100644
+index 46c3f58ec..35d5e1e1c 100644
 --- a/adb/client/usb_libusb.cpp
 +++ b/adb/client/usb_libusb.cpp
-@@ -28,7 +28,7 @@
+@@ -30,7 +30,7 @@
  #include <thread>
  #include <unordered_map>
  
@@ -20,6 +20,3 @@ index 81201995a..c3b9c543e 100644
  
  #include <android-base/file.h>
  #include <android-base/logging.h>
--- 
-2.17.1
-

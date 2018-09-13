@@ -1,18 +1,18 @@
-From 283c76f2b2eb38c0e295a0bb874aa3e5e60228cc Mon Sep 17 00:00:00 2001
+From defc2b0dbf91b7ef53490a2df0c8e95df7469f7c Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 17:37:12 +0100
-Subject: [PATCH 05/14] fix "initializer element is not constant"-error when
- building with g++
+Subject: [PATCH] fix "initializer element is not constant"-error when building
+ with g++
 
 ---
  liblog/logprint.c | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/liblog/logprint.c b/liblog/logprint.c
-index b62f8b446..bac242a82 100644
+index a2839bfb6..23f83c73a 100644
 --- a/liblog/logprint.c
 +++ b/liblog/logprint.c
-@@ -925,9 +925,9 @@ static int android_log_printBinaryEvent(const unsigned char** pEventData,
+@@ -926,9 +926,9 @@ static int android_log_printBinaryEvent(const unsigned char** pEventData,
            }
            break;
          case TYPE_MONOTONIC: {
@@ -25,6 +25,3 @@ index b62f8b446..bac242a82 100644
  
            /* Repaint as unsigned seconds, minutes, hours ... */
            outBuf -= outCount;
--- 
-2.17.1
-
