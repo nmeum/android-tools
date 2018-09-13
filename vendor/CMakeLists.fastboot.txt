@@ -9,15 +9,6 @@ add_library(libsparse STATIC
 target_include_directories(libsparse PUBLIC
 	core/libsparse/include core/base/include)
 
-add_library(libf2fs STATIC
-	extras/f2fs_utils/f2fs_utils.c
-	extras/f2fs_utils/f2fs_ioutils.c
-	extras/f2fs_utils/f2fs_dlutils.c)
-
-target_include_directories(libf2fs PUBLIC
-	extras/f2fs_utils f2fs-tools/include f2fs-tools/mkfs
-	core/libsparse/include selinux/libselinux/include)
-
 add_library(libzip STATIC
 	core/libziparchive/zip_archive.cc)
 
@@ -31,16 +22,8 @@ target_include_directories(libutil PUBLIC
 	core/include)
 
 add_library(libext4 STATIC
-	extras/ext4_utils/make_ext4fs.c
-	extras/ext4_utils/ext4fixup.c
 	extras/ext4_utils/ext4_utils.c
-	extras/ext4_utils/allocate.c
-	extras/ext4_utils/contents.c
-	extras/ext4_utils/extent.c
-	extras/ext4_utils/indirect.c
-	extras/ext4_utils/sha1.c
 	extras/ext4_utils/wipe.c
-	extras/ext4_utils/crc16.c
 	extras/ext4_utils/ext4_sb.c)
 
 target_include_directories(libext4 PUBLIC
@@ -122,12 +105,12 @@ add_executable(fastboot
 
 target_include_directories(fastboot PRIVATE
 	core/base/include core/include core/adb core/libsparse/include
-	core/mkbootimg extras/ext4_utils/include extras/f2fs_utils
-	core/libziparchive/include)
+	extras/ext4_utils/include extras/f2fs_utils
+	core/libziparchive/include core/mkbootimg/include/bootimg)
 target_compile_definitions(fastboot PRIVATE
 	-D_GNU_SOURCE -D_XOPEN_SOURCE=700 -DUSE_F2FS
 	-DANDROID_MKE2FS_NAME="${ANDROID_MKE2FS_NAME}")
 target_link_libraries(fastboot
 	libsparse libzip libcutils liblog libutil libbase libext4
-	libf2fs libselinux libsepol libdiagnoseusb
+	libselinux libsepol libdiagnoseusb
 	z pcre2-8 pthread dl)

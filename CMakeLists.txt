@@ -1,4 +1,4 @@
-project (android-tools)
+project(android-tools)
 cmake_minimum_required(VERSION 3.1.0)
 
 # Android provides it's own version of mke2fs which is incompatible with
@@ -11,8 +11,8 @@ set(ANDROID_MKE2FS_NAME "mke2fs.android")
 
 # Version of android-tools and the version of boringssl being used.
 # See: https://android.googlesource.com/platform/external/boringssl/+/android-${ANDROID_VERSION}/BORINGSSL_REVISION
-set(ANDROID_VERSION 8.1.0_r33)
-set(BORINGSSL_VERSION 14308731e5446a73ac2258688a9688b524483cb6)
+set(ANDROID_VERSION 9.0.0_r3)
+set(BORINGSSL_VERSION 45210dd4e21ace9d28cb76b3f83303fcdd2efcce)
 
 # The CMakeLists.txt in the vendor subdirectory is responsible for
 # patching, building and installing the software.

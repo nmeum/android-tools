@@ -50,17 +50,17 @@ target_include_directories(liblog PUBLIC
 	core/log/include core/include)
 
 add_library(libcutils STATIC
-	core/libcutils/load_file.c
-	core/libcutils/socket_local_client_unix.c
-	core/libcutils/socket_network_client_unix.c
-	core/libcutils/socket_local_server_unix.c
+	core/libcutils/load_file.cpp
+	core/libcutils/socket_local_client_unix.cpp
+	core/libcutils/socket_network_client_unix.cpp
+	core/libcutils/socket_local_server_unix.cpp
 	core/libcutils/sockets_unix.cpp
-	core/libcutils/socket_inaddr_any_server_unix.c
+	core/libcutils/socket_inaddr_any_server_unix.cpp
 	core/libcutils/sockets.cpp
 	core/libcutils/android_get_control_file.cpp
-	core/libcutils/threads.c
+	core/libcutils/threads.cpp
 	core/libcutils/fs_config.cpp
-	core/libcutils/canned_fs_config.c)
+	core/libcutils/canned_fs_config.cpp)
 
 target_compile_definitions(libcutils PRIVATE -D_GNU_SOURCE)
 target_include_directories(libcutils PUBLIC

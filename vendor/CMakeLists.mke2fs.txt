@@ -51,6 +51,7 @@ add_library(libext2fs STATIC
 	e2fsprogs/lib/ext2fs/get_num_dirs.c
 	e2fsprogs/lib/ext2fs/getsectsize.c
 	e2fsprogs/lib/ext2fs/getsize.c
+	e2fsprogs/lib/ext2fs/hashmap.c
 	e2fsprogs/lib/ext2fs/i_block.c
 	e2fsprogs/lib/ext2fs/ind_block.c
 	e2fsprogs/lib/ext2fs/initialize.c
@@ -75,6 +76,7 @@ add_library(libext2fs STATIC
 	e2fsprogs/lib/ext2fs/read_bb_file.c
 	e2fsprogs/lib/ext2fs/res_gdt.c
 	e2fsprogs/lib/ext2fs/rw_bitmaps.c
+	e2fsprogs/lib/ext2fs/sha512.c
 	e2fsprogs/lib/ext2fs/sparse_io.c
 	e2fsprogs/lib/ext2fs/symlink.c
 	e2fsprogs/lib/ext2fs/undo_io.c
@@ -98,7 +100,7 @@ add_library(libext2fs STATIC
 	e2fsprogs/misc/create_inode.c)
 
 target_include_directories(libext2fs PRIVATE
-	e2fsprogs/lib core/libsparse/include)
+	e2fsprogs/lib e2fsprogs/lib/ext2fs core/libsparse/include)
 
 add_executable("${ANDROID_MKE2FS_NAME}"
 	e2fsprogs/misc/default_profile.c
