@@ -10,12 +10,8 @@ set(android-vendored
 	e2fsprogs)
 
 if(EXISTS "${ANDROID_PATCH_DIR}/")
-	execute_process(COMMAND git -C ${CMAKE_CURRENT_SOURCE_DIR}/boringssl
-		reset -q --hard ${BORINGSSL_VERSION})
+	execute_process(COMMAND git submodule --quiet update)
 	foreach(v ${android-vendored})
-		execute_process(COMMAND git -C ${CMAKE_CURRENT_SOURCE_DIR}/${v}
-			reset -q --hard android-${ANDROID_VERSION})
-
 		file(GLOB patches ${ANDROID_PATCH_DIR}/${v}/*.patch)
 		if(patches)
 			message(STATUS "Applying patches for: ${v}")
