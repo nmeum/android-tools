@@ -34,7 +34,8 @@ I personally don't use any android-tools except adb and fastboot. Thus
 my motivation to add support for additional tools is rather low at the
 moment. However, patches adding support for new tools in a clean way are
 welcome. Additionally, patches needed to make the software compile on
-other Linux distributions are welcome as well.
+other Linux distributions are welcome as well. Please create new patches
+using `git format-patch --no-numbered --no-signature …`.
 
 # Dependencies
 
