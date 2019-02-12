@@ -1,4 +1,4 @@
-From 5dfa895fe4b4aa45c73dbfa3b231e1fdf7d00135 Mon Sep 17 00:00:00 2001
+From 31dc73f6fbb0da8f142c46bfc17f1d8bd1dd09e0 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 19 Jun 2018 12:44:59 +0000
 Subject: [PATCH] linux/types.h seem to already define __bitwise
