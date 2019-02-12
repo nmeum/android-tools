@@ -11,7 +11,7 @@ set(ANDROID_MKE2FS_NAME "mke2fs.android")
 
 # Version of android-tools and the version of boringssl being used.
 # See: https://android.googlesource.com/platform/external/boringssl/+/android-${ANDROID_VERSION}/BORINGSSL_REVISION
-set(ANDROID_VERSION 9.0.0_r3)
+set(ANDROID_VERSION 9.0.0_r33)
 set(BORINGSSL_VERSION 45210dd4e21ace9d28cb76b3f83303fcdd2efcce)
 
 # The CMakeLists.txt in the vendor subdirectory is responsible for

@@ -1,6 +1,6 @@
-From c5f7f3fa9d19e16850d0e1fd67c2415d0ac5c9ff Mon Sep 17 00:00:00 2001
+From 3a5363e0b4fd7ed20225d8eda77d35e0073c02b0 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
-Date: Thu, 13 Sep 2018 23:16:04 +0200
+Date: Tue, 12 Feb 2019 23:38:46 +0100
 Subject: [PATCH] Don't use the internal glibc header sys/cdefs.h
 
 This patch was created using sed(1) and ag(1) with the following script:
@@ -1059,7 +1059,7 @@ index 72e3f4a2b..64d060c6a 100644
  
  #endif /* _LIBLMKD_UTILS_H_ */
 diff --git a/lmkd/include/lmkd.h b/lmkd/include/lmkd.h
-index fe6364d82..85e663703 100644
+index e8f51da77..f44ff4f85 100644
 --- a/lmkd/include/lmkd.h
 +++ b/lmkd/include/lmkd.h
 @@ -18,10 +18,11 @@
@@ -1076,8 +1076,8 @@ index fe6364d82..85e663703 100644
  
  /*
   * Supported LMKD commands
-@@ -142,6 +143,8 @@ inline size_t lmkd_pack_set_procremove(LMKD_CTRL_PACKET packet,
-     return 2 * sizeof(int);
+@@ -152,6 +153,8 @@ inline size_t lmkd_pack_set_procpurge(LMKD_CTRL_PACKET packet) {
+     return sizeof(int);
  }
  
 -__END_DECLS
@@ -1087,7 +1087,7 @@ index fe6364d82..85e663703 100644
  
  #endif /* _LMKD_H_ */
 diff --git a/lmkd/statslog.h b/lmkd/statslog.h
-index edebb195b..4a43d99e9 100644
+index 84584805d..06631524b 100644
 --- a/lmkd/statslog.h
 +++ b/lmkd/statslog.h
 @@ -20,11 +20,12 @@
@@ -1105,7 +1105,7 @@ index edebb195b..4a43d99e9 100644
  
  /*
   * These are defined in
-@@ -86,6 +87,8 @@ stats_write_lmk_kill_occurred(android_log_context ctx, int32_t code, int32_t uid
+@@ -89,6 +90,8 @@ stats_write_lmk_kill_occurred(android_log_context ctx, int32_t code, int32_t uid
                                int64_t pgmajfault, int64_t rss_in_bytes, int64_t cache_in_bytes,
                                int64_t swap_in_bytes);
  
