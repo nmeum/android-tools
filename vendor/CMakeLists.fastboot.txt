@@ -108,6 +108,7 @@ target_include_directories(fastboot PRIVATE
 	extras/ext4_utils/include extras/f2fs_utils
 	core/libziparchive/include core/mkbootimg/include/bootimg)
 target_compile_definitions(fastboot PRIVATE
+	-DFASTBOOT_VERSION="${ANDROID_VERSION}"
 	-D_GNU_SOURCE -D_XOPEN_SOURCE=700 -DUSE_F2FS
 	-DANDROID_MKE2FS_NAME="${ANDROID_MKE2FS_NAME}")
 target_link_libraries(fastboot

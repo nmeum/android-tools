@@ -95,7 +95,7 @@ add_executable(adb
 	  core/adb/adb_auth_host.cpp
 	  core/adb/shell_service_protocol.cpp)
 
-target_compile_definitions(adb PRIVATE -DADB_VERSION=${ANDROID_VERSION})
+target_compile_definitions(adb PRIVATE -DADB_VERSION="${ANDROID_VERSION}")
 target_include_directories(adb PRIVATE
 	core/include core/base/include core/adb
 	core/libcrypto_utils/include boringssl/include)
