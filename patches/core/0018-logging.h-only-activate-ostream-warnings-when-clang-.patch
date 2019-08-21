@@ -1,0 +1,30 @@
+From 23889a11c2e0cdda76e04925d8364d1ccb99180d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
+Date: Sun, 25 Aug 2019 13:01:38 +0200
+Subject: [PATCH] logging.h: only activate ostream warnings when clang is used
+
+With gcc this results in a `attributes are not allowed on a
+function-definition` error.
+---
+ base/include/android-base/logging.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/base/include/android-base/logging.h b/base/include/android-base/logging.h
+index ab6476c59..e88f3d75f 100644
+--- a/base/include/android-base/logging.h
++++ b/base/include/android-base/logging.h
+@@ -482,6 +482,7 @@ namespace std {  // NOLINT(cert-dcl58-cpp)
+ // Note: to print the pointer, use "<< static_cast<const void*>(string_pointer)" instead.
+ // Note: a not-recommended alternative is to let Clang ignore the warning by adding
+ //       -Wno-user-defined-warnings to CPPFLAGS.
++#ifdef __clang__
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wgcc-compat"
+ #define OSTREAM_STRING_POINTER_USAGE_WARNING \
+@@ -491,5 +492,6 @@ inline std::ostream& operator<<(std::ostream& stream, const std::string* string_
+   return stream << static_cast<const void*>(string_pointer);
+ }
+ #pragma clang diagnostic pop
++#endif
+ 
+ }  // namespace std

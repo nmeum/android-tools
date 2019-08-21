@@ -1,4 +1,4 @@
-From f20a0e43789aa20102a9c4b8f78ac670e7123b79 Mon Sep 17 00:00:00 2001
+From ae66cdec744d81232c58583ae8c3226b7e74d860 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Thu, 13 Sep 2018 23:19:07 +0200
 Subject: [PATCH] Don't use the internal glibc header sys/cdefs.h
@@ -14,19 +14,18 @@ This patch was created using sed(1) and ag(1) with the following script:
 
 https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-get-error-messages-about-<code>sys/cdefs.h</code>
 ---
- ext4_utils/include/ext4_utils/ext4_crypt.h               | 9 ++++++---
- .../include/ext4_utils/ext4_crypt_init_extensions.h      | 9 ++++++---
- libpagemap/include/pagemap/pagemap.h                     | 9 ++++++---
- tests/lib/testUtil/include/testUtil.h                    | 8 ++++++--
- 4 files changed, 24 insertions(+), 11 deletions(-)
+ libfscrypt/include/fscrypt/fscrypt.h                 | 9 ++++++---
+ libfscrypt/include/fscrypt/fscrypt_init_extensions.h | 9 ++++++---
+ tests/lib/testUtil/include/testUtil.h                | 8 ++++++--
+ 3 files changed, 18 insertions(+), 8 deletions(-)
 
-diff --git a/ext4_utils/include/ext4_utils/ext4_crypt.h b/ext4_utils/include/ext4_utils/ext4_crypt.h
-index d410ccfd..29e161f4 100644
---- a/ext4_utils/include/ext4_utils/ext4_crypt.h
-+++ b/ext4_utils/include/ext4_utils/ext4_crypt.h
+diff --git a/libfscrypt/include/fscrypt/fscrypt.h b/libfscrypt/include/fscrypt/fscrypt.h
+index 8a68b935..06456cdb 100644
+--- a/libfscrypt/include/fscrypt/fscrypt.h
++++ b/libfscrypt/include/fscrypt/fscrypt.h
 @@ -17,11 +17,12 @@
- #ifndef _EXT4_CRYPT_H_
- #define _EXT4_CRYPT_H_
+ #ifndef _FSCRYPT_H_
+ #define _FSCRYPT_H_
  
 -#include <sys/cdefs.h>
  #include <stdbool.h>
@@ -37,25 +36,25 @@ index d410ccfd..29e161f4 100644
 +extern "C" {
 +#endif
  
- bool e4crypt_is_native();
+ bool fscrypt_is_native();
  
-@@ -34,6 +35,8 @@ static const char* e4crypt_unencrypted_folder = "/unencrypted";
- static const char* e4crypt_key_ref = "/unencrypted/ref";
- static const char* e4crypt_key_mode = "/unencrypted/mode";
+@@ -34,6 +35,8 @@ static const char* fscrypt_unencrypted_folder = "/unencrypted";
+ static const char* fscrypt_key_ref = "/unencrypted/ref";
+ static const char* fscrypt_key_mode = "/unencrypted/mode";
  
 -__END_DECLS
 +#ifdef __cplusplus
 +}
 +#endif
  
- #endif // _EXT4_CRYPT_H_
-diff --git a/ext4_utils/include/ext4_utils/ext4_crypt_init_extensions.h b/ext4_utils/include/ext4_utils/ext4_crypt_init_extensions.h
-index f14d4a99..13873296 100644
---- a/ext4_utils/include/ext4_utils/ext4_crypt_init_extensions.h
-+++ b/ext4_utils/include/ext4_utils/ext4_crypt_init_extensions.h
+ #endif // _FSCRYPT_H_
+diff --git a/libfscrypt/include/fscrypt/fscrypt_init_extensions.h b/libfscrypt/include/fscrypt/fscrypt_init_extensions.h
+index 2b6c46e1..cf0de3f6 100644
+--- a/libfscrypt/include/fscrypt/fscrypt_init_extensions.h
++++ b/libfscrypt/include/fscrypt/fscrypt_init_extensions.h
 @@ -17,17 +17,20 @@
- #ifndef _EXT4_CRYPT_INIT_EXTENSIONS_H_
- #define _EXT4_CRYPT_INIT_EXTENSIONS_H_
+ #ifndef _FSCRYPT_INIT_EXTENSIONS_H_
+ #define _FSCRYPT_INIT_EXTENSIONS_H_
  
 -#include <sys/cdefs.h>
  #include <stdbool.h>
@@ -68,46 +67,15 @@ index f14d4a99..13873296 100644
  
  // These functions assume they are being called from init
  // They will not operate properly outside of init
- int e4crypt_install_keyring();
- int e4crypt_set_directory_policy(const char* path);
+ int fscrypt_install_keyring();
+ int fscrypt_set_directory_policy(const char* path);
  
 -__END_DECLS
 +#ifdef __cplusplus
 +}
 +#endif
  
- #endif // _EXT4_CRYPT_INIT_EXTENSIONS_H_
-diff --git a/libpagemap/include/pagemap/pagemap.h b/libpagemap/include/pagemap/pagemap.h
-index b03614e8..80da8485 100644
---- a/libpagemap/include/pagemap/pagemap.h
-+++ b/libpagemap/include/pagemap/pagemap.h
-@@ -19,13 +19,14 @@
- 
- #include <stdint.h>
- #include <stdio.h>
--#include <sys/cdefs.h>
- #include <sys/types.h>
- #include <sys/queue.h>
- 
- #include <linux/kernel-page-flags.h>
- 
--__BEGIN_DECLS
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
- 
- typedef struct pm_proportional_swap pm_proportional_swap_t;
- 
-@@ -205,6 +206,8 @@ int pm_map_usage_flags(pm_map_t *map, pm_memusage_t *usage_out,
- /* Get the working set of this map alone. */
- int pm_map_workingset(pm_map_t *map, pm_memusage_t *ws_out);
- 
--__END_DECLS
-+#ifdef __cplusplus
-+}
-+#endif
- 
- #endif
+ #endif // _FSCRYPT_INIT_EXTENSIONS_H_
 diff --git a/tests/lib/testUtil/include/testUtil.h b/tests/lib/testUtil/include/testUtil.h
 index 3b75914d..bdef437d 100644
 --- a/tests/lib/testUtil/include/testUtil.h

@@ -1,0 +1,25 @@
+From 9e84fd21dbd5387f5eea9afd0dbbbeb4d27c8aaf Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
+Date: Sun, 1 Sep 2019 15:04:18 +0000
+Subject: [PATCH] adb: disable mdns transport support
+
+Would require patching the MDNS code as well.
+---
+ adb/client/main.cpp | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/adb/client/main.cpp b/adb/client/main.cpp
+index 0c5c28f1b..b6a128152 100644
+--- a/adb/client/main.cpp
++++ b/adb/client/main.cpp
+@@ -118,10 +118,6 @@ int adb_server_main(int is_daemon, const std::string& socket_spec, int ack_reply
+     init_transport_registration();
+     init_reconnect_handler();
+ 
+-    if (!getenv("ADB_MDNS") || strcmp(getenv("ADB_MDNS"), "0") != 0) {
+-        init_mdns_transport_discovery();
+-    }
+-
+     if (!getenv("ADB_USB") || strcmp(getenv("ADB_USB"), "0") != 0) {
+         usb_init();
+     } else {

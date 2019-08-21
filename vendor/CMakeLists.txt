@@ -1,7 +1,7 @@
 # TODO: https://cmake.org/cmake/help/v3.0/module/ExternalProject.html
 # To patch the submodule
 
-add_subdirectory(boringssl)
+add_subdirectory(boringssl EXCLUDE_FROM_ALL)
 set(android-vendored
 	core
 	extras
@@ -28,6 +28,12 @@ endif()
 include(CMakeLists.adb.txt)
 include(CMakeLists.fastboot.txt)
 include(CMakeLists.mke2fs.txt)
+
+# Various C++20 features are used across the codebase, e.g.
+# std::string_view.starts_with. Additionally, GNU extension
+# (such as typeof) are used occasionally.
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu11 -Wno-attributes")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++2a -Wno-attributes")
 
 # Targets which should be installed by `make install`.
 install(TARGETS adb fastboot "${ANDROID_MKE2FS_NAME}" DESTINATION bin)

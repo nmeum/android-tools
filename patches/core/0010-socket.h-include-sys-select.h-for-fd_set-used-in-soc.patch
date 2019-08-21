@@ -1,4 +1,4 @@
-From 44a8e5a2d61ad8e2ea0c714625b94dc48440afe8 Mon Sep 17 00:00:00 2001
+From 3d7bdd11ac7839b650dce086f4b3374fc4aaffb4 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Wed, 28 Feb 2018 20:22:09 +0100
 Subject: [PATCH] socket.h: include sys/select.h for fd_set used in socket.cpp
@@ -8,10 +8,10 @@ Subject: [PATCH] socket.h: include sys/select.h for fd_set used in socket.cpp
  1 file changed, 1 insertion(+)
 
 diff --git a/fastboot/socket.h b/fastboot/socket.h
-index 7eaa0ab2c..a772b1227 100644
+index e791f2c8b..ced760c03 100644
 --- a/fastboot/socket.h
 +++ b/fastboot/socket.h
-@@ -39,6 +39,7 @@
+@@ -38,6 +38,7 @@
  #include <utility>
  #include <vector>
  

@@ -91,6 +91,7 @@ add_library(libext2fs STATIC
 	e2fsprogs/lib/support/quotaio.c
 	e2fsprogs/lib/support/quotaio_tree.c
 	e2fsprogs/lib/support/quotaio_v2.c
+	e2fsprogs/lib/uuid/clear.c
 	e2fsprogs/lib/uuid/gen_uuid.c
 	e2fsprogs/lib/uuid/isnull.c
 	e2fsprogs/lib/uuid/pack.c

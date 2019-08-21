@@ -1,9 +1,9 @@
 add_library(libsparse STATIC
-	core/libsparse/backed_block.c
-	core/libsparse/output_file.c
-	core/libsparse/sparse.c
-	core/libsparse/sparse_crc32.c
-	core/libsparse/sparse_err.c
+	core/libsparse/backed_block.cpp
+	core/libsparse/output_file.cpp
+	core/libsparse/sparse.cpp
+	core/libsparse/sparse_crc32.cpp
+	core/libsparse/sparse_err.cpp
 	core/libsparse/sparse_read.cpp)
 
 target_include_directories(libsparse PUBLIC
@@ -22,12 +22,24 @@ target_include_directories(libutil PUBLIC
 	core/include)
 
 add_library(libext4 STATIC
-	extras/ext4_utils/ext4_utils.c
-	extras/ext4_utils/wipe.c
-	extras/ext4_utils/ext4_sb.c)
+	extras/ext4_utils/ext4_utils.cpp
+	extras/ext4_utils/wipe.cpp
+	extras/ext4_utils/ext4_sb.cpp)
 
 target_include_directories(libext4 PUBLIC
-	core/libsparse/include core/include selinux/libselinux/include extras/ext4_utils/include)
+	core/libsparse/include core/include selinux/libselinux/include
+	extras/ext4_utils/include core/base/include)
+
+add_library(libfsmgr STATIC
+	core/fs_mgr/liblp/reader.cpp
+	core/fs_mgr/liblp/writer.cpp
+	core/fs_mgr/liblp/utility.cpp
+	core/fs_mgr/liblp/partition_opener.cpp
+	core/fs_mgr/liblp/images.cpp)
+target_include_directories(libfsmgr PRIVATE
+	core/fs_mgr/liblp/include core/base/include
+	extras/ext4_utils/include core/libsparse/include
+	boringssl/include)
 
 add_library(libselinux STATIC
 	selinux/libselinux/src/callbacks.c
@@ -92,10 +104,10 @@ target_include_directories(libsepol PUBLIC
 	selinux/libsepol/include)
 
 add_executable(fastboot
-	core/fastboot/protocol.cpp
-	core/fastboot/engine.cpp
+	core/fastboot/fastboot_driver.cpp
 	core/fastboot/bootimg_utils.cpp
 	core/fastboot/fastboot.cpp
+	core/fastboot/main.cpp
 	core/fastboot/util.cpp
 	core/fastboot/fs.cpp
 	core/fastboot/usb_linux.cpp
@@ -106,12 +118,14 @@ add_executable(fastboot
 target_include_directories(fastboot PRIVATE
 	core/base/include core/include core/adb core/libsparse/include
 	extras/ext4_utils/include extras/f2fs_utils
-	core/libziparchive/include core/mkbootimg/include/bootimg)
+	core/libziparchive/include mkbootimg/include/bootimg
+	core/fs_mgr/liblp/include)
 target_compile_definitions(fastboot PRIVATE
-	-DFASTBOOT_VERSION="${ANDROID_VERSION}"
+	-DPLATFORM_TOOLS_VERSION="${ANDROID_VERSION}"
+	-DPLATFORM_TOOLS_VENDOR="${ANDROID_VENDOR}"
 	-D_GNU_SOURCE -D_XOPEN_SOURCE=700 -DUSE_F2FS
 	-DANDROID_MKE2FS_NAME="${ANDROID_MKE2FS_NAME}")
 target_link_libraries(fastboot
-	libsparse libzip libcutils liblog libutil libbase libext4
-	libselinux libsepol libdiagnoseusb
+	libsparse libzip libcutils liblog libfsmgr libutil
+	libbase libext4 libselinux libsepol libdiagnoseusb crypto
 	z pcre2-8 pthread dl)

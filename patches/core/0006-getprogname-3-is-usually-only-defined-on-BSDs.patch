@@ -1,0 +1,27 @@
+From a04b665ed514ed8d1d0a493caaf2fb3e91d4d47c Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
+Date: Tue, 27 Feb 2018 17:27:39 +0100
+Subject: [PATCH] getprogname(3) is usually only defined on BSDs
+
+musl libc doesn't have it either, therefore just check for __linux__
+instead of __GLIBC__.
+---
+ base/logging.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/base/logging.cpp b/base/logging.cpp
+index f89168c0f..582a8f6df 100644
+--- a/base/logging.cpp
++++ b/base/logging.cpp
+@@ -63,9 +63,9 @@ namespace android {
+ namespace base {
+ 
+ // BSD-based systems like Android/macOS have getprogname(). Others need us to provide one.
+-#if defined(__GLIBC__) || defined(_WIN32)
++#if defined(__linux__) || defined(_WIN32)
+ static const char* getprogname() {
+-#if defined(__GLIBC__)
++#if defined(__linux__)
+   return program_invocation_short_name;
+ #elif defined(_WIN32)
+   static bool first = true;

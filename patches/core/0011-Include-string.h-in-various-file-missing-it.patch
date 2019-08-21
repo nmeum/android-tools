@@ -1,4 +1,4 @@
-From a2a5e85e8c0638a4f039063bd43c0b8ccb72583f Mon Sep 17 00:00:00 2001
+From d4dc162302db5da549ddc5d0ee01b8e2cf848272 Mon Sep 17 00:00:00 2001
 From: Anatol Pomozov <anatol.pomozov@gmail.com>
 Date: Fri, 25 Aug 2017 23:30:34 +0000
 Subject: [PATCH] Include string.h in various file missing it
@@ -9,21 +9,20 @@ Most of these need string.h for strerror(3).
  base/errors_unix.cpp          | 1 +
  base/file.cpp                 | 1 +
  base/logging.cpp              | 1 +
- libsparse/sparse_read.cpp     | 1 +
- 5 files changed, 5 insertions(+)
+ 4 files changed, 4 insertions(+)
 
 diff --git a/adb/sysdeps/posix/network.cpp b/adb/sysdeps/posix/network.cpp
-index ecd1fd24e..86166c0e2 100644
+index c5c227568..99686f15f 100644
 --- a/adb/sysdeps/posix/network.cpp
 +++ b/adb/sysdeps/posix/network.cpp
-@@ -21,6 +21,7 @@
+@@ -22,6 +22,7 @@
  #include <sys/socket.h>
  
  #include <string>
 +#include <string.h>
  
- #include "adb_unique_fd.h"
- 
+ #include <android-base/logging.h>
+ #include <android-base/stringprintf.h>
 diff --git a/base/errors_unix.cpp b/base/errors_unix.cpp
 index 296995efe..48269b675 100644
 --- a/base/errors_unix.cpp
@@ -37,10 +36,10 @@ index 296995efe..48269b675 100644
  namespace android {
  namespace base {
 diff --git a/base/file.cpp b/base/file.cpp
-index 2f697a1cc..81aef5758 100644
+index 3dfcfbb7e..1b5c0203f 100644
 --- a/base/file.cpp
 +++ b/base/file.cpp
-@@ -22,6 +22,7 @@
+@@ -26,6 +26,7 @@
  #include <sys/stat.h>
  #include <sys/types.h>
  #include <unistd.h>
@@ -49,26 +48,14 @@ index 2f697a1cc..81aef5758 100644
  #include <memory>
  #include <mutex>
 diff --git a/base/logging.cpp b/base/logging.cpp
-index 8b933622d..c74fc6273 100644
+index 582a8f6df..860f7921f 100644
 --- a/base/logging.cpp
 +++ b/base/logging.cpp
-@@ -23,6 +23,7 @@
- #include <fcntl.h>
+@@ -24,6 +24,7 @@
+ #include <inttypes.h>
  #include <libgen.h>
  #include <time.h>
 +#include <string.h>
  
  // For getprogname(3) or program_invocation_short_name.
  #if defined(__ANDROID__) || defined(__APPLE__)
-diff --git a/libsparse/sparse_read.cpp b/libsparse/sparse_read.cpp
-index 437963527..ccb565bb6 100644
---- a/libsparse/sparse_read.cpp
-+++ b/libsparse/sparse_read.cpp
-@@ -26,6 +26,7 @@
- #include <stdlib.h>
- #include <string.h>
- #include <string>
-+#include <string.h>
- #include <unistd.h>
- 
- #include <sparse/sparse.h>

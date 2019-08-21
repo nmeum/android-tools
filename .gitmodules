@@ -16,3 +16,6 @@
 [submodule "boringssl"]
 	path = vendor/boringssl
 	url = https://boringssl.googlesource.com/boringssl.git
+[submodule "vendor/mkbootimg"]
+	path = vendor/mkbootimg
+	url = https://android.googlesource.com/platform/system/tools/mkbootimg
