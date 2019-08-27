@@ -26,6 +26,7 @@ if(EXISTS "${ANDROID_PATCH_DIR}/")
 endif()
 
 include(CMakeLists.adb.txt)
+include(CMakeLists.sparse.txt)
 include(CMakeLists.fastboot.txt)
 include(CMakeLists.mke2fs.txt)
 
@@ -36,4 +37,5 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu11 -Wno-attributes")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++2a -Wno-attributes")
 
 # Targets which should be installed by `make install`.
-install(TARGETS adb fastboot "${ANDROID_MKE2FS_NAME}" DESTINATION bin)
+install(TARGETS adb fastboot "${ANDROID_MKE2FS_NAME}"
+	simg2img img2simg append2simg DESTINATION bin)
