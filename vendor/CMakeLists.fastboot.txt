@@ -1,14 +1,3 @@
-add_library(libsparse STATIC
-	core/libsparse/backed_block.cpp
-	core/libsparse/output_file.cpp
-	core/libsparse/sparse.cpp
-	core/libsparse/sparse_crc32.cpp
-	core/libsparse/sparse_err.cpp
-	core/libsparse/sparse_read.cpp)
-
-target_include_directories(libsparse PUBLIC
-	core/libsparse/include core/base/include)
-
 add_library(libzip STATIC
 	core/libziparchive/zip_archive.cc)
 

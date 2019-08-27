@@ -26,6 +26,7 @@ Currently the following tools are supported:
 * adb
 * fastboot
 * mke2fs.android (required by fastboot)
+* simg2img, img2simg, append2simg
 
 The build system itself works quite well and is already being used for
 the Alpine Linux [android-tools package][alpine-linux] which I maintain.
