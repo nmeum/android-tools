@@ -1,4 +1,4 @@
-From 435700088eaed2b8cbbc75a7d59c52cc50430aab Mon Sep 17 00:00:00 2001
+From 707f5a76e51c698028c44145b5cea1991cf6f098 Mon Sep 17 00:00:00 2001
 From: Robert Yang <decatf@gmail.com>
 Date: Wed, 24 Oct 2018 09:48:40 -0400
 Subject: [PATCH] adb: Reduce fallback size for _SC_GETPW_R_SIZE_MAX
@@ -9,7 +9,7 @@ See: https://github.com/nmeum/android-tools/pull/5#discussion_r227946282
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/adb/adb_utils.cpp b/adb/adb_utils.cpp
-index cf5fbc88d..d1392f06d 100644
+index d1910f1c3..593448a0a 100644
 --- a/adb/adb_utils.cpp
 +++ b/adb/adb_utils.cpp
 @@ -294,7 +294,7 @@ std::string adb_get_homedir_path() {

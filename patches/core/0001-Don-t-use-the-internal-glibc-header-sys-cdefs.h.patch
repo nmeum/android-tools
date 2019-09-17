@@ -1,6 +1,6 @@
-From b6b5d681d6abebd0635802389b382077d575754a Mon Sep 17 00:00:00 2001
+From d263b26ed5a51821b711ac14d94ef586e4ade981 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
-Date: Wed, 21 Aug 2019 19:17:23 +0200
+Date: Tue, 17 Sep 2019 11:42:41 +0200
 Subject: [PATCH] Don't use the internal glibc header sys/cdefs.h
 
 This patch was created using sed(1) and ag(1) with the following script:
@@ -41,7 +41,7 @@ https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-
  .../include/memunreachable/memunreachable.h   |  9 +++++---
  .../include/nativeloader/dlext_namespaces.h   |  8 +++++--
  libnetutils/include/netutils/ifc.h            |  9 +++++---
- .../packagelistparser/packagelistparser.h     |  9 +++++---
+ .../packagelistparser/packagelistparser.h     |  8 +++++--
  .../cgrouprc/include/android/cgrouprc.h       |  8 +++++--
  .../include/processgroup/processgroup.h       |  9 +++++---
  libsuspend/autosuspend_ops.h                  |  8 +++++--
@@ -62,7 +62,7 @@ https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-
  trusty/gatekeeper/trusty_gatekeeper_ipc.h     |  8 +++++--
  .../ipc/trusty_keymaster_ipc.h                |  8 +++++--
  .../storage/lib/include/trusty/lib/storage.h  |  8 +++++--
- 48 files changed, 285 insertions(+), 140 deletions(-)
+ 48 files changed, 285 insertions(+), 139 deletions(-)
 
 diff --git a/debuggerd/include/debuggerd/handler.h b/debuggerd/include/debuggerd/handler.h
 index 7196e0ad4..9ba20db19 100644
@@ -618,10 +618,10 @@ index 7c53cbb65..df881ec51 100644
 +}
 +#endif
 diff --git a/liblog/logger.h b/liblog/logger.h
-index 1f632c037..24cbcfd2e 100644
+index accb6e7cb..2bfd0692e 100644
 --- a/liblog/logger.h
 +++ b/liblog/logger.h
-@@ -25,7 +25,9 @@
+@@ -24,7 +24,9 @@
  #include "log_portability.h"
  #include "uio.h"
  
@@ -632,7 +632,7 @@ index 1f632c037..24cbcfd2e 100644
  
  /* Union, sock or fd of zero is not allowed unless static initialized */
  union android_log_context_union {
-@@ -162,4 +164,6 @@ void __android_log_unlock();
+@@ -161,4 +163,6 @@ void __android_log_unlock();
  
  extern int __android_log_transport;
  
@@ -786,14 +786,11 @@ index 3b272343d..60c68d76c 100644
  
  #endif /* _NETUTILS_IFC_H_ */
 diff --git a/libpackagelistparser/include/packagelistparser/packagelistparser.h b/libpackagelistparser/include/packagelistparser/packagelistparser.h
-index 3cb6b9af0..9e641ad2b 100644
+index e89cb5400..86b6604ca 100644
 --- a/libpackagelistparser/include/packagelistparser/packagelistparser.h
 +++ b/libpackagelistparser/include/packagelistparser/packagelistparser.h
-@@ -29,10 +29,11 @@
- #define PACKAGELISTPARSER_H_
- 
+@@ -19,7 +19,9 @@
  #include <stdbool.h>
--#include <sys/cdefs.h>
  #include <sys/types.h>
  
 -__BEGIN_DECLS
@@ -801,18 +798,16 @@ index 3cb6b9af0..9e641ad2b 100644
 +extern "C" {
 +#endif
  
- /** The file containing the list of installed packages on the system */
- #define PACKAGES_LIST_FILE  "/data/system/packages.list"
-@@ -89,6 +90,8 @@ extern bool packagelist_parse(pfn_on_package callback, void *userdata);
-  */
- extern void packagelist_free(pkg_info *info);
+ typedef struct gid_list {
+   /** Number of gids. */
+@@ -78,4 +80,6 @@ bool packagelist_parse_file(const char* path, bool (*callback)(pkg_info* info, v
+ /** Frees the given `pkg_info`. */
+ void packagelist_free(pkg_info* info);
  
 -__END_DECLS
 +#ifdef __cplusplus
 +}
 +#endif
- 
- #endif /* PACKAGELISTPARSER_H_ */
 diff --git a/libprocessgroup/cgrouprc/include/android/cgrouprc.h b/libprocessgroup/cgrouprc/include/android/cgrouprc.h
 index 0f6a9cd5d..3a41a550d 100644
 --- a/libprocessgroup/cgrouprc/include/android/cgrouprc.h

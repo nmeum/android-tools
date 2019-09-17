@@ -1,4 +1,4 @@
-From 2d94bd3f415975f294b046ab43ea438f1dd924ce Mon Sep 17 00:00:00 2001
+From 1834e64f1bb3315cbdf7b0668213919da59a9d62 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Wed, 21 Aug 2019 20:01:26 +0200
 Subject: [PATCH] liblog: Fix initialization of android_log_transport_write
@@ -23,10 +23,10 @@ index c0b0e69a5..29bcd4f75 100644
      .open = fakeOpen,
      .close = fakeClose,
 diff --git a/liblog/stderr_write.cpp b/liblog/stderr_write.cpp
-index e324a7c65..a32626099 100644
+index e76673f74..1deb88b37 100644
 --- a/liblog/stderr_write.cpp
 +++ b/liblog/stderr_write.cpp
-@@ -56,8 +56,8 @@ struct stderrContext {
+@@ -55,8 +55,8 @@ struct stderrContext {
  
  struct android_log_transport_write stderrLoggerWrite = {
      .node = {&stderrLoggerWrite.node, &stderrLoggerWrite.node},

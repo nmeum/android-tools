@@ -1,4 +1,4 @@
-From 7b0d908f0a06d0efb49120103bee139528daaf5c Mon Sep 17 00:00:00 2001
+From dec9399d0428444b549354f9fb4d047105f8550f Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Sun, 1 Sep 2019 13:40:05 +0000
 Subject: [PATCH] Don't include version.h
@@ -10,7 +10,7 @@ Version is set using a CPPFLAG.
  2 files changed, 2 insertions(+), 6 deletions(-)
 
 diff --git a/adb/adb.cpp b/adb/adb.cpp
-index 687d9f096..8841170ba 100644
+index 0d27e83aa..906851493 100644
 --- a/adb/adb.cpp
 +++ b/adb/adb.cpp
 @@ -44,8 +44,6 @@

@@ -1,4 +1,4 @@
-From 7d39438932de32c95c5a90f1ffeac31bfd8a21a7 Mon Sep 17 00:00:00 2001
+From eafcbdb9fddbd5e9fbebf693c38db641f038c720 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 16:30:30 +0100
 Subject: [PATCH] Fix inclusion of stdatomic.h with g++
@@ -6,9 +6,9 @@ Subject: [PATCH] Fix inclusion of stdatomic.h with g++
 See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=60932#c5
 ---
  libcutils/include/cutils/trace.h | 5 +++++
- liblog/logger.h                  | 6 ++++++
+ liblog/logger.h                  | 5 +++++
  liblog/logger_write.cpp          | 5 +++++
- 3 files changed, 16 insertions(+)
+ 3 files changed, 15 insertions(+)
 
 diff --git a/libcutils/include/cutils/trace.h b/libcutils/include/cutils/trace.h
 index 712f75c4f..9a41f4be7 100644
@@ -28,10 +28,10 @@ index 712f75c4f..9a41f4be7 100644
  #include <stdint.h>
  #include <stdio.h>
 diff --git a/liblog/logger.h b/liblog/logger.h
-index 24cbcfd2e..046710332 100644
+index 2bfd0692e..5adb6ac0d 100644
 --- a/liblog/logger.h
 +++ b/liblog/logger.h
-@@ -16,7 +16,13 @@
+@@ -16,7 +16,12 @@
  
  #pragma once
  
@@ -41,10 +41,9 @@ index 24cbcfd2e..046710332 100644
 +#else
  #include <stdatomic.h>
 +#endif
-+
- #include <stdbool.h>
  
  #include <cutils/list.h>
+ #include <log/log.h>
 diff --git a/liblog/logger_write.cpp b/liblog/logger_write.cpp
 index a4b3cd7b2..0f44b859c 100644
 --- a/liblog/logger_write.cpp

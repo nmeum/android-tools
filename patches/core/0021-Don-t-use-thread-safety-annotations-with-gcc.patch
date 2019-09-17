@@ -1,4 +1,4 @@
-From 1b0be10ea58e094cbb953501a9deabff96767437 Mon Sep 17 00:00:00 2001
+From d4415747d45ae90cfa6f733a90305975952ac160 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Mon, 16 Sep 2019 19:24:15 +0200
 Subject: [PATCH] Don't use thread safety annotations with gcc

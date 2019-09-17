@@ -1,4 +1,4 @@
-From 9f3cc5bd8c2004cef236c22c47c05a3be726f5a8 Mon Sep 17 00:00:00 2001
+From 67d0ebe5041f56c7d4860754f90142b35c6cd6b3 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Sun, 1 Sep 2019 14:22:06 +0000
 Subject: [PATCH] Include cstring in various file missing it
@@ -10,10 +10,10 @@ Subject: [PATCH] Include cstring in various file missing it
  3 files changed, 3 insertions(+)
 
 diff --git a/adb/types.h b/adb/types.h
-index cd1366dfb..1eb7e4b6d 100644
+index 8bd66be57..9523547eb 100644
 --- a/adb/types.h
 +++ b/adb/types.h
-@@ -22,6 +22,7 @@
+@@ -24,6 +24,7 @@
  #include <type_traits>
  #include <utility>
  #include <vector>
@@ -22,23 +22,23 @@ index cd1366dfb..1eb7e4b6d 100644
  #include <android-base/logging.h>
  
 diff --git a/fs_mgr/liblp/reader.cpp b/fs_mgr/liblp/reader.cpp
-index dcee6d2d8..6fcd613ab 100644
+index 8dbe955fa..959f8e813 100644
 --- a/fs_mgr/liblp/reader.cpp
 +++ b/fs_mgr/liblp/reader.cpp
-@@ -19,6 +19,7 @@
- #include <stddef.h>
+@@ -20,6 +20,7 @@
  #include <stdlib.h>
+ #include <string.h>
  #include <unistd.h>
 +#include <cstring>
  
  #include <functional>
  
 diff --git a/fs_mgr/liblp/writer.cpp b/fs_mgr/liblp/writer.cpp
-index bffcb7e6e..1bf95b56b 100644
+index 8a983adf4..e70903acf 100644
 --- a/fs_mgr/liblp/writer.cpp
 +++ b/fs_mgr/liblp/writer.cpp
-@@ -19,6 +19,7 @@
- #include <inttypes.h>
+@@ -20,6 +20,7 @@
+ #include <string.h>
  #include <unistd.h>
  
 +#include <cstring>

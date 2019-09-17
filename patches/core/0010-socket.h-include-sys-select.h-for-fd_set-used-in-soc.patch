@@ -1,4 +1,4 @@
-From 3d7bdd11ac7839b650dce086f4b3374fc4aaffb4 Mon Sep 17 00:00:00 2001
+From 9f0ead465298fa4da5628493b159147149c16fa2 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Wed, 28 Feb 2018 20:22:09 +0100
 Subject: [PATCH] socket.h: include sys/select.h for fd_set used in socket.cpp

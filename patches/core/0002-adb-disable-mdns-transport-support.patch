@@ -1,4 +1,4 @@
-From 9e84fd21dbd5387f5eea9afd0dbbbeb4d27c8aaf Mon Sep 17 00:00:00 2001
+From 586a4d9e878ba3294b604cfce8572bf6ee4336c2 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Sun, 1 Sep 2019 15:04:18 +0000
 Subject: [PATCH] adb: disable mdns transport support

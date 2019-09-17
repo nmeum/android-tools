@@ -1,4 +1,4 @@
-From d4dc162302db5da549ddc5d0ee01b8e2cf848272 Mon Sep 17 00:00:00 2001
+From c85143654f46db5f814ba08568ef8b5f0cda20f1 Mon Sep 17 00:00:00 2001
 From: Anatol Pomozov <anatol.pomozov@gmail.com>
 Date: Fri, 25 Aug 2017 23:30:34 +0000
 Subject: [PATCH] Include string.h in various file missing it
@@ -6,10 +6,9 @@ Subject: [PATCH] Include string.h in various file missing it
 Most of these need string.h for strerror(3).
 ---
  adb/sysdeps/posix/network.cpp | 1 +
- base/errors_unix.cpp          | 1 +
  base/file.cpp                 | 1 +
  base/logging.cpp              | 1 +
- 4 files changed, 4 insertions(+)
+ 3 files changed, 3 insertions(+)
 
 diff --git a/adb/sysdeps/posix/network.cpp b/adb/sysdeps/posix/network.cpp
 index c5c227568..99686f15f 100644
@@ -23,18 +22,6 @@ index c5c227568..99686f15f 100644
  
  #include <android-base/logging.h>
  #include <android-base/stringprintf.h>
-diff --git a/base/errors_unix.cpp b/base/errors_unix.cpp
-index 296995efe..48269b675 100644
---- a/base/errors_unix.cpp
-+++ b/base/errors_unix.cpp
-@@ -17,6 +17,7 @@
- #include "android-base/errors.h"
- 
- #include <errno.h>
-+#include <string.h>
- 
- namespace android {
- namespace base {
 diff --git a/base/file.cpp b/base/file.cpp
 index 3dfcfbb7e..1b5c0203f 100644
 --- a/base/file.cpp
