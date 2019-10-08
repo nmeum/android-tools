@@ -33,8 +33,14 @@ include(CMakeLists.mke2fs.txt)
 # Various C++20 features are used across the codebase, e.g.
 # std::string_view.starts_with. Additionally, GNU extension
 # (such as typeof) are used occasionally.
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu11 -Wno-attributes")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++2a -Wno-attributes")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++2a")
+
+# Android seems to use various attributes supported by clang but not by
+# GCC which causes it to emit lots of warnings. Since these attributes
+# don't seem to effect runtime behaviour simply disable the warnings.
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-attributes")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-attributes")
 
 # Targets which should be installed by `make install`.
 install(TARGETS adb fastboot "${ANDROID_MKE2FS_NAME}"
