@@ -1,4 +1,4 @@
-From eafcbdb9fddbd5e9fbebf693c38db641f038c720 Mon Sep 17 00:00:00 2001
+From aff90ade8e66223a7e561c2ea00ac6c0ddfa2fc9 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 16:30:30 +0100
 Subject: [PATCH] Fix inclusion of stdatomic.h with g++
@@ -28,7 +28,7 @@ index 712f75c4f..9a41f4be7 100644
  #include <stdint.h>
  #include <stdio.h>
 diff --git a/liblog/logger.h b/liblog/logger.h
-index 2bfd0692e..5adb6ac0d 100644
+index c5fbc1184..abeb23454 100644
 --- a/liblog/logger.h
 +++ b/liblog/logger.h
 @@ -16,7 +16,12 @@
@@ -45,7 +45,7 @@ index 2bfd0692e..5adb6ac0d 100644
  #include <cutils/list.h>
  #include <log/log.h>
 diff --git a/liblog/logger_write.cpp b/liblog/logger_write.cpp
-index a4b3cd7b2..0f44b859c 100644
+index e1772f190..1c72653cc 100644
 --- a/liblog/logger_write.cpp
 +++ b/liblog/logger_write.cpp
 @@ -15,7 +15,12 @@

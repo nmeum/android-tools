@@ -1,4 +1,4 @@
-From 67d0ebe5041f56c7d4860754f90142b35c6cd6b3 Mon Sep 17 00:00:00 2001
+From 4789635b4f900b1f625458d75b5b2b9e916cf0a6 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Sun, 1 Sep 2019 14:22:06 +0000
 Subject: [PATCH] Include cstring in various file missing it
@@ -22,7 +22,7 @@ index 8bd66be57..9523547eb 100644
  #include <android-base/logging.h>
  
 diff --git a/fs_mgr/liblp/reader.cpp b/fs_mgr/liblp/reader.cpp
-index 8dbe955fa..959f8e813 100644
+index aecf6852e..0771382ed 100644
 --- a/fs_mgr/liblp/reader.cpp
 +++ b/fs_mgr/liblp/reader.cpp
 @@ -20,6 +20,7 @@
