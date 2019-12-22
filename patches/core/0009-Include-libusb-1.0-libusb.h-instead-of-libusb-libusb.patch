@@ -1,4 +1,4 @@
-From a49cab2c60b71aac1acb0ad98e9599eb1df77466 Mon Sep 17 00:00:00 2001
+From 558f8bd8ed938a448f5a6438327ed40181f83fa7 Mon Sep 17 00:00:00 2001
 From: Anatol Pomozov <anatol.pomozov@gmail.com>
 Date: Fri, 25 Aug 2017 23:30:34 +0000
 Subject: [PATCH] Include libusb-1.0/libusb.h instead of libusb/libusb.h

@@ -1,4 +1,4 @@
-From ae66cdec744d81232c58583ae8c3226b7e74d860 Mon Sep 17 00:00:00 2001
+From 5afbc52c470940f0935b352b283bf4a5b61db146 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Thu, 13 Sep 2018 23:19:07 +0200
 Subject: [PATCH] Don't use the internal glibc header sys/cdefs.h
@@ -14,13 +14,12 @@ This patch was created using sed(1) and ag(1) with the following script:
 
 https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-get-error-messages-about-<code>sys/cdefs.h</code>
 ---
- libfscrypt/include/fscrypt/fscrypt.h                 | 9 ++++++---
- libfscrypt/include/fscrypt/fscrypt_init_extensions.h | 9 ++++++---
- tests/lib/testUtil/include/testUtil.h                | 8 ++++++--
- 3 files changed, 18 insertions(+), 8 deletions(-)
+ libfscrypt/include/fscrypt/fscrypt.h  | 9 ++++++---
+ tests/lib/testUtil/include/testUtil.h | 8 ++++++--
+ 2 files changed, 12 insertions(+), 5 deletions(-)
 
 diff --git a/libfscrypt/include/fscrypt/fscrypt.h b/libfscrypt/include/fscrypt/fscrypt.h
-index 8a68b935..06456cdb 100644
+index 13358bb7..b77999a4 100644
 --- a/libfscrypt/include/fscrypt/fscrypt.h
 +++ b/libfscrypt/include/fscrypt/fscrypt.h
 @@ -17,11 +17,12 @@
@@ -38,8 +37,8 @@ index 8a68b935..06456cdb 100644
  
  bool fscrypt_is_native();
  
-@@ -34,6 +35,8 @@ static const char* fscrypt_unencrypted_folder = "/unencrypted";
- static const char* fscrypt_key_ref = "/unencrypted/ref";
+@@ -34,6 +35,8 @@ static const char* fscrypt_key_ref = "/unencrypted/ref";
+ static const char* fscrypt_key_per_boot_ref = "/unencrypted/per_boot_ref";
  static const char* fscrypt_key_mode = "/unencrypted/mode";
  
 -__END_DECLS
@@ -48,34 +47,6 @@ index 8a68b935..06456cdb 100644
 +#endif
  
  #endif // _FSCRYPT_H_
-diff --git a/libfscrypt/include/fscrypt/fscrypt_init_extensions.h b/libfscrypt/include/fscrypt/fscrypt_init_extensions.h
-index 2b6c46e1..cf0de3f6 100644
---- a/libfscrypt/include/fscrypt/fscrypt_init_extensions.h
-+++ b/libfscrypt/include/fscrypt/fscrypt_init_extensions.h
-@@ -17,17 +17,20 @@
- #ifndef _FSCRYPT_INIT_EXTENSIONS_H_
- #define _FSCRYPT_INIT_EXTENSIONS_H_
- 
--#include <sys/cdefs.h>
- #include <stdbool.h>
- #include <cutils/multiuser.h>
- 
--__BEGIN_DECLS
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
- 
- // These functions assume they are being called from init
- // They will not operate properly outside of init
- int fscrypt_install_keyring();
- int fscrypt_set_directory_policy(const char* path);
- 
--__END_DECLS
-+#ifdef __cplusplus
-+}
-+#endif
- 
- #endif // _FSCRYPT_INIT_EXTENSIONS_H_
 diff --git a/tests/lib/testUtil/include/testUtil.h b/tests/lib/testUtil/include/testUtil.h
 index 3b75914d..bdef437d 100644
 --- a/tests/lib/testUtil/include/testUtil.h

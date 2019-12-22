@@ -1,4 +1,4 @@
-From c85143654f46db5f814ba08568ef8b5f0cda20f1 Mon Sep 17 00:00:00 2001
+From a486fad6720b82aa36925faf5a0d5973e5098b13 Mon Sep 17 00:00:00 2001
 From: Anatol Pomozov <anatol.pomozov@gmail.com>
 Date: Fri, 25 Aug 2017 23:30:34 +0000
 Subject: [PATCH] Include string.h in various file missing it
@@ -23,7 +23,7 @@ index c5c227568..99686f15f 100644
  #include <android-base/logging.h>
  #include <android-base/stringprintf.h>
 diff --git a/base/file.cpp b/base/file.cpp
-index 3dfcfbb7e..1b5c0203f 100644
+index 6321fc624..ab072e6b5 100644
 --- a/base/file.cpp
 +++ b/base/file.cpp
 @@ -26,6 +26,7 @@
