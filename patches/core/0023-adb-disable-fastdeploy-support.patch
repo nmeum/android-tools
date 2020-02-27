@@ -1,0 +1,107 @@
+From 3960fd22b7637059b654f879a6e31e5b349fc992 Mon Sep 17 00:00:00 2001
+From: Minecrell <minecrell@minecrell.net>
+Date: Thu, 27 Feb 2020 14:06:16 +0100
+Subject: [PATCH] adb: disable fastdeploy support
+
+The "fastdeploy" support in ADB seems extremely complicated, it requires
+additional dependencies on protobuf and Java,
+see: https://git.archlinux.org/svntogit/community.git/commit/trunk/PKGBUILD?h=packages/android-tools&id=18cab8db85b81471e3beb90a0543945fb31f84bb
+
+For now lets just disable it (like it was on platform-tools-29.0.4).
+If someone wants to make it work, feel free to :)
+---
+ adb/client/adb_install.cpp | 10 ++++++++++
+ adb/client/fastdeploy.h    |  4 ++++
+ 2 files changed, 14 insertions(+)
+
+diff --git a/adb/client/adb_install.cpp b/adb/client/adb_install.cpp
+index 73dcde1fe..5ef7a48a3 100644
+--- a/adb/client/adb_install.cpp
++++ b/adb/client/adb_install.cpp
+@@ -167,6 +167,7 @@ static int install_app_streamed(int argc, const char** argv, bool use_fastdeploy
+     }
+ 
+     if (use_fastdeploy) {
++#if defined(ENABLE_FASTDEPLOY)
+         auto metadata = extract_metadata(file);
+         if (metadata.has_value()) {
+             // pass all but 1st (command) and last (apk path) parameters through to pm for
+@@ -175,6 +176,9 @@ static int install_app_streamed(int argc, const char** argv, bool use_fastdeploy
+             auto patchFd = install_patch(pm_args.size(), pm_args.data());
+             return stream_patch(file, std::move(metadata.value()), std::move(patchFd));
+         }
++#else
++        error_exit("fastdeploy is disabled");
++#endif
+     }
+ 
+     struct stat sb;
+@@ -263,6 +267,7 @@ static int install_app_legacy(int argc, const char** argv, bool use_fastdeploy)
+     argv[last_apk] = apk_dest.c_str(); /* destination name, not source location */
+ 
+     if (use_fastdeploy) {
++#if defined(ENABLE_FASTDEPLOY)
+         auto metadata = extract_metadata(apk_file[0]);
+         if (metadata.has_value()) {
+             auto patchFd = apply_patch_on_device(apk_dest.c_str());
+@@ -273,6 +278,9 @@ static int install_app_legacy(int argc, const char** argv, bool use_fastdeploy)
+ 
+             return status;
+         }
++#else
++        error_exit("fastdeploy is disabled");
++#endif
+     }
+ 
+     if (do_sync_push(apk_file, apk_dest.c_str(), false)) {
+@@ -327,6 +335,7 @@ int install_app(int argc, const char** argv) {
+         error_exit("Attempting to use streaming install on unsupported device");
+     }
+ 
++#if defined(ENABLE_FASTDEPLOY)
+     if (use_fastdeploy && get_device_api_level() < kFastDeployMinApi) {
+         printf("Fast Deploy is only compatible with devices of API version %d or higher, "
+                "ignoring.\n",
+@@ -334,6 +343,7 @@ int install_app(int argc, const char** argv) {
+         use_fastdeploy = false;
+     }
+     fastdeploy_set_agent_update_strategy(agent_update_strategy);
++#endif
+ 
+     std::vector<const char*> passthrough_argv;
+     for (int i = 0; i < argc; i++) {
+diff --git a/adb/client/fastdeploy.h b/adb/client/fastdeploy.h
+index 830aeb2ca..25f3f9efe 100644
+--- a/adb/client/fastdeploy.h
++++ b/adb/client/fastdeploy.h
+@@ -16,12 +16,14 @@
+ 
+ #pragma once
+ 
++#if defined(ENABLE_FASTDEPLOY)
+ #include "adb_unique_fd.h"
+ 
+ #include "fastdeploy/proto/ApkEntry.pb.h"
+ 
+ #include <optional>
+ #include <string>
++#endif
+ 
+ enum FastDeploy_AgentUpdateStrategy {
+     FastDeploy_AgentUpdateAlways,
+@@ -29,6 +31,7 @@ enum FastDeploy_AgentUpdateStrategy {
+     FastDeploy_AgentUpdateDifferentVersion
+ };
+ 
++#if defined(ENABLE_FASTDEPLOY)
+ void fastdeploy_set_agent_update_strategy(FastDeploy_AgentUpdateStrategy agent_update_strategy);
+ int get_device_api_level();
+ 
+@@ -37,3 +40,4 @@ unique_fd install_patch(int argc, const char** argv);
+ unique_fd apply_patch_on_device(const char* output_path);
+ int stream_patch(const char* apk_path, com::android::fastdeploy::APKMetaData metadata,
+                  unique_fd patch_fd);
++#endif
+-- 
+2.25.1
+
