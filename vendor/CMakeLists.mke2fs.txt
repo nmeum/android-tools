@@ -10,6 +10,7 @@ add_library(libext2fs STATIC
 	e2fsprogs/lib/blkid/resolve.c
 	e2fsprogs/lib/blkid/save.c
 	e2fsprogs/lib/blkid/tag.c
+	e2fsprogs/lib/e2p/encoding.c
 	e2fsprogs/lib/e2p/feature.c
 	e2fsprogs/lib/e2p/hashstr.c
 	e2fsprogs/lib/e2p/mntopts.c
@@ -68,6 +69,7 @@ add_library(libext2fs STATIC
 	e2fsprogs/lib/ext2fs/mmp.c
 	e2fsprogs/lib/ext2fs/namei.c
 	e2fsprogs/lib/ext2fs/newdir.c
+	e2fsprogs/lib/ext2fs/nls_utf8.c
 	e2fsprogs/lib/ext2fs/openfs.c
 	e2fsprogs/lib/ext2fs/progress.c
 	e2fsprogs/lib/ext2fs/punch.c
