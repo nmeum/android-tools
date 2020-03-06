@@ -1,69 +1,127 @@
-From d263b26ed5a51821b711ac14d94ef586e4ade981 Mon Sep 17 00:00:00 2001
+From aa1a21801edbbe2d275c4eb85501af106b0a80e1 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
-Date: Tue, 17 Sep 2019 11:42:41 +0200
+Date: Sun, 22 Dec 2019 18:42:19 +0100
 Subject: [PATCH] Don't use the internal glibc header sys/cdefs.h
 
 This patch was created using sed(1) and ag(1) with the following script:
 
-	for file in $(ag -l __BEGIN_DECLS); do
+	for file in $(ag -l '__BEGIN_DECLS|sys/cdefs.h'); do
 		sed -i "${file}" \
 			-e 's/__BEGIN_DECLS/#ifdef __cplusplus\nextern "C" {\n#endif/g' \
 			-e 's/__END_DECLS/#ifdef __cplusplus\n}\n#endif/g' \
 			-e '/#include <sys\/cdefs.h>/d'
 	done
 
+Then remove garbage in core/liblog/log_portability.h.
+
 https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-get-error-messages-about-<code>sys/cdefs.h</code>
 ---
+ base/include/android-base/endian.h            |  1 -
+ base/include/android-base/properties.h        |  1 -
+ debuggerd/include/debuggerd/client.h          |  1 -
  debuggerd/include/debuggerd/handler.h         |  9 +++++---
+ debuggerd/util.h                              |  1 -
  deprecated-adf/libadf/include/adf/adf.h       |  9 +++++---
  .../libadfhwc/include/adfhwc/adfhwc.h         |  9 +++++---
+ fs_mgr/fs_mgr_priv_boot_config.h              |  1 -
+ init/keychords.cpp                            |  1 -
+ init/reboot.cpp                               |  1 -
+ libasyncio/include/asyncio/AsyncIO.h          |  1 -
  libbacktrace/backtrace_testlib.h              |  9 +++++---
  libcutils/android_get_control_env.h           |  9 +++++---
  libcutils/include/cutils/android_reboot.h     |  9 +++++---
  libcutils/include/cutils/bitops.h             |  9 +++++---
  libcutils/include/cutils/klog.h               |  9 +++++---
  libcutils/include/cutils/partition_utils.h    |  9 +++++---
+ libcutils/include/cutils/properties.h         |  1 -
  libcutils/include/cutils/str_parms.h          |  9 +++++---
  libcutils/include/cutils/trace.h              |  9 +++++---
  libcutils/include/private/canned_fs_config.h  |  8 +++++--
  libcutils/include/private/fs_config.h         |  9 +++++---
  libion/include/ion/ion.h                      |  8 +++++--
  libkeyutils/include/keyutils.h                |  9 +++++---
- liblog/config_read.h                          |  8 +++++--
- liblog/config_write.h                         |  8 +++++--
  liblog/fake_log_device.h                      |  8 +++++--
  liblog/include/log/log_main.h                 |  9 +++++---
  liblog/log_portability.h                      | 14 -------------
  liblog/logd_reader.h                          |  8 +++++--
  liblog/logger.h                               |  8 +++++--
+ libmemunreachable/Allocator.cpp               |  1 -
  libmemunreachable/Binder.cpp                  |  9 +++++---
  libmemunreachable/bionic.h                    |  9 +++++---
  .../include/memunreachable/memunreachable.h   |  9 +++++---
- .../include/nativeloader/dlext_namespaces.h   |  8 +++++--
  libnetutils/include/netutils/ifc.h            |  9 +++++---
  .../packagelistparser/packagelistparser.h     |  8 +++++--
+ libpixelflinger/codeflinger/disassem.c        |  1 -
+ libpixelflinger/codeflinger/mips64_disassem.c |  1 -
+ libpixelflinger/codeflinger/mips_disassem.c   |  1 -
+ libprocessgroup/cgroup_map.h                  |  1 -
  .../cgrouprc/include/android/cgrouprc.h       |  8 +++++--
  .../include/processgroup/processgroup.h       |  9 +++++---
+ libprocessgroup/task_profiles.h               |  1 -
  libsuspend/autosuspend_ops.h                  |  8 +++++--
  libsuspend/include/suspend/autosuspend.h      |  9 +++++---
  libsync/include/android/sync.h                |  8 +++++--
  libsync/include/ndk/sync.h                    |  9 +++++---
  libsync/sw_sync.h                             |  8 +++++--
  libsystem/include/system/camera.h             |  9 +++++---
+ libsystem/include/system/radio.h              |  1 -
  libutils/Singleton_test.h                     |  9 +++++---
  .../include/ziparchive/zip_archive.h          |  1 -
  llkd/include/llkd.h                           | 21 +++++++++++++------
+ llkd/libllkd.cpp                              |  1 -
  lmkd/include/liblmkd_utils.h                  |  9 +++++---
  lmkd/include/lmkd.h                           |  9 +++++---
+ lmkd/liblmkd_utils.c                          |  1 -
  lmkd/libpsi/include/psi/psi.h                 |  9 +++++---
+ lmkd/lmkd.c                                   |  1 -
  lmkd/statslog.h                               |  9 +++++---
+ logcat/logcat.cpp                             |  1 -
+ logcat/tests/logcat_test.cpp                  |  1 -
+ logd/LogBuffer.cpp                            |  1 -
+ logd/LogListener.cpp                          |  1 -
+ logd/LogUtils.h                               |  1 -
  logd/libaudit.h                               |  9 +++++---
- logwrapper/include/logwrap/logwrap.h          |  8 +++++--
  trusty/gatekeeper/trusty_gatekeeper_ipc.h     |  8 +++++--
  .../ipc/trusty_keymaster_ipc.h                |  8 +++++--
  .../storage/lib/include/trusty/lib/storage.h  |  8 +++++--
- 48 files changed, 285 insertions(+), 139 deletions(-)
+ 68 files changed, 261 insertions(+), 155 deletions(-)
 
+diff --git a/base/include/android-base/endian.h b/base/include/android-base/endian.h
+index 8fa6365ee..1e5cceb9a 100644
+--- a/base/include/android-base/endian.h
++++ b/base/include/android-base/endian.h
+@@ -19,7 +19,6 @@
+ /* A cross-platform equivalent of bionic's <sys/endian.h>. */
+ 
+ /* For __BIONIC__ and __GLIBC__ */
+-#include <sys/cdefs.h>
+ 
+ #if defined(__BIONIC__)
+ 
+diff --git a/base/include/android-base/properties.h b/base/include/android-base/properties.h
+index 31823df0a..be1a96b61 100644
+--- a/base/include/android-base/properties.h
++++ b/base/include/android-base/properties.h
+@@ -16,7 +16,6 @@
+ 
+ #pragma once
+ 
+-#include <sys/cdefs.h>
+ 
+ #include <chrono>
+ #include <limits>
+diff --git a/debuggerd/include/debuggerd/client.h b/debuggerd/include/debuggerd/client.h
+index b7284b08e..b85b6e542 100644
+--- a/debuggerd/include/debuggerd/client.h
++++ b/debuggerd/include/debuggerd/client.h
+@@ -17,7 +17,6 @@
+ #pragma once
+ 
+ #include <stdbool.h>
+-#include <sys/cdefs.h>
+ #include <unistd.h>
+ 
+ #include <android-base/unique_fd.h>
 diff --git a/debuggerd/include/debuggerd/handler.h b/debuggerd/include/debuggerd/handler.h
 index 7196e0ad4..9ba20db19 100644
 --- a/debuggerd/include/debuggerd/handler.h
@@ -90,6 +148,18 @@ index 7196e0ad4..9ba20db19 100644
 +#ifdef __cplusplus
 +}
 +#endif
+diff --git a/debuggerd/util.h b/debuggerd/util.h
+index e96442360..43d430314 100644
+--- a/debuggerd/util.h
++++ b/debuggerd/util.h
+@@ -18,7 +18,6 @@
+ 
+ #include <string>
+ 
+-#include <sys/cdefs.h>
+ #include <sys/types.h>
+ 
+ std::string get_process_name(pid_t pid);
 diff --git a/deprecated-adf/libadf/include/adf/adf.h b/deprecated-adf/libadf/include/adf/adf.h
 index e4c7b28cc..41b3da475 100644
 --- a/deprecated-adf/libadf/include/adf/adf.h
@@ -156,6 +226,54 @@ index 4f7092507..97beb2f71 100644
 +#endif
  
  #endif /* _LIBADFHWC_ADFHWC_H_ */
+diff --git a/fs_mgr/fs_mgr_priv_boot_config.h b/fs_mgr/fs_mgr_priv_boot_config.h
+index 417fb380b..6528248a9 100644
+--- a/fs_mgr/fs_mgr_priv_boot_config.h
++++ b/fs_mgr/fs_mgr_priv_boot_config.h
+@@ -17,7 +17,6 @@
+ #ifndef __CORE_FS_MGR_PRIV_BOOTCONFIG_H
+ #define __CORE_FS_MGR_PRIV_BOOTCONFIG_H
+ 
+-#include <sys/cdefs.h>
+ #include <string>
+ #include <utility>
+ #include <vector>
+diff --git a/init/keychords.cpp b/init/keychords.cpp
+index 5f2682be5..fe00a8d7b 100644
+--- a/init/keychords.cpp
++++ b/init/keychords.cpp
+@@ -19,7 +19,6 @@
+ #include <dirent.h>
+ #include <fcntl.h>
+ #include <linux/input.h>
+-#include <sys/cdefs.h>
+ #include <sys/inotify.h>
+ #include <sys/ioctl.h>
+ #include <sys/types.h>
+diff --git a/init/reboot.cpp b/init/reboot.cpp
+index d77b9757e..9d66f4a68 100644
+--- a/init/reboot.cpp
++++ b/init/reboot.cpp
+@@ -23,7 +23,6 @@
+ #include <mntent.h>
+ #include <semaphore.h>
+ #include <stdlib.h>
+-#include <sys/cdefs.h>
+ #include <sys/ioctl.h>
+ #include <sys/mount.h>
+ #include <sys/stat.h>
+diff --git a/libasyncio/include/asyncio/AsyncIO.h b/libasyncio/include/asyncio/AsyncIO.h
+index 9620d2a84..005fc6648 100644
+--- a/libasyncio/include/asyncio/AsyncIO.h
++++ b/libasyncio/include/asyncio/AsyncIO.h
+@@ -20,7 +20,6 @@
+ #include <linux/aio_abi.h>
+ #include <stdbool.h>
+ #include <stdint.h>
+-#include <sys/cdefs.h>
+ #include <sys/types.h>
+ #include <time.h>
+ #include <unistd.h>
 diff --git a/libbacktrace/backtrace_testlib.h b/libbacktrace/backtrace_testlib.h
 index 9b55e56d4..6289c66b9 100644
 --- a/libbacktrace/backtrace_testlib.h
@@ -310,6 +428,18 @@ index 8bc9b48b3..ff1d13a06 100644
 +#endif
  
  #endif /* __CUTILS_PARTITION_WIPED_H__ */
+diff --git a/libcutils/include/cutils/properties.h b/libcutils/include/cutils/properties.h
+index d2e08712a..7e0eb2ac0 100644
+--- a/libcutils/include/cutils/properties.h
++++ b/libcutils/include/cutils/properties.h
+@@ -17,7 +17,6 @@
+ #ifndef __CUTILS_PROPERTIES_H
+ #define __CUTILS_PROPERTIES_H
+ 
+-#include <sys/cdefs.h>
+ #include <stddef.h>
+ #include <sys/system_properties.h>
+ #include <stdint.h>
 diff --git a/libcutils/include/cutils/str_parms.h b/libcutils/include/cutils/str_parms.h
 index aa1435a08..160792a37 100644
 --- a/libcutils/include/cutils/str_parms.h
@@ -423,7 +553,7 @@ index 8a9a1ffd7..40cb55f23 100644
 +}
 +#endif
 diff --git a/libion/include/ion/ion.h b/libion/include/ion/ion.h
-index a60d24eaf..14d1f91ac 100644
+index 1480bd965..eb80cf1f5 100644
 --- a/libion/include/ion/ion.h
 +++ b/libion/include/ion/ion.h
 @@ -24,7 +24,9 @@
@@ -437,9 +567,9 @@ index a60d24eaf..14d1f91ac 100644
  
  struct ion_handle;
  
-@@ -50,6 +52,8 @@ int ion_query_get_heaps(int fd, int cnt, void* buffers);
- 
+@@ -51,6 +53,8 @@ int ion_query_get_heaps(int fd, int cnt, void* buffers);
  int ion_is_legacy(int fd);
+ int ion_is_using_modular_heaps(int fd);
  
 -__END_DECLS
 +#ifdef __cplusplus
@@ -474,52 +604,6 @@ index c508f2790..2c3b4b0b1 100644
 +#endif
  
  #endif
-diff --git a/liblog/config_read.h b/liblog/config_read.h
-index 212b8a09f..97abb11e5 100644
---- a/liblog/config_read.h
-+++ b/liblog/config_read.h
-@@ -20,7 +20,9 @@
- 
- #include "log_portability.h"
- 
--__BEGIN_DECLS
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
- 
- extern struct listnode __android_log_transport_read;
- extern struct listnode __android_log_persist_read;
-@@ -49,4 +51,6 @@ extern struct listnode __android_log_persist_read;
- void __android_log_config_read();
- void __android_log_config_read_close();
- 
--__END_DECLS
-+#ifdef __cplusplus
-+}
-+#endif
-diff --git a/liblog/config_write.h b/liblog/config_write.h
-index a901f1352..5afc4378e 100644
---- a/liblog/config_write.h
-+++ b/liblog/config_write.h
-@@ -20,7 +20,9 @@
- 
- #include "log_portability.h"
- 
--__BEGIN_DECLS
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
- 
- extern struct listnode __android_log_transport_write;
- extern struct listnode __android_log_persist_write;
-@@ -49,4 +51,6 @@ extern struct listnode __android_log_persist_write;
- void __android_log_config_write();
- void __android_log_config_write_close();
- 
--__END_DECLS
-+#ifdef __cplusplus
-+}
-+#endif
 diff --git a/liblog/fake_log_device.h b/liblog/fake_log_device.h
 index ce54db2bf..fc37085e6 100644
 --- a/liblog/fake_log_device.h
@@ -618,7 +702,7 @@ index 7c53cbb65..df881ec51 100644
 +}
 +#endif
 diff --git a/liblog/logger.h b/liblog/logger.h
-index accb6e7cb..2bfd0692e 100644
+index 8cae66c88..c5fbc1184 100644
 --- a/liblog/logger.h
 +++ b/liblog/logger.h
 @@ -24,7 +24,9 @@
@@ -632,14 +716,26 @@ index accb6e7cb..2bfd0692e 100644
  
  /* Union, sock or fd of zero is not allowed unless static initialized */
  union android_log_context_union {
-@@ -161,4 +163,6 @@ void __android_log_unlock();
- 
- extern int __android_log_transport;
+@@ -145,4 +147,6 @@ void __android_log_lock();
+ int __android_log_trylock();
+ void __android_log_unlock();
  
 -__END_DECLS
 +#ifdef __cplusplus
 +}
 +#endif
+diff --git a/libmemunreachable/Allocator.cpp b/libmemunreachable/Allocator.cpp
+index 1eb7e98c5..4863907d4 100644
+--- a/libmemunreachable/Allocator.cpp
++++ b/libmemunreachable/Allocator.cpp
+@@ -22,7 +22,6 @@
+ #include <assert.h>
+ #include <stdlib.h>
+ 
+-#include <sys/cdefs.h>
+ #include <sys/mman.h>
+ #include <sys/prctl.h>
+ 
 diff --git a/libmemunreachable/Binder.cpp b/libmemunreachable/Binder.cpp
 index 60512a3f8..834507459 100644
 --- a/libmemunreachable/Binder.cpp
@@ -732,31 +828,6 @@ index 011443fe3..86e9f5ff3 100644
 +#endif
  
  #endif  // LIBMEMUNREACHABLE_MEMUNREACHABLE_H_
-diff --git a/libnativeloader/include/nativeloader/dlext_namespaces.h b/libnativeloader/include/nativeloader/dlext_namespaces.h
-index 2d6ce8569..d22defc9c 100644
---- a/libnativeloader/include/nativeloader/dlext_namespaces.h
-+++ b/libnativeloader/include/nativeloader/dlext_namespaces.h
-@@ -20,7 +20,9 @@
- #include <android/dlext.h>
- #include <stdbool.h>
- 
--__BEGIN_DECLS
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
- 
- /*
-  * Initializes anonymous namespaces. The shared_libs_sonames is the list of sonames
-@@ -111,6 +113,8 @@ extern bool android_link_namespaces(struct android_namespace_t* from,
- 
- extern struct android_namespace_t* android_get_exported_namespace(const char* name);
- 
--__END_DECLS
-+#ifdef __cplusplus
-+}
-+#endif
- 
- #endif /* __ANDROID_DLEXT_NAMESPACES_H__ */
 diff --git a/libnetutils/include/netutils/ifc.h b/libnetutils/include/netutils/ifc.h
 index 3b272343d..60c68d76c 100644
 --- a/libnetutils/include/netutils/ifc.h
@@ -808,6 +879,54 @@ index e89cb5400..86b6604ca 100644
 +#ifdef __cplusplus
 +}
 +#endif
+diff --git a/libpixelflinger/codeflinger/disassem.c b/libpixelflinger/codeflinger/disassem.c
+index 5cbd63db8..294b13800 100644
+--- a/libpixelflinger/codeflinger/disassem.c
++++ b/libpixelflinger/codeflinger/disassem.c
+@@ -47,7 +47,6 @@
+  * This code is not complete. Not all instructions are disassembled.
+  */
+ 
+-#include <sys/cdefs.h>
+ //__FBSDID("$FreeBSD: /repoman/r/ncvs/src/sys/arm/arm/disassem.c,v 1.2 2005/01/05 21:58:47 imp Exp $");
+ #include <sys/param.h>
+ #include <stdio.h>
+diff --git a/libpixelflinger/codeflinger/mips64_disassem.c b/libpixelflinger/codeflinger/mips64_disassem.c
+index 852829984..2f1272d6b 100644
+--- a/libpixelflinger/codeflinger/mips64_disassem.c
++++ b/libpixelflinger/codeflinger/mips64_disassem.c
+@@ -38,7 +38,6 @@
+ #include <stdbool.h>
+ #include <stdint.h>
+ #include <stdio.h>
+-#include <sys/cdefs.h>
+ #include <sys/types.h>
+ 
+ #include <android/log.h>
+diff --git a/libpixelflinger/codeflinger/mips_disassem.c b/libpixelflinger/codeflinger/mips_disassem.c
+index 1fe680675..200c4abaa 100644
+--- a/libpixelflinger/codeflinger/mips_disassem.c
++++ b/libpixelflinger/codeflinger/mips_disassem.c
+@@ -38,7 +38,6 @@
+ #include <stdint.h>
+ #include <stdarg.h>
+ #include <stdbool.h>
+-#include <sys/cdefs.h>
+ 
+ #include <sys/types.h>
+ #include "mips_opcode.h"
+diff --git a/libprocessgroup/cgroup_map.h b/libprocessgroup/cgroup_map.h
+index 427d71b40..62984037d 100644
+--- a/libprocessgroup/cgroup_map.h
++++ b/libprocessgroup/cgroup_map.h
+@@ -16,7 +16,6 @@
+ 
+ #pragma once
+ 
+-#include <sys/cdefs.h>
+ #include <sys/types.h>
+ 
+ #include <map>
 diff --git a/libprocessgroup/cgrouprc/include/android/cgrouprc.h b/libprocessgroup/cgrouprc/include/android/cgrouprc.h
 index 0f6a9cd5d..3a41a550d 100644
 --- a/libprocessgroup/cgrouprc/include/android/cgrouprc.h
@@ -861,6 +980,18 @@ index f73ec2d41..8f1455acf 100644
 +#ifdef __cplusplus
 +}
 +#endif
+diff --git a/libprocessgroup/task_profiles.h b/libprocessgroup/task_profiles.h
+index 9f2308c64..25c4220b3 100644
+--- a/libprocessgroup/task_profiles.h
++++ b/libprocessgroup/task_profiles.h
+@@ -16,7 +16,6 @@
+ 
+ #pragma once
+ 
+-#include <sys/cdefs.h>
+ #include <sys/types.h>
+ #include <map>
+ #include <mutex>
 diff --git a/libsuspend/autosuspend_ops.h b/libsuspend/autosuspend_ops.h
 index b0024c8bb..ea0eafd00 100644
 --- a/libsuspend/autosuspend_ops.h
@@ -1016,6 +1147,18 @@ index 2ca90c395..c42f55966 100644
 +#endif
  
  #endif /* SYSTEM_CORE_INCLUDE_ANDROID_CAMERA_H */
+diff --git a/libsystem/include/system/radio.h b/libsystem/include/system/radio.h
+index acf3ea787..dfd254fc6 100644
+--- a/libsystem/include/system/radio.h
++++ b/libsystem/include/system/radio.h
+@@ -20,7 +20,6 @@
+ #include <stdbool.h>
+ #include <stdint.h>
+ #include <stdio.h>
+-#include <sys/cdefs.h>
+ #include <sys/types.h>
+ 
+ 
 diff --git a/libutils/Singleton_test.h b/libutils/Singleton_test.h
 index c77d9ffe6..00bd56242 100644
 --- a/libutils/Singleton_test.h
@@ -1107,6 +1250,18 @@ index 3586ca1b1..b606c60d8 100644
  std::chrono::milliseconds llkCheck(bool checkRunning = false);
  
  /* clang-format off */
+diff --git a/llkd/libllkd.cpp b/llkd/libllkd.cpp
+index b26ad4df6..95cc6d04d 100644
+--- a/llkd/libllkd.cpp
++++ b/llkd/libllkd.cpp
+@@ -25,7 +25,6 @@
+ #include <signal.h>
+ #include <stdint.h>
+ #include <string.h>
+-#include <sys/cdefs.h>  // ___STRING, __predict_true() and _predict_false()
+ #include <sys/mman.h>   // mlockall()
+ #include <sys/prctl.h>
+ #include <sys/stat.h>     // lstat()
 diff --git a/lmkd/include/liblmkd_utils.h b/lmkd/include/liblmkd_utils.h
 index 72e3f4a2b..64d060c6a 100644
 --- a/lmkd/include/liblmkd_utils.h
@@ -1165,6 +1320,18 @@ index 59377dd1f..bdc5413f2 100644
 +#endif
  
  #endif /* _LMKD_H_ */
+diff --git a/lmkd/liblmkd_utils.c b/lmkd/liblmkd_utils.c
+index fa3b7a920..3f76a35dd 100644
+--- a/lmkd/liblmkd_utils.c
++++ b/lmkd/liblmkd_utils.c
+@@ -16,7 +16,6 @@
+ 
+ #include <errno.h>
+ #include <fcntl.h>
+-#include <sys/cdefs.h>
+ #include <sys/stat.h>
+ #include <sys/types.h>
+ #include <stdio.h>
 diff --git a/lmkd/libpsi/include/psi/psi.h b/lmkd/libpsi/include/psi/psi.h
 index cd49e8b60..b4f4afe70 100644
 --- a/lmkd/libpsi/include/psi/psi.h
@@ -1193,12 +1360,24 @@ index cd49e8b60..b4f4afe70 100644
 +#endif
  
  #endif  // __ANDROID_PSI_H__
+diff --git a/lmkd/lmkd.c b/lmkd/lmkd.c
+index 9de7ff7b7..8d96149f6 100644
+--- a/lmkd/lmkd.c
++++ b/lmkd/lmkd.c
+@@ -25,7 +25,6 @@
+ #include <stdbool.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#include <sys/cdefs.h>
+ #include <sys/epoll.h>
+ #include <sys/eventfd.h>
+ #include <sys/mman.h>
 diff --git a/lmkd/statslog.h b/lmkd/statslog.h
-index 2edba7a72..63b5b3e87 100644
+index a09c7dd91..1c10f609b 100644
 --- a/lmkd/statslog.h
 +++ b/lmkd/statslog.h
-@@ -20,11 +20,12 @@
- #include <assert.h>
+@@ -21,11 +21,12 @@
+ #include <inttypes.h>
  #include <stats_event_list.h>
  #include <stdbool.h>
 -#include <sys/cdefs.h>
@@ -1210,11 +1389,11 @@ index 2edba7a72..63b5b3e87 100644
 +extern "C" {
 +#endif
  
- /*
-  * These are defined in
-@@ -91,6 +92,8 @@ stats_write_lmk_kill_occurred(android_log_context ctx, int32_t code, int32_t uid
-                               int64_t swap_in_bytes, int64_t process_start_time_ns,
-                               int32_t min_oom_score);
+ struct memory_stat {
+     int64_t pgfault;
+@@ -131,6 +132,8 @@ static inline bool init_poll_kernel(struct kernel_poll_info *poll_info __unused)
+ 
+ #endif /* LMKD_LOG_STATS */
  
 -__END_DECLS
 +#ifdef __cplusplus
@@ -1222,6 +1401,66 @@ index 2edba7a72..63b5b3e87 100644
 +#endif
  
  #endif /* _STATSLOG_H_ */
+diff --git a/logcat/logcat.cpp b/logcat/logcat.cpp
+index 4dcb3383e..5b261dc79 100644
+--- a/logcat/logcat.cpp
++++ b/logcat/logcat.cpp
+@@ -31,7 +31,6 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#include <sys/cdefs.h>
+ #include <sys/ioctl.h>
+ #include <sys/resource.h>
+ #include <sys/socket.h>
+diff --git a/logcat/tests/logcat_test.cpp b/logcat/tests/logcat_test.cpp
+index b32b43737..a9f0a7738 100644
+--- a/logcat/tests/logcat_test.cpp
++++ b/logcat/tests/logcat_test.cpp
+@@ -21,7 +21,6 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#include <sys/cdefs.h>
+ #include <sys/stat.h>
+ #include <sys/types.h>
+ #include <sys/wait.h>
+diff --git a/logd/LogBuffer.cpp b/logd/LogBuffer.cpp
+index ba05a064f..f244dec30 100644
+--- a/logd/LogBuffer.cpp
++++ b/logd/LogBuffer.cpp
+@@ -21,7 +21,6 @@
+ #include <errno.h>
+ #include <stdio.h>
+ #include <string.h>
+-#include <sys/cdefs.h>
+ #include <sys/user.h>
+ #include <time.h>
+ #include <unistd.h>
+diff --git a/logd/LogListener.cpp b/logd/LogListener.cpp
+index 443570fd3..493756c60 100644
+--- a/logd/LogListener.cpp
++++ b/logd/LogListener.cpp
+@@ -15,7 +15,6 @@
+  */
+ 
+ #include <limits.h>
+-#include <sys/cdefs.h>
+ #include <sys/prctl.h>
+ #include <sys/socket.h>
+ #include <sys/types.h>
+diff --git a/logd/LogUtils.h b/logd/LogUtils.h
+index fa9f39895..67d448e4e 100644
+--- a/logd/LogUtils.h
++++ b/logd/LogUtils.h
+@@ -17,7 +17,6 @@
+ #ifndef _LOGD_LOG_UTILS_H__
+ #define _LOGD_LOG_UTILS_H__
+ 
+-#include <sys/cdefs.h>
+ #include <sys/types.h>
+ 
+ #include <private/android_logger.h>
 diff --git a/logd/libaudit.h b/logd/libaudit.h
 index b4a92a8a3..6cf37914e 100644
 --- a/logd/libaudit.h
@@ -1254,31 +1493,6 @@ index b4a92a8a3..6cf37914e 100644
 +#endif
  
  #endif
-diff --git a/logwrapper/include/logwrap/logwrap.h b/logwrapper/include/logwrap/logwrap.h
-index d3538b30c..1fe8e0309 100644
---- a/logwrapper/include/logwrap/logwrap.h
-+++ b/logwrapper/include/logwrap/logwrap.h
-@@ -21,7 +21,9 @@
- #include <stdbool.h>
- #include <stdint.h>
- 
--__BEGIN_DECLS
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
- 
- /*
-  * Run a command while logging its stdout and stderr
-@@ -88,6 +90,8 @@ static inline int android_fork_execvp(int argc, char* argv[], int *status,
-                                    NULL, 0);
- }
- 
--__END_DECLS
-+#ifdef __cplusplus
-+}
-+#endif
- 
- #endif /* __LIBS_LOGWRAP_H */
 diff --git a/trusty/gatekeeper/trusty_gatekeeper_ipc.h b/trusty/gatekeeper/trusty_gatekeeper_ipc.h
 index f8de7f873..fa8fd4019 100644
 --- a/trusty/gatekeeper/trusty_gatekeeper_ipc.h
@@ -1349,3 +1563,6 @@ index b8ddf67d8..6cac8750c 100644
 +#ifdef __cplusplus
 +}
 +#endif
+-- 
+2.25.1
+

@@ -1,4 +1,4 @@
-From 155d0c0698367312c8c8cd4e504bc4d217dd084d Mon Sep 17 00:00:00 2001
+From 90460f08eb9174da8ebdd2581337c3cb0c32a093 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Wed, 21 Aug 2019 19:59:43 +0200
 Subject: [PATCH] libcutils: include sys/select.h for timeval

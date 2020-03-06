@@ -19,3 +19,6 @@
 [submodule "vendor/mkbootimg"]
 	path = vendor/mkbootimg
 	url = https://android.googlesource.com/platform/system/tools/mkbootimg
+[submodule "vendor/avb"]
+	path = vendor/avb
+	url = https://android.googlesource.com/platform/external/avb

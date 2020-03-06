@@ -5,10 +5,15 @@ target_include_directories(libzip PUBLIC
 	core/base/include core/include core/libziparchive/include)
 
 add_library(libutil STATIC
-	core/libutils/FileMap.cpp)
+	core/libutils/FileMap.cpp
+	core/libutils/SharedBuffer.cpp
+	core/libutils/String16.cpp
+	core/libutils/String8.cpp
+	core/libutils/VectorImpl.cpp
+	core/libutils/Unicode.cpp)
 
 target_include_directories(libutil PUBLIC
-	core/include)
+	core/include core/base/include)
 
 add_library(libext4 STATIC
 	extras/ext4_utils/ext4_utils.cpp
@@ -20,41 +25,41 @@ target_include_directories(libext4 PUBLIC
 	extras/ext4_utils/include core/base/include)
 
 add_library(libfsmgr STATIC
-	core/fs_mgr/liblp/reader.cpp
-	core/fs_mgr/liblp/writer.cpp
-	core/fs_mgr/liblp/utility.cpp
+	core/fs_mgr/liblp/images.cpp
 	core/fs_mgr/liblp/partition_opener.cpp
-	core/fs_mgr/liblp/images.cpp)
+	core/fs_mgr/liblp/reader.cpp
+	core/fs_mgr/liblp/utility.cpp
+	core/fs_mgr/liblp/writer.cpp)
 target_include_directories(libfsmgr PRIVATE
 	core/fs_mgr/liblp/include core/base/include
 	extras/ext4_utils/include core/libsparse/include
 	boringssl/include)
 
 add_library(libselinux STATIC
+	selinux/libselinux/src/booleans.c
 	selinux/libselinux/src/callbacks.c
+	selinux/libselinux/src/canonicalize_context.c
 	selinux/libselinux/src/check_context.c
+	selinux/libselinux/src/disable.c
+	selinux/libselinux/src/enabled.c
 	selinux/libselinux/src/freecon.c
+	selinux/libselinux/src/getenforce.c
 	selinux/libselinux/src/init.c
+	selinux/libselinux/src/label_backends_android.c
 	selinux/libselinux/src/label.c
 	selinux/libselinux/src/label_file.c
 	selinux/libselinux/src/label_support.c
-	selinux/libselinux/src/setrans_client.c
-	selinux/libselinux/src/regex.c
-	selinux/libselinux/src/matchpathcon.c
-	selinux/libselinux/src/selinux_config.c
-	selinux/libselinux/src/label_backends_android.c
-	selinux/libselinux/src/canonicalize_context.c
-	selinux/libselinux/src/lsetfilecon.c
-	selinux/libselinux/src/policyvers.c
 	selinux/libselinux/src/lgetfilecon.c
 	selinux/libselinux/src/load_policy.c
+	selinux/libselinux/src/lsetfilecon.c
+	selinux/libselinux/src/matchpathcon.c
+	selinux/libselinux/src/policyvers.c
+	selinux/libselinux/src/regex.c
+	selinux/libselinux/src/selinux_config.c
+	selinux/libselinux/src/setenforce.c
+	selinux/libselinux/src/setrans_client.c
 	selinux/libselinux/src/seusers.c
-	selinux/libselinux/src/sha1.c
-	selinux/libselinux/src/booleans.c
-	selinux/libselinux/src/disable.c
-	selinux/libselinux/src/enabled.c
-	selinux/libselinux/src/getenforce.c
-	selinux/libselinux/src/setenforce.c)
+	selinux/libselinux/src/sha1.c)
 
 target_compile_definitions(libselinux PRIVATE
 	-DAUDITD_LOG_TAG=1003 -D_GNU_SOURCE -DHOST -DUSE_PCRE2
@@ -65,50 +70,51 @@ target_include_directories(libselinux PUBLIC
 	selinux/libselinux/include selinux/libsepol/include)
 
 add_library(libsepol
-	selinux/libsepol/src/policydb_public.c
-	selinux/libsepol/src/genbools.c
-	selinux/libsepol/src/debug.c
-	selinux/libsepol/src/policydb.c
-	selinux/libsepol/src/conditional.c
-	selinux/libsepol/src/services.c
-	selinux/libsepol/src/ebitmap.c
-	selinux/libsepol/src/util.c
 	selinux/libsepol/src/assertion.c
-	selinux/libsepol/src/avtab.c
-	selinux/libsepol/src/hashtab.c
-	selinux/libsepol/src/sidtab.c
-	selinux/libsepol/src/context.c
-	selinux/libsepol/src/genusers.c
-	selinux/libsepol/src/context_record.c
-	selinux/libsepol/src/mls.c
 	selinux/libsepol/src/avrule_block.c
-	selinux/libsepol/src/symtab.c
-	selinux/libsepol/src/policydb_convert.c
-	selinux/libsepol/src/write.c
+	selinux/libsepol/src/avtab.c
+	selinux/libsepol/src/conditional.c
 	selinux/libsepol/src/constraint.c
+	selinux/libsepol/src/context.c
+	selinux/libsepol/src/context_record.c
+	selinux/libsepol/src/debug.c
+	selinux/libsepol/src/ebitmap.c
 	selinux/libsepol/src/expand.c
-	selinux/libsepol/src/hierarchy.c)
+	selinux/libsepol/src/genbools.c
+	selinux/libsepol/src/genusers.c
+	selinux/libsepol/src/hashtab.c
+	selinux/libsepol/src/hierarchy.c
+	selinux/libsepol/src/kernel_to_common.c
+	selinux/libsepol/src/mls.c
+	selinux/libsepol/src/policydb.c
+	selinux/libsepol/src/policydb_convert.c
+	selinux/libsepol/src/policydb_public.c
+	selinux/libsepol/src/services.c
+	selinux/libsepol/src/sidtab.c
+	selinux/libsepol/src/symtab.c
+	selinux/libsepol/src/util.c
+	selinux/libsepol/src/write.c)
 
 target_include_directories(libsepol PUBLIC
 	selinux/libsepol/include)
 
 add_executable(fastboot
-	core/fastboot/fastboot_driver.cpp
 	core/fastboot/bootimg_utils.cpp
 	core/fastboot/fastboot.cpp
-	core/fastboot/main.cpp
-	core/fastboot/util.cpp
+	core/fastboot/fastboot_driver.cpp
 	core/fastboot/fs.cpp
-	core/fastboot/usb_linux.cpp
+	core/fastboot/main.cpp
 	core/fastboot/socket.cpp
 	core/fastboot/tcp.cpp
-	core/fastboot/udp.cpp)
+	core/fastboot/udp.cpp
+	core/fastboot/usb_linux.cpp
+	core/fastboot/util.cpp)
 
 target_include_directories(fastboot PRIVATE
 	core/base/include core/include core/adb core/libsparse/include
 	extras/ext4_utils/include extras/f2fs_utils
 	core/libziparchive/include mkbootimg/include/bootimg
-	core/fs_mgr/liblp/include)
+	core/fs_mgr/liblp/include avb)
 target_compile_definitions(fastboot PRIVATE
 	-DPLATFORM_TOOLS_VERSION="${ANDROID_VERSION}"
 	-DPLATFORM_TOOLS_VENDOR="${ANDROID_VENDOR}"

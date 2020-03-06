@@ -1,4 +1,4 @@
-From 1d151b53bb4671e753bb8358f56dec8f758aadec Mon Sep 17 00:00:00 2001
+From 404faa9e2a991b80c2cb6bbfac4c8322b64e1626 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Sun, 1 Sep 2019 15:05:17 +0000
 Subject: [PATCH] fdevent: missing atomic include
@@ -8,12 +8,12 @@ Subject: [PATCH] fdevent: missing atomic include
  1 file changed, 1 insertion(+)
 
 diff --git a/adb/fdevent/fdevent.h b/adb/fdevent/fdevent.h
-index 2424252f5..776904643 100644
+index 86814d7c5..7fe7db470 100644
 --- a/adb/fdevent/fdevent.h
 +++ b/adb/fdevent/fdevent.h
-@@ -27,6 +27,7 @@
- #include <mutex>
+@@ -28,6 +28,7 @@
  #include <optional>
+ #include <unordered_map>
  #include <variant>
 +#include <atomic>
  

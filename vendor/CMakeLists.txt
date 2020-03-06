@@ -3,6 +3,7 @@
 
 add_subdirectory(boringssl EXCLUDE_FROM_ALL)
 set(android-vendored
+	avb
 	core
 	extras
 	selinux

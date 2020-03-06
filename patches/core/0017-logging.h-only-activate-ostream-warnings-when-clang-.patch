@@ -1,4 +1,4 @@
-From a2fd5ff210ac72c646f830a775e8f408cdc029ac Mon Sep 17 00:00:00 2001
+From 3bd851330b0bbcce1c90fbb47b2a15e017380711 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Sun, 25 Aug 2019 13:01:38 +0200
 Subject: [PATCH] logging.h: only activate ostream warnings when clang is used

@@ -1,0 +1,22 @@
+From 1834e64f1bb3315cbdf7b0668213919da59a9d62 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
+Date: Wed, 21 Aug 2019 20:01:26 +0200
+Subject: [PATCH] liblog: Fix initialization of android_log_transport_write
+
+---
+ liblog/fake_writer.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/liblog/fake_writer.cpp b/liblog/fake_writer.cpp
+index f1ddff17b..a363731b8 100644
+--- a/liblog/fake_writer.cpp
++++ b/liblog/fake_writer.cpp
+@@ -34,7 +34,7 @@ static int logFds[(int)LOG_ID_MAX] = {-1, -1, -1, -1, -1, -1};
+ struct android_log_transport_write fakeLoggerWrite = {
+     .name = "fake",
+     .logMask = 0,
+-    .context.priv = &logFds,
++    .context = { .priv = &logFds },
+     .available = fakeAvailable,
+     .open = fakeOpen,
+     .close = fakeClose,
