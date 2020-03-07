@@ -1,4 +1,4 @@
-From 3bd851330b0bbcce1c90fbb47b2a15e017380711 Mon Sep 17 00:00:00 2001
+From ffa398b6e5204d1852199d6dd889f7ca1b0c1f2c Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Sun, 25 Aug 2019 13:01:38 +0200
 Subject: [PATCH] logging.h: only activate ostream warnings when clang is used
@@ -10,10 +10,10 @@ function-definition` error.
  1 file changed, 2 insertions(+)
 
 diff --git a/base/include/android-base/logging.h b/base/include/android-base/logging.h
-index ab6476c59..e88f3d75f 100644
+index accc225db..081776880 100644
 --- a/base/include/android-base/logging.h
 +++ b/base/include/android-base/logging.h
-@@ -482,6 +482,7 @@ namespace std {  // NOLINT(cert-dcl58-cpp)
+@@ -449,6 +449,7 @@ namespace std {  // NOLINT(cert-dcl58-cpp)
  // Note: to print the pointer, use "<< static_cast<const void*>(string_pointer)" instead.
  // Note: a not-recommended alternative is to let Clang ignore the warning by adding
  //       -Wno-user-defined-warnings to CPPFLAGS.
@@ -21,7 +21,7 @@ index ab6476c59..e88f3d75f 100644
  #pragma clang diagnostic push
  #pragma clang diagnostic ignored "-Wgcc-compat"
  #define OSTREAM_STRING_POINTER_USAGE_WARNING \
-@@ -491,5 +492,6 @@ inline std::ostream& operator<<(std::ostream& stream, const std::string* string_
+@@ -458,5 +459,6 @@ std::ostream& operator<<(std::ostream& stream, const std::string* string_pointer
    return stream << static_cast<const void*>(string_pointer);
  }
  #pragma clang diagnostic pop

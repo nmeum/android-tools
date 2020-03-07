@@ -1,4 +1,4 @@
-From 19a89ce927dea6ac38cce82c1d1df4298c9166f9 Mon Sep 17 00:00:00 2001
+From 9b0cdcae93aeab6f6cfa801ebf5ed463f96f2f8d Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Sun, 1 Sep 2019 13:40:05 +0000
 Subject: [PATCH] Don't include version.h
@@ -10,7 +10,7 @@ Version is set using a CPPFLAG.
  2 files changed, 2 insertions(+), 6 deletions(-)
 
 diff --git a/adb/adb.cpp b/adb/adb.cpp
-index 90c6dcdc3..afc93a9ea 100644
+index 7aaf9a646..8ac768ead 100644
 --- a/adb/adb.cpp
 +++ b/adb/adb.cpp
 @@ -44,8 +44,6 @@
@@ -32,7 +32,7 @@ index 90c6dcdc3..afc93a9ea 100644
  }
  
 diff --git a/fastboot/fastboot.cpp b/fastboot/fastboot.cpp
-index 2fe3b1a9e..fa8c7b61b 100644
+index 7fdc28b3d..0144054a3 100644
 --- a/fastboot/fastboot.cpp
 +++ b/fastboot/fastboot.cpp
 @@ -59,10 +59,8 @@
@@ -46,7 +46,7 @@ index 2fe3b1a9e..fa8c7b61b 100644
  #include <sparse/sparse.h>
  #include <ziparchive/zip_archive.h>
  
-@@ -1783,7 +1781,7 @@ int FastBootTool::Main(int argc, char* argv[]) {
+@@ -1799,7 +1797,7 @@ int FastBootTool::Main(int argc, char* argv[]) {
                  setvbuf(stdout, nullptr, _IONBF, 0);
                  setvbuf(stderr, nullptr, _IONBF, 0);
              } else if (name == "version") {

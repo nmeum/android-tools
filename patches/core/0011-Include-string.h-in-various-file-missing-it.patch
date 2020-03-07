@@ -1,4 +1,4 @@
-From a486fad6720b82aa36925faf5a0d5973e5098b13 Mon Sep 17 00:00:00 2001
+From bb7f9dc8ee9112fd8a4133f698d0997c398ea17e Mon Sep 17 00:00:00 2001
 From: Anatol Pomozov <anatol.pomozov@gmail.com>
 Date: Fri, 25 Aug 2017 23:30:34 +0000
 Subject: [PATCH] Include string.h in various file missing it
@@ -11,7 +11,7 @@ Most of these need string.h for strerror(3).
  3 files changed, 3 insertions(+)
 
 diff --git a/adb/sysdeps/posix/network.cpp b/adb/sysdeps/posix/network.cpp
-index c5c227568..99686f15f 100644
+index a4d9013d3..ec4c7c8e6 100644
 --- a/adb/sysdeps/posix/network.cpp
 +++ b/adb/sysdeps/posix/network.cpp
 @@ -22,6 +22,7 @@
@@ -35,7 +35,7 @@ index 6321fc624..ab072e6b5 100644
  #include <memory>
  #include <mutex>
 diff --git a/base/logging.cpp b/base/logging.cpp
-index 582a8f6df..860f7921f 100644
+index 45dad1733..8061f9d0b 100644
 --- a/base/logging.cpp
 +++ b/base/logging.cpp
 @@ -24,6 +24,7 @@

@@ -1,4 +1,4 @@
-From 8339c4c67d30a5bd6e8103ded5a7b2b487abbbec Mon Sep 17 00:00:00 2001
+From 193c1a01ba81ec7360c5de00af7b074b449058d6 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Sun, 1 Sep 2019 15:04:18 +0000
 Subject: [PATCH] adb: disable mdns transport support
@@ -9,7 +9,7 @@ Would require patching the MDNS code as well.
  1 file changed, 4 deletions(-)
 
 diff --git a/adb/client/main.cpp b/adb/client/main.cpp
-index 0c5c28f1b..b6a128152 100644
+index e5ffe4c09..2e95e9445 100644
 --- a/adb/client/main.cpp
 +++ b/adb/client/main.cpp
 @@ -118,10 +118,6 @@ int adb_server_main(int is_daemon, const std::string& socket_spec, int ack_reply

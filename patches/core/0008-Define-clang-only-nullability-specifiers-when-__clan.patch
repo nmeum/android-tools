@@ -1,4 +1,4 @@
-From f0728c8d81c71230b89117d3d9a84d1757585352 Mon Sep 17 00:00:00 2001
+From 773dc1100c157024c385cf70b5be6bcbdec1456f Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 17:48:49 +0100
 Subject: [PATCH] Define clang-only nullability specifiers when __clang__ is
@@ -9,7 +9,7 @@ Subject: [PATCH] Define clang-only nullability specifiers when __clang__ is
  1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/adb/sysdeps.h b/adb/sysdeps.h
-index 466c2cedb..a47429d70 100644
+index 0c5a6b4c1..6af797cf0 100644
 --- a/adb/sysdeps.h
 +++ b/adb/sysdeps.h
 @@ -42,11 +42,13 @@

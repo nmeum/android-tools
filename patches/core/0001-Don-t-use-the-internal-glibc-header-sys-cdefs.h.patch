@@ -1,9 +1,7 @@
-From aa1a21801edbbe2d275c4eb85501af106b0a80e1 Mon Sep 17 00:00:00 2001
+From 139c7847746f16f08758122e08ea05b7c785bfc9 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Sun, 22 Dec 2019 18:42:19 +0100
 Subject: [PATCH] Don't use the internal glibc header sys/cdefs.h
-
-This patch was created using sed(1) and ag(1) with the following script:
 
 	for file in $(ag -l '__BEGIN_DECLS|sys/cdefs.h'); do
 		sed -i "${file}" \
@@ -12,9 +10,7 @@ This patch was created using sed(1) and ag(1) with the following script:
 			-e '/#include <sys\/cdefs.h>/d'
 	done
 
-Then remove garbage in core/liblog/log_portability.h.
-
-https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-get-error-messages-about-<code>sys/cdefs.h</code>
+https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-get-error-messages-about-%3Ccode%3Esys/cdefs.h%3C/code%3E
 ---
  base/include/android-base/endian.h            |  1 -
  base/include/android-base/properties.h        |  1 -
@@ -38,17 +34,11 @@ https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-
  libcutils/include/cutils/trace.h              |  9 +++++---
  libcutils/include/private/canned_fs_config.h  |  8 +++++--
  libcutils/include/private/fs_config.h         |  9 +++++---
- libion/include/ion/ion.h                      |  8 +++++--
  libkeyutils/include/keyutils.h                |  9 +++++---
- liblog/fake_log_device.h                      |  8 +++++--
  liblog/include/log/log_main.h                 |  9 +++++---
- liblog/log_portability.h                      | 14 -------------
- liblog/logd_reader.h                          |  8 +++++--
- liblog/logger.h                               |  8 +++++--
- libmemunreachable/Allocator.cpp               |  1 -
- libmemunreachable/Binder.cpp                  |  9 +++++---
- libmemunreachable/bionic.h                    |  9 +++++---
- .../include/memunreachable/memunreachable.h   |  9 +++++---
+ liblog/logd_reader.h                          |  9 +++++---
+ liblog/logger.h                               |  9 +++++---
+ liblog/pmsg_reader.h                          |  9 +++++---
  libnetutils/include/netutils/ifc.h            |  9 +++++---
  .../packagelistparser/packagelistparser.h     |  8 +++++--
  libpixelflinger/codeflinger/disassem.c        |  1 -
@@ -69,12 +59,6 @@ https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-
  .../include/ziparchive/zip_archive.h          |  1 -
  llkd/include/llkd.h                           | 21 +++++++++++++------
  llkd/libllkd.cpp                              |  1 -
- lmkd/include/liblmkd_utils.h                  |  9 +++++---
- lmkd/include/lmkd.h                           |  9 +++++---
- lmkd/liblmkd_utils.c                          |  1 -
- lmkd/libpsi/include/psi/psi.h                 |  9 +++++---
- lmkd/lmkd.c                                   |  1 -
- lmkd/statslog.h                               |  9 +++++---
  logcat/logcat.cpp                             |  1 -
  logcat/tests/logcat_test.cpp                  |  1 -
  logd/LogBuffer.cpp                            |  1 -
@@ -84,7 +68,7 @@ https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-
  trusty/gatekeeper/trusty_gatekeeper_ipc.h     |  8 +++++--
  .../ipc/trusty_keymaster_ipc.h                |  8 +++++--
  .../storage/lib/include/trusty/lib/storage.h  |  8 +++++--
- 68 files changed, 261 insertions(+), 155 deletions(-)
+ 56 files changed, 213 insertions(+), 118 deletions(-)
 
 diff --git a/base/include/android-base/endian.h b/base/include/android-base/endian.h
 index 8fa6365ee..1e5cceb9a 100644
@@ -123,11 +107,11 @@ index b7284b08e..b85b6e542 100644
  
  #include <android-base/unique_fd.h>
 diff --git a/debuggerd/include/debuggerd/handler.h b/debuggerd/include/debuggerd/handler.h
-index 7196e0ad4..9ba20db19 100644
+index cd6fc0510..8219d15a8 100644
 --- a/debuggerd/include/debuggerd/handler.h
 +++ b/debuggerd/include/debuggerd/handler.h
-@@ -18,10 +18,11 @@
- 
+@@ -19,10 +19,11 @@
+ #include <bionic/reserved_signals.h>
  #include <signal.h>
  #include <stdint.h>
 -#include <sys/cdefs.h>
@@ -140,8 +124,8 @@ index 7196e0ad4..9ba20db19 100644
  
  // These callbacks are called in a signal handler, and thus must be async signal safe.
  // If null, the callbacks will not be called.
-@@ -53,4 +54,6 @@ static void __attribute__((__unused__)) debuggerd_register_handlers(struct sigac
-   sigaction(DEBUGGER_SIGNAL, action, nullptr);
+@@ -54,4 +55,6 @@ static void __attribute__((__unused__)) debuggerd_register_handlers(struct sigac
+   sigaction(BIONIC_SIGNAL_DEBUGGER, action, nullptr);
  }
  
 -__END_DECLS
@@ -239,7 +223,7 @@ index 417fb380b..6528248a9 100644
  #include <utility>
  #include <vector>
 diff --git a/init/keychords.cpp b/init/keychords.cpp
-index 5f2682be5..fe00a8d7b 100644
+index adec38329..40e852489 100644
 --- a/init/keychords.cpp
 +++ b/init/keychords.cpp
 @@ -19,7 +19,6 @@
@@ -251,7 +235,7 @@ index 5f2682be5..fe00a8d7b 100644
  #include <sys/ioctl.h>
  #include <sys/types.h>
 diff --git a/init/reboot.cpp b/init/reboot.cpp
-index d77b9757e..9d66f4a68 100644
+index 38e822711..0a6e7b1fc 100644
 --- a/init/reboot.cpp
 +++ b/init/reboot.cpp
 @@ -23,7 +23,6 @@
@@ -468,17 +452,16 @@ index aa1435a08..160792a37 100644
  
  #endif /* __CUTILS_STR_PARMS_H */
 diff --git a/libcutils/include/cutils/trace.h b/libcutils/include/cutils/trace.h
-index 79b4b355b..712f75c4f 100644
+index e12c32cff..a27831b75 100644
 --- a/libcutils/include/cutils/trace.h
 +++ b/libcutils/include/cutils/trace.h
-@@ -22,13 +22,14 @@
+@@ -22,12 +22,13 @@
  #include <stdbool.h>
  #include <stdint.h>
  #include <stdio.h>
 -#include <sys/cdefs.h>
  #include <sys/types.h>
  #include <unistd.h>
- 
  #include <cutils/compiler.h>
  
 -__BEGIN_DECLS
@@ -488,7 +471,7 @@ index 79b4b355b..712f75c4f 100644
  
  /**
   * The ATRACE_TAG macro can be defined before including this header to trace
-@@ -256,6 +257,8 @@ static inline void atrace_int64(uint64_t tag, const char* name, int64_t value)
+@@ -271,6 +272,8 @@ static inline void atrace_int64(uint64_t tag, const char* name, int64_t value)
      }
  }
  
@@ -552,31 +535,6 @@ index 8a9a1ffd7..40cb55f23 100644
 +#ifdef __cplusplus
 +}
 +#endif
-diff --git a/libion/include/ion/ion.h b/libion/include/ion/ion.h
-index 1480bd965..eb80cf1f5 100644
---- a/libion/include/ion/ion.h
-+++ b/libion/include/ion/ion.h
-@@ -24,7 +24,9 @@
- #include <sys/types.h>
- #include <linux/ion.h>
- 
--__BEGIN_DECLS
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
- 
- struct ion_handle;
- 
-@@ -51,6 +53,8 @@ int ion_query_get_heaps(int fd, int cnt, void* buffers);
- int ion_is_legacy(int fd);
- int ion_is_using_modular_heaps(int fd);
- 
--__END_DECLS
-+#ifdef __cplusplus
-+}
-+#endif
- 
- #endif /* __SYS_CORE_ION_H */
 diff --git a/libkeyutils/include/keyutils.h b/libkeyutils/include/keyutils.h
 index c508f2790..2c3b4b0b1 100644
 --- a/libkeyutils/include/keyutils.h
@@ -604,31 +562,8 @@ index c508f2790..2c3b4b0b1 100644
 +#endif
  
  #endif
-diff --git a/liblog/fake_log_device.h b/liblog/fake_log_device.h
-index ce54db2bf..fc37085e6 100644
---- a/liblog/fake_log_device.h
-+++ b/liblog/fake_log_device.h
-@@ -23,7 +23,9 @@
- 
- struct iovec;
- 
--__BEGIN_DECLS
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
- 
- int fakeLogOpen(const char* pathName);
- int fakeLogClose(int fd);
-@@ -34,4 +36,6 @@ int __android_log_is_loggable(int prio, const char*, int def);
- int __android_log_is_loggable_len(int prio, const char*, size_t, int def);
- int __android_log_is_debuggable();
- 
--__END_DECLS
-+#ifdef __cplusplus
-+}
-+#endif
 diff --git a/liblog/include/log/log_main.h b/liblog/include/log/log_main.h
-index 64791c2cc..f9ebf23f8 100644
+index 1bd1c8aec..c71bbdd45 100644
 --- a/liblog/include/log/log_main.h
 +++ b/liblog/include/log/log_main.h
 @@ -17,12 +17,13 @@
@@ -647,7 +582,7 @@ index 64791c2cc..f9ebf23f8 100644
  
  /*
   * Normally we strip the effects of ALOGV (VERBOSE messages),
-@@ -372,4 +373,6 @@ int __android_log_is_loggable_len(int prio, const char* tag, size_t len, int def
+@@ -377,4 +378,6 @@ int __android_log_is_loggable_len(int prio, const char* tag, size_t len, int def
  #pragma clang diagnostic pop
  #endif
  
@@ -655,58 +590,45 @@ index 64791c2cc..f9ebf23f8 100644
 +#ifdef __cplusplus
 +}
 +#endif
-diff --git a/liblog/log_portability.h b/liblog/log_portability.h
-index b7279d1d8..ea413b92d 100644
---- a/liblog/log_portability.h
-+++ b/liblog/log_portability.h
-@@ -16,22 +16,8 @@
+diff --git a/liblog/logd_reader.h b/liblog/logd_reader.h
+index 68eef027a..64e400ff9 100644
+--- a/liblog/logd_reader.h
++++ b/liblog/logd_reader.h
+@@ -16,16 +16,19 @@
  
  #pragma once
  
 -#include <sys/cdefs.h>
  #include <unistd.h>
  
--/* possible missing definitions in sys/cdefs.h */
--
--/* DECLS */
--#ifndef __BEGIN_DECLS
--#if defined(__cplusplus)
--#define __BEGIN_DECLS extern "C" {
--#define __END_DECLS }
--#else
--#define __BEGIN_DECLS
--#define __END_DECLS
--#endif
--#endif
--
- /* possible missing definitions in unistd.h */
- 
- #ifndef TEMP_FAILURE_RETRY
-diff --git a/liblog/logd_reader.h b/liblog/logd_reader.h
-index 7c53cbb65..df881ec51 100644
---- a/liblog/logd_reader.h
-+++ b/liblog/logd_reader.h
-@@ -20,8 +20,12 @@
- 
- #include "log_portability.h"
+ #include "log/log_read.h"
  
 -__BEGIN_DECLS
 +#ifdef __cplusplus
 +extern "C" {
 +#endif
  
- ssize_t __send_log_msg(char* buf, size_t buf_size);
+ int LogdRead(struct logger_list* logger_list, struct log_msg* log_msg);
+ void LogdClose(struct logger_list* logger_list);
+ 
+ ssize_t SendLogdControlMessage(char* buf, size_t buf_size);
  
 -__END_DECLS
 +#ifdef __cplusplus
 +}
 +#endif
 diff --git a/liblog/logger.h b/liblog/logger.h
-index 8cae66c88..c5fbc1184 100644
+index ddff19dd5..263859dbd 100644
 --- a/liblog/logger.h
 +++ b/liblog/logger.h
-@@ -24,7 +24,9 @@
- #include "log_portability.h"
+@@ -17,13 +17,14 @@
+ #pragma once
+ 
+ #include <stdatomic.h>
+-#include <sys/cdefs.h>
+ 
+ #include <log/log.h>
+ 
  #include "uio.h"
  
 -__BEGIN_DECLS
@@ -714,130 +636,50 @@ index 8cae66c88..c5fbc1184 100644
 +extern "C" {
 +#endif
  
- /* Union, sock or fd of zero is not allowed unless static initialized */
- union android_log_context_union {
-@@ -145,4 +147,6 @@ void __android_log_lock();
- int __android_log_trylock();
- void __android_log_unlock();
+ struct logger_list {
+   atomic_int fd;
+@@ -48,4 +49,6 @@ inline bool android_logger_is_logd(struct logger* logger) {
+   return reinterpret_cast<uintptr_t>(logger) & LOGGER_LOGD;
+ }
  
 -__END_DECLS
 +#ifdef __cplusplus
 +}
 +#endif
-diff --git a/libmemunreachable/Allocator.cpp b/libmemunreachable/Allocator.cpp
-index 1eb7e98c5..4863907d4 100644
---- a/libmemunreachable/Allocator.cpp
-+++ b/libmemunreachable/Allocator.cpp
-@@ -22,7 +22,6 @@
- #include <assert.h>
- #include <stdlib.h>
+diff --git a/liblog/pmsg_reader.h b/liblog/pmsg_reader.h
+index b784f9ff5..88aeec9c8 100644
+--- a/liblog/pmsg_reader.h
++++ b/liblog/pmsg_reader.h
+@@ -16,14 +16,17 @@
  
--#include <sys/cdefs.h>
- #include <sys/mman.h>
- #include <sys/prctl.h>
- 
-diff --git a/libmemunreachable/Binder.cpp b/libmemunreachable/Binder.cpp
-index 60512a3f8..834507459 100644
---- a/libmemunreachable/Binder.cpp
-+++ b/libmemunreachable/Binder.cpp
-@@ -14,7 +14,6 @@
-  * limitations under the License.
-  */
+ #pragma once
  
 -#include <sys/cdefs.h>
  #include <unistd.h>
  
- #include <functional>
-@@ -22,7 +21,9 @@
- #include "Binder.h"
- #include "log.h"
+ #include "log/log_read.h"
  
 -__BEGIN_DECLS
 +#ifdef __cplusplus
 +extern "C" {
 +#endif
  
- // Weak undefined references to the symbols in libbinder and libhwbinder
- // so that libmemunreachable can call them in processes that have them
-@@ -30,7 +31,9 @@ __BEGIN_DECLS
- ssize_t __attribute__((weak)) getBinderKernelReferences(size_t, uintptr_t*);
- ssize_t __attribute__((weak)) getHWBinderKernelReferences(size_t, uintptr_t*);
+ int PmsgRead(struct logger_list* logger_list, struct log_msg* log_msg);
+ void PmsgClose(struct logger_list* logger_list);
  
 -__END_DECLS
 +#ifdef __cplusplus
 +}
 +#endif
- 
- namespace android {
- 
-diff --git a/libmemunreachable/bionic.h b/libmemunreachable/bionic.h
-index dd1ec79d6..cc7374d07 100644
---- a/libmemunreachable/bionic.h
-+++ b/libmemunreachable/bionic.h
-@@ -19,9 +19,10 @@
- 
- #include <stdint.h>
- #include <stdlib.h>
--#include <sys/cdefs.h>
- 
--__BEGIN_DECLS
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
- 
- /* Exported from bionic */
- extern void malloc_disable();
-@@ -30,6 +31,8 @@ extern int malloc_iterate(uintptr_t base, size_t size,
-                           void (*callback)(uintptr_t base, size_t size, void* arg), void* arg);
- extern ssize_t malloc_backtrace(void* pointer, uintptr_t* frames, size_t frame_count);
- 
--__END_DECLS
-+#ifdef __cplusplus
-+}
-+#endif
- 
- #endif  // LIBMEMUNREACHABLE_BIONIC_H_
-diff --git a/libmemunreachable/include/memunreachable/memunreachable.h b/libmemunreachable/include/memunreachable/memunreachable.h
-index 011443fe3..86e9f5ff3 100644
---- a/libmemunreachable/include/memunreachable/memunreachable.h
-+++ b/libmemunreachable/include/memunreachable/memunreachable.h
-@@ -18,7 +18,6 @@
- #define LIBMEMUNREACHABLE_MEMUNREACHABLE_H_
- 
- #include <string.h>
--#include <sys/cdefs.h>
- 
- #ifdef __cplusplus
- 
-@@ -82,12 +81,16 @@ std::string GetUnreachableMemoryString(bool log_contents = false, size_t limit =
- 
- #endif
- 
--__BEGIN_DECLS
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
- 
- bool LogUnreachableMemory(bool log_contents, size_t limit);
- 
- bool NoLeaks();
- 
--__END_DECLS
-+#ifdef __cplusplus
-+}
-+#endif
- 
- #endif  // LIBMEMUNREACHABLE_MEMUNREACHABLE_H_
 diff --git a/libnetutils/include/netutils/ifc.h b/libnetutils/include/netutils/ifc.h
-index 3b272343d..60c68d76c 100644
+index ee896ac08..3816f3371 100644
 --- a/libnetutils/include/netutils/ifc.h
 +++ b/libnetutils/include/netutils/ifc.h
-@@ -17,10 +17,11 @@
- #ifndef _NETUTILS_IFC_H_
- #define _NETUTILS_IFC_H_
+@@ -19,9 +19,10 @@
  
--#include <sys/cdefs.h>
  #include <arpa/inet.h>
+ #include <stdbool.h>
+-#include <sys/cdefs.h>
  
 -__BEGIN_DECLS
 +#ifdef __cplusplus
@@ -846,7 +688,7 @@ index 3b272343d..60c68d76c 100644
  
  extern int ifc_init(void);
  extern void ifc_close(void);
-@@ -61,6 +62,8 @@ extern int ifc_configure(const char *ifname, in_addr_t address,
+@@ -64,6 +65,8 @@ extern int ifc_configure(const char *ifname, in_addr_t address,
  
  extern in_addr_t prefixLengthToIpv4Netmask(int prefix_length);
  
@@ -928,7 +770,7 @@ index 427d71b40..62984037d 100644
  
  #include <map>
 diff --git a/libprocessgroup/cgrouprc/include/android/cgrouprc.h b/libprocessgroup/cgrouprc/include/android/cgrouprc.h
-index 0f6a9cd5d..3a41a550d 100644
+index 0ce51237a..ede70e815 100644
 --- a/libprocessgroup/cgrouprc/include/android/cgrouprc.h
 +++ b/libprocessgroup/cgrouprc/include/android/cgrouprc.h
 @@ -18,7 +18,9 @@
@@ -942,7 +784,7 @@ index 0f6a9cd5d..3a41a550d 100644
  
  // For host builds, __INTRODUCED_IN is not defined.
  #ifndef __INTRODUCED_IN
-@@ -84,6 +86,8 @@ __attribute__((warn_unused_result)) const char* ACgroupController_getName(const
+@@ -95,6 +97,8 @@ __attribute__((warn_unused_result)) const char* ACgroupController_getName(const
  __attribute__((warn_unused_result)) const char* ACgroupController_getPath(const ACgroupController*)
          __INTRODUCED_IN(29);
  
@@ -953,7 +795,7 @@ index 0f6a9cd5d..3a41a550d 100644
  
  #endif
 diff --git a/libprocessgroup/include/processgroup/processgroup.h b/libprocessgroup/include/processgroup/processgroup.h
-index f73ec2d41..8f1455acf 100644
+index 0b38b6bce..c8d9c0642 100644
 --- a/libprocessgroup/include/processgroup/processgroup.h
 +++ b/libprocessgroup/include/processgroup/processgroup.h
 @@ -16,12 +16,13 @@
@@ -972,7 +814,7 @@ index f73ec2d41..8f1455acf 100644
  
  static constexpr const char* CGROUPV2_CONTROLLER_NAME = "cgroup2";
  
-@@ -65,4 +66,6 @@ void removeAllProcessGroups(void);
+@@ -68,4 +69,6 @@ void removeAllProcessGroups(void);
  
  #endif // __ANDROID_VNDK__
  
@@ -981,7 +823,7 @@ index f73ec2d41..8f1455acf 100644
 +}
 +#endif
 diff --git a/libprocessgroup/task_profiles.h b/libprocessgroup/task_profiles.h
-index 9f2308c64..25c4220b3 100644
+index a64ca50ad..d6ffefe53 100644
 --- a/libprocessgroup/task_profiles.h
 +++ b/libprocessgroup/task_profiles.h
 @@ -16,7 +16,6 @@
@@ -1192,7 +1034,7 @@ index c77d9ffe6..00bd56242 100644
  }
  
 diff --git a/libziparchive/include/ziparchive/zip_archive.h b/libziparchive/include/ziparchive/zip_archive.h
-index e3ac114f2..30518f0fe 100644
+index 047af90f2..1b10be4fd 100644
 --- a/libziparchive/include/ziparchive/zip_archive.h
 +++ b/libziparchive/include/ziparchive/zip_archive.h
 @@ -22,7 +22,6 @@
@@ -1251,7 +1093,7 @@ index 3586ca1b1..b606c60d8 100644
  
  /* clang-format off */
 diff --git a/llkd/libllkd.cpp b/llkd/libllkd.cpp
-index b26ad4df6..95cc6d04d 100644
+index 1c3acb821..c9f0725dc 100644
 --- a/llkd/libllkd.cpp
 +++ b/llkd/libllkd.cpp
 @@ -25,7 +25,6 @@
@@ -1262,157 +1104,18 @@ index b26ad4df6..95cc6d04d 100644
  #include <sys/mman.h>   // mlockall()
  #include <sys/prctl.h>
  #include <sys/stat.h>     // lstat()
-diff --git a/lmkd/include/liblmkd_utils.h b/lmkd/include/liblmkd_utils.h
-index 72e3f4a2b..64d060c6a 100644
---- a/lmkd/include/liblmkd_utils.h
-+++ b/lmkd/include/liblmkd_utils.h
-@@ -17,12 +17,13 @@
- #ifndef _LIBLMKD_UTILS_H_
- #define _LIBLMKD_UTILS_H_
- 
--#include <sys/cdefs.h>
- #include <sys/types.h>
- 
- #include <lmkd.h>
- 
--__BEGIN_DECLS
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
- 
- /*
-  * Connects to lmkd process and returns socket handle.
-@@ -49,6 +50,8 @@ int lmkd_register_proc(int sock, struct lmk_procprio *params);
-  */
- int create_memcg(uid_t uid, pid_t pid);
- 
--__END_DECLS
-+#ifdef __cplusplus
-+}
-+#endif
- 
- #endif /* _LIBLMKD_UTILS_H_ */
-diff --git a/lmkd/include/lmkd.h b/lmkd/include/lmkd.h
-index 59377dd1f..bdc5413f2 100644
---- a/lmkd/include/lmkd.h
-+++ b/lmkd/include/lmkd.h
-@@ -18,10 +18,11 @@
- #define _LMKD_H_
- 
- #include <arpa/inet.h>
--#include <sys/cdefs.h>
- #include <sys/types.h>
- 
--__BEGIN_DECLS
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
- 
- /*
-  * Supported LMKD commands
-@@ -188,6 +189,8 @@ static inline size_t lmkd_pack_set_getkillcnt_repl(LMKD_CTRL_PACKET packet, int
-     return 2 * sizeof(int);
- }
- 
--__END_DECLS
-+#ifdef __cplusplus
-+}
-+#endif
- 
- #endif /* _LMKD_H_ */
-diff --git a/lmkd/liblmkd_utils.c b/lmkd/liblmkd_utils.c
-index fa3b7a920..3f76a35dd 100644
---- a/lmkd/liblmkd_utils.c
-+++ b/lmkd/liblmkd_utils.c
-@@ -16,7 +16,6 @@
- 
- #include <errno.h>
- #include <fcntl.h>
--#include <sys/cdefs.h>
- #include <sys/stat.h>
- #include <sys/types.h>
- #include <stdio.h>
-diff --git a/lmkd/libpsi/include/psi/psi.h b/lmkd/libpsi/include/psi/psi.h
-index cd49e8b60..b4f4afe70 100644
---- a/lmkd/libpsi/include/psi/psi.h
-+++ b/lmkd/libpsi/include/psi/psi.h
-@@ -17,10 +17,11 @@
- #ifndef __ANDROID_PSI_H__
- #define __ANDROID_PSI_H__
- 
--#include <sys/cdefs.h>
- #include <sys/types.h>
- 
--__BEGIN_DECLS
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
- 
- enum psi_stall_type {
-     PSI_SOME,
-@@ -63,6 +64,8 @@ int unregister_psi_monitor(int epollfd, int fd);
-  */
- void destroy_psi_monitor(int fd);
- 
--__END_DECLS
-+#ifdef __cplusplus
-+}
-+#endif
- 
- #endif  // __ANDROID_PSI_H__
-diff --git a/lmkd/lmkd.c b/lmkd/lmkd.c
-index 9de7ff7b7..8d96149f6 100644
---- a/lmkd/lmkd.c
-+++ b/lmkd/lmkd.c
-@@ -25,7 +25,6 @@
- #include <stdbool.h>
- #include <stdlib.h>
- #include <string.h>
--#include <sys/cdefs.h>
- #include <sys/epoll.h>
- #include <sys/eventfd.h>
- #include <sys/mman.h>
-diff --git a/lmkd/statslog.h b/lmkd/statslog.h
-index a09c7dd91..1c10f609b 100644
---- a/lmkd/statslog.h
-+++ b/lmkd/statslog.h
-@@ -21,11 +21,12 @@
- #include <inttypes.h>
- #include <stats_event_list.h>
- #include <stdbool.h>
--#include <sys/cdefs.h>
- 
- #include <cutils/properties.h>
- 
--__BEGIN_DECLS
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
- 
- struct memory_stat {
-     int64_t pgfault;
-@@ -131,6 +132,8 @@ static inline bool init_poll_kernel(struct kernel_poll_info *poll_info __unused)
- 
- #endif /* LMKD_LOG_STATS */
- 
--__END_DECLS
-+#ifdef __cplusplus
-+}
-+#endif
- 
- #endif /* _STATSLOG_H_ */
 diff --git a/logcat/logcat.cpp b/logcat/logcat.cpp
-index 4dcb3383e..5b261dc79 100644
+index 08e3d2254..51c363da8 100644
 --- a/logcat/logcat.cpp
 +++ b/logcat/logcat.cpp
-@@ -31,7 +31,6 @@
+@@ -26,7 +26,6 @@
  #include <stdio.h>
  #include <stdlib.h>
  #include <string.h>
 -#include <sys/cdefs.h>
  #include <sys/ioctl.h>
  #include <sys/resource.h>
- #include <sys/socket.h>
+ #include <sys/stat.h>
 diff --git a/logcat/tests/logcat_test.cpp b/logcat/tests/logcat_test.cpp
 index b32b43737..a9f0a7738 100644
 --- a/logcat/tests/logcat_test.cpp
@@ -1426,7 +1129,7 @@ index b32b43737..a9f0a7738 100644
  #include <sys/types.h>
  #include <sys/wait.h>
 diff --git a/logd/LogBuffer.cpp b/logd/LogBuffer.cpp
-index ba05a064f..f244dec30 100644
+index 834b20b6b..ce994d610 100644
 --- a/logd/LogBuffer.cpp
 +++ b/logd/LogBuffer.cpp
 @@ -21,7 +21,6 @@
@@ -1438,7 +1141,7 @@ index ba05a064f..f244dec30 100644
  #include <time.h>
  #include <unistd.h>
 diff --git a/logd/LogListener.cpp b/logd/LogListener.cpp
-index 443570fd3..493756c60 100644
+index ba610424f..6c276da43 100644
 --- a/logd/LogListener.cpp
 +++ b/logd/LogListener.cpp
 @@ -15,7 +15,6 @@
@@ -1563,6 +1266,3 @@ index b8ddf67d8..6cac8750c 100644
 +#ifdef __cplusplus
 +}
 +#endif
--- 
-2.25.1
-

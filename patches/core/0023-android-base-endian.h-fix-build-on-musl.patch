@@ -1,4 +1,4 @@
-From e7f6f2a9af0c53a1e5e512e63268a0aac6f3a35b Mon Sep 17 00:00:00 2001
+From c2b5373035e070e6784f2f84cb4166dfbc0110fa Mon Sep 17 00:00:00 2001
 From: Minecrell <minecrell@minecrell.net>
 Date: Sat, 29 Feb 2020 13:22:44 +0100
 Subject: [PATCH] android-base/endian.h: fix build on musl
@@ -32,6 +32,3 @@ index 1e5cceb9a..c85c0ae30 100644
  #else
  
  #if defined(__APPLE__)
--- 
-2.25.1
-
