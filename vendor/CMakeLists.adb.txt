@@ -27,6 +27,7 @@ add_library(libbase STATIC
 	core/base/errors_unix.cpp
 	core/base/file.cpp
 	core/base/logging.cpp
+	core/base/liblog_symbols.cpp
 	core/base/mapped_file.cpp
 	core/base/parsenetaddress.cpp
 	core/base/stringprintf.cpp
@@ -38,19 +39,17 @@ target_include_directories(libbase PUBLIC
 	core/base/include core/include)
 
 add_library(liblog STATIC
-	core/liblog/fake_log_device.cpp
-	core/liblog/fake_writer.cpp
 	core/liblog/log_event_list.cpp
 	core/liblog/log_event_write.cpp
-	core/liblog/logger_lock.cpp
 	core/liblog/logger_name.cpp
 	core/liblog/logger_write.cpp
+	core/liblog/properties.cpp
 	core/liblog/logprint.cpp)
 
 target_compile_definitions(liblog PRIVATE
 	-DLIBLOG_LOG_TAG=1006 -D_XOPEN_SOURCE=700 -DFAKE_LOG_DEVICE=1)
 target_include_directories(liblog PUBLIC
-	core/log/include core/include)
+	core/log/include core/include core/base/include)
 
 add_library(libcutils STATIC
 	core/libcutils/android_get_control_file.cpp
@@ -98,7 +97,8 @@ add_executable(adb
 	  core/adb/sockets.cpp
 	  core/adb/transport.cpp
 	  core/adb/transport_local.cpp
-	  core/adb/transport_usb.cpp)
+	  core/adb/transport_usb.cpp
+	  core/adb/types.cpp)
 
 target_compile_definitions(adb PRIVATE
 	-DPLATFORM_TOOLS_VERSION="${ANDROID_VERSION}"
