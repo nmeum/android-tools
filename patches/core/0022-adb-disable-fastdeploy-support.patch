@@ -1,4 +1,4 @@
-From 3960fd22b7637059b654f879a6e31e5b349fc992 Mon Sep 17 00:00:00 2001
+From f88c6cd4ac3822799ac494f103bb31b4346794e4 Mon Sep 17 00:00:00 2001
 From: Minecrell <minecrell@minecrell.net>
 Date: Thu, 27 Feb 2020 14:06:16 +0100
 Subject: [PATCH] adb: disable fastdeploy support
@@ -15,7 +15,7 @@ If someone wants to make it work, feel free to :)
  2 files changed, 14 insertions(+)
 
 diff --git a/adb/client/adb_install.cpp b/adb/client/adb_install.cpp
-index 73dcde1fe..5ef7a48a3 100644
+index 2bcd0a682..bf982df47 100644
 --- a/adb/client/adb_install.cpp
 +++ b/adb/client/adb_install.cpp
 @@ -167,6 +167,7 @@ static int install_app_streamed(int argc, const char** argv, bool use_fastdeploy
@@ -36,7 +36,7 @@ index 73dcde1fe..5ef7a48a3 100644
      }
  
      struct stat sb;
-@@ -263,6 +267,7 @@ static int install_app_legacy(int argc, const char** argv, bool use_fastdeploy)
+@@ -267,6 +271,7 @@ static int install_app_legacy(int argc, const char** argv, bool use_fastdeploy)
      argv[last_apk] = apk_dest.c_str(); /* destination name, not source location */
  
      if (use_fastdeploy) {
@@ -44,7 +44,7 @@ index 73dcde1fe..5ef7a48a3 100644
          auto metadata = extract_metadata(apk_file[0]);
          if (metadata.has_value()) {
              auto patchFd = apply_patch_on_device(apk_dest.c_str());
-@@ -273,6 +278,9 @@ static int install_app_legacy(int argc, const char** argv, bool use_fastdeploy)
+@@ -277,6 +282,9 @@ static int install_app_legacy(int argc, const char** argv, bool use_fastdeploy)
  
              return status;
          }
@@ -54,7 +54,7 @@ index 73dcde1fe..5ef7a48a3 100644
      }
  
      if (do_sync_push(apk_file, apk_dest.c_str(), false)) {
-@@ -327,6 +335,7 @@ int install_app(int argc, const char** argv) {
+@@ -331,6 +339,7 @@ int install_app(int argc, const char** argv) {
          error_exit("Attempting to use streaming install on unsupported device");
      }
  
@@ -62,7 +62,7 @@ index 73dcde1fe..5ef7a48a3 100644
      if (use_fastdeploy && get_device_api_level() < kFastDeployMinApi) {
          printf("Fast Deploy is only compatible with devices of API version %d or higher, "
                 "ignoring.\n",
-@@ -334,6 +343,7 @@ int install_app(int argc, const char** argv) {
+@@ -338,6 +347,7 @@ int install_app(int argc, const char** argv) {
          use_fastdeploy = false;
      }
      fastdeploy_set_agent_update_strategy(agent_update_strategy);
@@ -102,6 +102,3 @@ index 830aeb2ca..25f3f9efe 100644
  int stream_patch(const char* apk_path, com::android::fastdeploy::APKMetaData metadata,
                   unique_fd patch_fd);
 +#endif
--- 
-2.25.1
-

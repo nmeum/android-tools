@@ -1,4 +1,4 @@
-From d587ab356e278f5a2b252e42c350120aed9b74ce Mon Sep 17 00:00:00 2001
+From 9ac4b25ad703678e11ed8c3edf0a40ede70a1085 Mon Sep 17 00:00:00 2001
 From: John Zimmermann <johnz@posteo.net>
 Date: Tue, 1 Oct 2019 12:38:21 +0200
 Subject: [PATCH] Use glibc's gettid when using glibc>=2.30

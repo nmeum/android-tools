@@ -1,4 +1,4 @@
-From ae078d62e51b33541f217860bbec9ec7794c3917 Mon Sep 17 00:00:00 2001
+From d547c8ee94112ddbf8cdd4cbc35766e249b73496 Mon Sep 17 00:00:00 2001
 From: Robert Yang <decatf@gmail.com>
 Date: Wed, 24 Oct 2018 09:48:40 -0400
 Subject: [PATCH] adb: Reduce fallback size for _SC_GETPW_R_SIZE_MAX

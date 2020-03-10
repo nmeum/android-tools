@@ -1,4 +1,4 @@
-From 90460f08eb9174da8ebdd2581337c3cb0c32a093 Mon Sep 17 00:00:00 2001
+From c2cc6dce3b151beb7c7ff820fd2d5da8295dd443 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Wed, 21 Aug 2019 19:59:43 +0200
 Subject: [PATCH] libcutils: include sys/select.h for timeval
@@ -8,7 +8,7 @@ Subject: [PATCH] libcutils: include sys/select.h for timeval
  1 file changed, 1 insertion(+)
 
 diff --git a/libcutils/sockets_unix.cpp b/libcutils/sockets_unix.cpp
-index 6acdcd89b..32ab56080 100644
+index 84663e675..f174fba8f 100644
 --- a/libcutils/sockets_unix.cpp
 +++ b/libcutils/sockets_unix.cpp
 @@ -20,6 +20,7 @@

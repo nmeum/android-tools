@@ -1,4 +1,4 @@
-From aff90ade8e66223a7e561c2ea00ac6c0ddfa2fc9 Mon Sep 17 00:00:00 2001
+From 4c4657f706f4ceaf2e297d44db5ac3010d73db91 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 16:30:30 +0100
 Subject: [PATCH] Fix inclusion of stdatomic.h with g++
@@ -7,11 +7,10 @@ See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=60932#c5
 ---
  libcutils/include/cutils/trace.h | 5 +++++
  liblog/logger.h                  | 5 +++++
- liblog/logger_write.cpp          | 5 +++++
- 3 files changed, 15 insertions(+)
+ 2 files changed, 10 insertions(+)
 
 diff --git a/libcutils/include/cutils/trace.h b/libcutils/include/cutils/trace.h
-index 712f75c4f..9a41f4be7 100644
+index a27831b75..bb8a8e5a6 100644
 --- a/libcutils/include/cutils/trace.h
 +++ b/libcutils/include/cutils/trace.h
 @@ -18,7 +18,12 @@
@@ -28,7 +27,7 @@ index 712f75c4f..9a41f4be7 100644
  #include <stdint.h>
  #include <stdio.h>
 diff --git a/liblog/logger.h b/liblog/logger.h
-index c5fbc1184..abeb23454 100644
+index 263859dbd..46361731d 100644
 --- a/liblog/logger.h
 +++ b/liblog/logger.h
 @@ -16,7 +16,12 @@
@@ -42,22 +41,5 @@ index c5fbc1184..abeb23454 100644
  #include <stdatomic.h>
 +#endif
  
- #include <cutils/list.h>
  #include <log/log.h>
-diff --git a/liblog/logger_write.cpp b/liblog/logger_write.cpp
-index e1772f190..1c72653cc 100644
---- a/liblog/logger_write.cpp
-+++ b/liblog/logger_write.cpp
-@@ -15,7 +15,12 @@
-  */
  
- #include <errno.h>
-+#ifdef __cplusplus
-+#include <atomic>
-+using namespace std;
-+#else
- #include <stdatomic.h>
-+#endif
- #include <stdlib.h>
- #include <string.h>
- #include <sys/time.h>

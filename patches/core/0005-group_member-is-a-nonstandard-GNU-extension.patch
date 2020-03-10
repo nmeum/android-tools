@@ -1,4 +1,4 @@
-From 537d75fca0476f1b777c292351def45b2e5bae97 Mon Sep 17 00:00:00 2001
+From 4ebddcc89aca9b112d2a5e170541f4f6cd0a9d3c Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 17:24:05 +0100
 Subject: [PATCH] group_member is a nonstandard GNU extension

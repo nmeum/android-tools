@@ -80,8 +80,6 @@ add_library(libsepol
 	selinux/libsepol/src/debug.c
 	selinux/libsepol/src/ebitmap.c
 	selinux/libsepol/src/expand.c
-	selinux/libsepol/src/genbools.c
-	selinux/libsepol/src/genusers.c
 	selinux/libsepol/src/hashtab.c
 	selinux/libsepol/src/hierarchy.c
 	selinux/libsepol/src/kernel_to_common.c
@@ -93,7 +91,8 @@ add_library(libsepol
 	selinux/libsepol/src/sidtab.c
 	selinux/libsepol/src/symtab.c
 	selinux/libsepol/src/util.c
-	selinux/libsepol/src/write.c)
+	selinux/libsepol/src/write.c
+	selinux/libsepol/src/optimize.c)
 
 target_include_directories(libsepol PUBLIC
 	selinux/libsepol/include)

@@ -1,0 +1,35 @@
+From 7df8e7ef6fcd51e612922739d67e47c659600894 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
+Date: Sat, 7 Mar 2020 13:48:50 +0100
+Subject: [PATCH] types.h: Fix ambiguous reference to weak_ptr
+
+Without this patch the patch files with:
+
+	error: reference to 'weak_ptr' is ambiguous
+
+As there also seems to be a definition of weak_ptr in the std namespace.
+---
+ adb/types.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/adb/types.h b/adb/types.h
+index b7d6e3bfb..8bdeadb18 100644
+--- a/adb/types.h
++++ b/adb/types.h
+@@ -331,13 +331,13 @@ struct enable_weak_from_this {
+         }
+     }
+ 
+-    weak_ptr<T> weak() { return weak_ptr<T>(static_cast<T*>(this)); }
++    ::weak_ptr<T> weak() { return ::weak_ptr<T>(static_cast<T*>(this)); }
+ 
+     void schedule_deletion() {
+         fdevent_run_on_main_thread([this]() { delete this; });
+     }
+ 
+   private:
+-    friend struct weak_ptr<T>;
+-    std::vector<weak_ptr<T>*> weak_ptrs_;
++    friend struct ::weak_ptr<T>;
++    std::vector<::weak_ptr<T>*> weak_ptrs_;
+ };

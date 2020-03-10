@@ -1,4 +1,4 @@
-From 5afbc52c470940f0935b352b283bf4a5b61db146 Mon Sep 17 00:00:00 2001
+From 61050e9a7723cea3c4e6a6706425e67dbbd7d7ad Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Thu, 13 Sep 2018 23:19:07 +0200
 Subject: [PATCH] Don't use the internal glibc header sys/cdefs.h
@@ -14,39 +14,61 @@ This patch was created using sed(1) and ag(1) with the following script:
 
 https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-get-error-messages-about-<code>sys/cdefs.h</code>
 ---
- libfscrypt/include/fscrypt/fscrypt.h  | 9 ++++++---
+ ext4_utils/blk_alloc_to_base_fs.cpp   | 1 -
+ kexec_tools/kexec.h                   | 1 -
+ multinetwork/common.h                 | 1 -
+ taskstats/taskstats.c                 | 1 -
  tests/lib/testUtil/include/testUtil.h | 8 ++++++--
- 2 files changed, 12 insertions(+), 5 deletions(-)
+ 5 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/libfscrypt/include/fscrypt/fscrypt.h b/libfscrypt/include/fscrypt/fscrypt.h
-index 13358bb7..b77999a4 100644
---- a/libfscrypt/include/fscrypt/fscrypt.h
-+++ b/libfscrypt/include/fscrypt/fscrypt.h
-@@ -17,11 +17,12 @@
- #ifndef _FSCRYPT_H_
- #define _FSCRYPT_H_
+diff --git a/ext4_utils/blk_alloc_to_base_fs.cpp b/ext4_utils/blk_alloc_to_base_fs.cpp
+index 664648d1..470a7ec0 100644
+--- a/ext4_utils/blk_alloc_to_base_fs.cpp
++++ b/ext4_utils/blk_alloc_to_base_fs.cpp
+@@ -19,7 +19,6 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#include <sys/cdefs.h>
+ 
+ #define MAX_PATH 4096
+ #define MAX_FILE_VERSION 100
+diff --git a/kexec_tools/kexec.h b/kexec_tools/kexec.h
+index c45b1b31..b2b702eb 100644
+--- a/kexec_tools/kexec.h
++++ b/kexec_tools/kexec.h
+@@ -1,7 +1,6 @@
+ #ifndef _SYS_KEXEC_H
+ #define _SYS_KEXEC_H
  
 -#include <sys/cdefs.h>
- #include <stdbool.h>
- #include <cutils/multiuser.h>
+ #include <linux/kexec.h>
+ #include <unistd.h>
+ #include <sys/syscall.h>
+diff --git a/multinetwork/common.h b/multinetwork/common.h
+index f431ea99..412826f8 100644
+--- a/multinetwork/common.h
++++ b/multinetwork/common.h
+@@ -18,7 +18,6 @@
+ #ifndef SYSTEM_EXTRAS_MULTINETWORK_COMMON_H_
+ #define SYSTEM_EXTRAS_MULTINETWORK_COMMON_H_
  
--__BEGIN_DECLS
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
+-#include <sys/cdefs.h>
+ #include <sys/socket.h>
+ #include <unistd.h>
+ #include <string>
+diff --git a/taskstats/taskstats.c b/taskstats/taskstats.c
+index f2cf16f7..39a90613 100644
+--- a/taskstats/taskstats.c
++++ b/taskstats/taskstats.c
+@@ -30,7 +30,6 @@
+ #include <netlink/msg.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+-#include <sys/cdefs.h>
+ #include <time.h>
+ #include <unistd.h>
  
- bool fscrypt_is_native();
- 
-@@ -34,6 +35,8 @@ static const char* fscrypt_key_ref = "/unencrypted/ref";
- static const char* fscrypt_key_per_boot_ref = "/unencrypted/per_boot_ref";
- static const char* fscrypt_key_mode = "/unencrypted/mode";
- 
--__END_DECLS
-+#ifdef __cplusplus
-+}
-+#endif
- 
- #endif // _FSCRYPT_H_
 diff --git a/tests/lib/testUtil/include/testUtil.h b/tests/lib/testUtil/include/testUtil.h
 index 3b75914d..bdef437d 100644
 --- a/tests/lib/testUtil/include/testUtil.h

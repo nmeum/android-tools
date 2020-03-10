@@ -1,4 +1,4 @@
-From 404faa9e2a991b80c2cb6bbfac4c8322b64e1626 Mon Sep 17 00:00:00 2001
+From b177c9bed1236f83ca0ad8554bbec82a603db89e Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Sun, 1 Sep 2019 15:05:17 +0000
 Subject: [PATCH] fdevent: missing atomic include
