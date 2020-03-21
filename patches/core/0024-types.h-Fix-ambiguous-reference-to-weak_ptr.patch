@@ -3,7 +3,7 @@ From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Sat, 7 Mar 2020 13:48:50 +0100
 Subject: [PATCH] types.h: Fix ambiguous reference to weak_ptr
 
-Without this patch the patch files with:
+Without this patch the build fails with:
 
 	error: reference to 'weak_ptr' is ambiguous
 
