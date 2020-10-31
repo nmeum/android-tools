@@ -20,23 +20,7 @@ add_library(libadb STATIC
 target_compile_definitions(libadb PRIVATE -D_GNU_SOURCE)
 target_compile_definitions(libadb PUBLIC -DADB_HOST=1)
 target_include_directories(libadb PUBLIC
-	core/include core/base/include core/adb boringssl/include core/libcrypto_utils/include)
-
-add_library(libbase STATIC
-	core/base/chrono_utils.cpp
-	core/base/errors_unix.cpp
-	core/base/file.cpp
-	core/base/logging.cpp
-	core/base/liblog_symbols.cpp
-	core/base/mapped_file.cpp
-	core/base/parsenetaddress.cpp
-	core/base/stringprintf.cpp
-	core/base/strings.cpp
-	core/base/test_utils.cpp
-	core/base/threads.cpp)
-
-target_include_directories(libbase PUBLIC
-	core/base/include core/include)
+	core/include libbase/include core/adb boringssl/include core/libcrypto_utils/include)
 
 add_library(liblog STATIC
 	core/liblog/log_event_list.cpp
@@ -49,7 +33,7 @@ add_library(liblog STATIC
 target_compile_definitions(liblog PRIVATE
 	-DLIBLOG_LOG_TAG=1006 -D_XOPEN_SOURCE=700 -DFAKE_LOG_DEVICE=1)
 target_include_directories(liblog PUBLIC
-	core/log/include core/include core/base/include)
+	core/log/include core/include libbase/include)
 
 add_library(libcutils STATIC
 	core/libcutils/android_get_control_file.cpp
@@ -68,7 +52,7 @@ target_compile_definitions(libcutils PRIVATE -D_GNU_SOURCE)
 target_include_directories(libcutils PRIVATE
 	core/liblog/include core/libutils/include)
 target_include_directories(libcutils PUBLIC
-	core/libcutils/include core/base/include)
+	core/libcutils/include libbase/include)
 
 add_library(libdiagnoseusb STATIC
 	core/diagnose_usb/diagnose_usb.cpp)
@@ -76,7 +60,7 @@ target_include_directories(libdiagnoseusb PUBLIC
 	core/diagnose_usb/include)
 
 target_include_directories(libdiagnoseusb PUBLIC
-	core/include core/base/include)
+	core/include libbase/include)
 
 add_library(libcrypto STATIC
 	core/libcrypto_utils/android_pubkey.c)
@@ -104,7 +88,7 @@ target_compile_definitions(adb PRIVATE
 	-DPLATFORM_TOOLS_VERSION="${ANDROID_VERSION}"
 	-DPLATFORM_TOOLS_VENDOR="${ANDROID_VENDOR}")
 target_include_directories(adb PRIVATE
-	core/include core/base/include core/adb
+	core/include libbase/include core/adb
 	core/libcrypto_utils/include boringssl/include)
 target_link_libraries(adb libbase liblog libadb
 	libdiagnoseusb libcrypto crypto pthread usb-1.0 libcutils)

@@ -6,6 +6,7 @@ set(android-vendored
 	avb
 	core
 	extras
+	libbase
 	selinux
 	f2fs-tools
 	e2fsprogs)
@@ -26,6 +27,7 @@ if(EXISTS "${ANDROID_PATCH_DIR}/")
 	endforeach(v)
 endif()
 
+include(CMakeLists.libbase.txt)
 include(CMakeLists.adb.txt)
 include(CMakeLists.sparse.txt)
 include(CMakeLists.fastboot.txt)

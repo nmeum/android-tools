@@ -22,3 +22,6 @@
 [submodule "vendor/avb"]
 	path = vendor/avb
 	url = https://android.googlesource.com/platform/external/avb
+[submodule "vendor/libbase"]
+	path = vendor/libbase
+	url = https://android.googlesource.com/platform/system/libbase

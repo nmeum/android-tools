@@ -1,0 +1,20 @@
+add_library(libbase STATIC
+	libbase/abi_compatibility.cpp
+	libbase/chrono_utils.cpp
+	libbase/cmsg.cpp
+	libbase/errors_unix.cpp
+	libbase/file.cpp
+	libbase/logging.cpp
+	libbase/liblog_symbols.cpp
+	libbase/mapped_file.cpp
+	libbase/parsebool.cpp
+	libbase/parsenetaddress.cpp
+	libbase/process.cpp
+	libbase/properties.cpp
+	libbase/stringprintf.cpp
+	libbase/strings.cpp
+	libbase/test_utils.cpp
+	libbase/threads.cpp)
+
+target_include_directories(libbase PUBLIC
+	libbase/include core/include)

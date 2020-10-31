@@ -1,0 +1,101 @@
+From 378f4c75d683dee5a5895fe0fda44d54c50ac120 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=C4=90o=C3=A0n=20Tr=E1=BA=A7n=20C=C3=B4ng=20Danh?=
+ <congdanhqx@gmail.com>
+Date: Sat, 31 Oct 2020 21:27:36 +0700
+Subject: [PATCH] less lambda, less problem
+
+gcc 9.3.0 on Linux system with musl-libc run into this problem with this lambda:
+
+ --------8<--------------
+ during RTL pass: expand
+ In file included from /home/sgn/src/android-tools/vendor/libbase/logging.cpp:64:
+ /home/sgn/src/android-tools/vendor/libbase/logging_splitters.h: In lambda function:
+ /home/sgn/src/android-tools/vendor/libbase/logging_splitters.h:82:79: internal compiler error: in expand_expr_real_1, at expr.c:10012
+   82 |       size_written = snprintf(logd_chunk + chunk_position, sizeof(logd_chunk) - chunk_position,
+      |                                                            ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+ 0x7fef4a69fa79 libc_start_main_stage2
+        src/env/__libc_start_main.c:94
+ Please submit a full bug report,
+ with preprocessed source if appropriate.
+ Please include the complete backtrace with any bug report.
+ See <https://gcc.gnu.org/bugs/> for instructions.
+ ------------------->8-----------------
+
+---
+ logging_splitters.h | 56 ++++++++++++++++++++++++++++++---------------
+ 1 file changed, 38 insertions(+), 18 deletions(-)
+
+diff --git a/logging_splitters.h b/logging_splitters.h
+index 2ec2b20..e6c6bb8 100644
+--- a/logging_splitters.h
++++ b/logging_splitters.h
+@@ -40,6 +40,39 @@ static void SplitByLines(const char* msg, const F& log_function, Args&&... args)
+   log_function(msg, -1, args...);
+ }
+ 
++struct Android_WriteToLogdChunkNoLambda
++{
++  std::string& file_header;
++  ptrdiff_t chunk_position;
++  char *logd_chunk;
++  size_t logd_chunk_size;
++  bool add_file;
++
++  Android_WriteToLogdChunkNoLambda(
++    std::string& file_header,
++    ptrdiff_t chunk_position,
++    char *logd_chunk,
++    size_t logd_chunk_size,
++    bool add_file)
++    : file_header(file_header),
++      chunk_position(chunk_position),
++      logd_chunk(logd_chunk),
++      logd_chunk_size(logd_chunk_size),
++      add_file(add_file)
++  {}
++
++  void operator()(const char* message, int length) {
++    int size_written = 0;
++    const char* new_line = chunk_position > 0 ? "\n" : "";
++    if (add_file) {
++      size_written = snprintf(logd_chunk + chunk_position, logd_chunk_size - chunk_position,
++                              "%s%s%.*s", new_line, file_header.c_str(), length, message);
++    } else {
++      size_written = snprintf(logd_chunk + chunk_position, logd_chunk_size - chunk_position,
++                              "%s%.*s", new_line, length, message);
++    }
++  }
++};
+ // This splits the message up into chunks that logs can process delimited by new lines.  It calls
+ // log_function with the exact null terminated message that should be sent to logd.
+ // Note, despite the loops and snprintf's, if severity is not fatal and there are no new lines,
+@@ -75,24 +108,11 @@ static void SplitByLogdChunks(LogId log_id, LogSeverity severity, const char* ta
+     chunk_position = 0;
+   };
+ 
+-  auto write_to_logd_chunk = [&](const char* message, int length) {
+-    int size_written = 0;
+-    const char* new_line = chunk_position > 0 ? "\n" : "";
+-    if (add_file) {
+-      size_written = snprintf(logd_chunk + chunk_position, sizeof(logd_chunk) - chunk_position,
+-                              "%s%s%.*s", new_line, file_header.c_str(), length, message);
+-    } else {
+-      size_written = snprintf(logd_chunk + chunk_position, sizeof(logd_chunk) - chunk_position,
+-                              "%s%.*s", new_line, length, message);
+-    }
+-
+-    // This should never fail, if it does and we set size_written to 0, which will skip this line
+-    // and move to the next one.
+-    if (size_written < 0) {
+-      size_written = 0;
+-    }
+-    chunk_position += size_written;
+-  };
++  Android_WriteToLogdChunkNoLambda write_to_logd_chunk(file_header,
++                                                       chunk_position,
++                                                       logd_chunk,
++                                                       max_size + 1,
++                                                       add_file);
+ 
+   const char* newline = strchr(msg, '\n');
+   while (newline != nullptr) {
