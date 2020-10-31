@@ -7,6 +7,7 @@ set(android-vendored
 	core
 	extras
 	libbase
+	libziparchive
 	selinux
 	f2fs-tools
 	e2fsprogs)

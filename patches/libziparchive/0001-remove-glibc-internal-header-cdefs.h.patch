@@ -1,0 +1,22 @@
+From b3fe976c27a54378dfd5c90214cb29c8f8c06169 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=C4=90o=C3=A0n=20Tr=E1=BA=A7n=20C=C3=B4ng=20Danh?=
+ <congdanhqx@gmail.com>
+Date: Sat, 31 Oct 2020 19:48:45 +0700
+Subject: [PATCH] remove glibc internal header cdefs.h
+
+---
+ include/ziparchive/zip_archive.h | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/include/ziparchive/zip_archive.h b/include/ziparchive/zip_archive.h
+index 005d697..3f16935 100644
+--- a/include/ziparchive/zip_archive.h
++++ b/include/ziparchive/zip_archive.h
+@@ -22,7 +22,6 @@
+ 
+ #include <stdint.h>
+ #include <string.h>
+-#include <sys/cdefs.h>
+ #include <sys/types.h>
+ 
+ #include <functional>
