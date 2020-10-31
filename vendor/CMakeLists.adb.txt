@@ -7,19 +7,28 @@ protobuf_generate_cpp(ADB_KNOWN_HOSTS_PROTO_SRCS ADB_KNOWN_HOSTS_PROTO_HDRS
 protobuf_generate_cpp(ADB_PAIRING_PROTO_SRCS ADB_PAIRING_PROTO_HDRS
 	core/adb/proto/pairing.proto)
 
+# No fastdeploy because it requires deployagent.inc
 add_library(libadb STATIC
 	core/adb/client/adb_client.cpp
 	core/adb/client/adb_install.cpp
+	core/adb/client/adb_wifi.cpp
 	core/adb/client/auth.cpp
 	core/adb/client/bugreport.cpp
 	core/adb/client/commandline.cpp
 	core/adb/client/console.cpp
 	core/adb/client/file_sync_client.cpp
+	core/adb/client/incremental.cpp
+	core/adb/client/incremental_server.cpp
+	core/adb/client/incremental_utils.cpp
 	core/adb/client/line_printer.cpp
 	core/adb/client/main.cpp
+	core/adb/client/pairing/pairing_client.cpp
 	core/adb/client/usb_dispatch.cpp
 	core/adb/client/usb_libusb.cpp
 	core/adb/client/usb_linux.cpp
+	core/adb/pairing_auth/aes_128_gcm.cpp
+	core/adb/pairing_auth/pairing_auth.cpp
+	core/adb/pairing_connection/pairing_connection.cpp
 	core/adb/services.cpp
 	core/adb/socket_spec.cpp
 	core/adb/sysdeps_unix.cpp
@@ -42,12 +51,48 @@ set_property(SOURCE core/adb/pairing_connection/pairing_connection.cpp
 target_compile_definitions(libadb PRIVATE -D_GNU_SOURCE)
 target_compile_definitions(libadb PUBLIC -DADB_HOST=1)
 target_include_directories(libadb PUBLIC
-	core/include libbase/include core/adb boringssl/include core/libcrypto_utils/include)
+	base/libs/androidfw/include
+	boringssl/include
+	core/adb
+	core/adb/crypto/include
+	core/adb/pairing_auth/include
+	core/adb/pairing_connection/include
+	core/adb/tls/include
+	core/include
+	core/libcrypto_utils/include
+	core/libcutils/include
+	libbase/include
+	libziparchive/include
+	native/include)
+
+add_library(libadb_crypto_defaults STATIC
+	core/adb/crypto/key.cpp
+	core/adb/crypto/rsa_2048_key.cpp
+	core/adb/crypto/x509_generator.cpp)
+
+target_include_directories(libadb_crypto_defaults PUBLIC
+	core/adb
+	core/adb/crypto/include
+	boringssl/include
+	core/libcrypto_utils/include
+	libbase/include)
+
+
+add_library(libadb_tls_connection_defaults STATIC
+	core/adb/tls/adb_ca_list.cpp
+	core/adb/tls/tls_connection.cpp)
+
+target_include_directories(libadb_tls_connection_defaults PUBLIC
+	core/adb
+	core/adb/tls/include
+	boringssl/include
+	libbase/include)
 
 add_library(liblog STATIC
 	core/liblog/log_event_list.cpp
 	core/liblog/log_event_write.cpp
 	core/liblog/logger_name.cpp
+	core/liblog/logger_read.cpp
 	core/liblog/logger_write.cpp
 	core/liblog/properties.cpp
 	core/liblog/logprint.cpp)
@@ -55,19 +100,34 @@ add_library(liblog STATIC
 target_compile_definitions(liblog PRIVATE
 	-DLIBLOG_LOG_TAG=1006 -D_XOPEN_SOURCE=700 -DFAKE_LOG_DEVICE=1)
 target_include_directories(liblog PUBLIC
-	core/log/include core/include libbase/include)
+	core/include
+	core/liblog/include
+	core/libcutils/include
+	libbase/include)
 
 add_library(libcutils STATIC
 	core/libcutils/android_get_control_file.cpp
+	core/libcutils/ashmem-host.cpp
 	core/libcutils/canned_fs_config.cpp
+	core/libcutils/config_utils.cpp
+	core/libcutils/fs.cpp
 	core/libcutils/fs_config.cpp
+	core/libcutils/hashmap.cpp
+	core/libcutils/iosched_policy.cpp
 	core/libcutils/load_file.cpp
+	core/libcutils/multiuser.cpp
+	core/libcutils/native_handle.cpp
+	core/libcutils/properties.cpp
+	core/libcutils/record_stream.cpp
 	core/libcutils/socket_inaddr_any_server_unix.cpp
 	core/libcutils/socket_local_client_unix.cpp
 	core/libcutils/socket_local_server_unix.cpp
 	core/libcutils/socket_network_client_unix.cpp
 	core/libcutils/sockets_unix.cpp
 	core/libcutils/sockets.cpp
+	core/libcutils/str_parms.cpp
+	core/libcutils/strlcpy.c
+	core/libcutils/trace-host.cpp
 	core/libcutils/threads.cpp)
 
 target_compile_definitions(libcutils PRIVATE -D_GNU_SOURCE)
@@ -84,8 +144,14 @@ target_include_directories(libdiagnoseusb PUBLIC
 target_include_directories(libdiagnoseusb PUBLIC
 	core/include libbase/include)
 
+add_library(libadb_sysdeps STATIC
+	core/adb/sysdeps/env.cpp)
+target_include_directories(libadb_sysdeps PUBLIC
+	libbase/include
+	core/adb)
+
 add_library(libcrypto STATIC
-	core/libcrypto_utils/android_pubkey.c)
+	core/libcrypto_utils/android_pubkey.cpp)
 
 target_include_directories(libcrypto PUBLIC
 	core/libcrypto_utils/include boringssl/include)
@@ -95,15 +161,18 @@ add_executable(adb
 	  core/adb/adb_io.cpp
 	  core/adb/adb_listeners.cpp
 	  core/adb/adb_trace.cpp
+	  core/adb/adb_unique_fd.cpp
 	  core/adb/adb_utils.cpp
 	  core/adb/fdevent/fdevent.cpp
 	  core/adb/fdevent/fdevent_poll.cpp
 	  core/adb/fdevent/fdevent_epoll.cpp
 	  core/adb/shell_service_protocol.cpp
 	  core/adb/sockets.cpp
+	  core/adb/socket_spec.cpp
 	  core/adb/transport.cpp
-	  core/adb/transport_local.cpp
-	  core/adb/transport_usb.cpp
+	  core/adb/transport_fd.cpp
+	  core/adb/client/transport_local.cpp
+	  core/adb/client/transport_usb.cpp
 	  core/adb/types.cpp)
 
 target_compile_definitions(adb PRIVATE
@@ -112,6 +181,25 @@ target_compile_definitions(adb PRIVATE
 target_include_directories(adb PRIVATE
 	core/include libbase/include core/adb
 	core/libcrypto_utils/include boringssl/include)
-target_link_libraries(adb libbase liblog libadb
+target_link_libraries(adb
+	libadb
+	libadb_crypto_defaults
+	libadb_tls_connection_defaults
+	libbase
+	libcrypto
+	libadb_sysdeps
+	libcutils
+	libdiagnoseusb
+	liblog
+	libzip
+	crypto
+	ssl
 	${PROTOBUF_LIBRARIES}
-	libdiagnoseusb libcrypto crypto pthread usb-1.0 libcutils)
+	brotlicommon
+	brotlidec
+	brotlienc
+	lz4
+	pthread
+	usb-1.0
+	z
+	zstd)

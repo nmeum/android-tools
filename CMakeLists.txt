@@ -29,5 +29,6 @@ set(CPACK_SOURCE_PACKAGE_FILE_NAME "${PROJECT_NAME}-${ANDROID_VERSION}")
 set(CPACK_SOURCE_IGNORE_FILES "/patches/" "/build/" "/.git/" "/tests/"
 	"/testdata/" "/extras/simpleperf/scripts/" "\\\\.so$" "\\\\.zip$"
 	"/vendor/base/[a-k].*" "/vendor/base/[m-z].*"
+	"\\\\.orig" "\\\\.rej"
 	"/fuzz/" "\\\\.tar$" "\\\\.tar\\\\..*$" "\\\\.tgz$" "\\\\.data$")
 include(CPack)

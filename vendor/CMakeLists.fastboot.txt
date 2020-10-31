@@ -21,7 +21,10 @@ add_library(libutil STATIC
 	core/libutils/Unicode.cpp)
 
 target_include_directories(libutil PUBLIC
-	core/include libbase/include)
+	core/include
+	core/liblog/include
+	core/libutils/include
+	libbase/include)
 
 add_library(libext4 STATIC
 	extras/ext4_utils/ext4_utils.cpp
