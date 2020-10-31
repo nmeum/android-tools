@@ -1,4 +1,4 @@
-From 9b0cdcae93aeab6f6cfa801ebf5ed463f96f2f8d Mon Sep 17 00:00:00 2001
+From 286944c8dce3f6766c112855b87d4043bae66e78 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Sun, 1 Sep 2019 13:40:05 +0000
 Subject: [PATCH] Don't include version.h
@@ -10,10 +10,10 @@ Version is set using a CPPFLAG.
  2 files changed, 2 insertions(+), 6 deletions(-)
 
 diff --git a/adb/adb.cpp b/adb/adb.cpp
-index 7aaf9a646..8ac768ead 100644
+index 8fcb4c62a..daae0e103 100644
 --- a/adb/adb.cpp
 +++ b/adb/adb.cpp
-@@ -44,8 +44,6 @@
+@@ -45,8 +45,6 @@
  #include <android-base/parsenetaddress.h>
  #include <android-base/stringprintf.h>
  #include <android-base/strings.h>
@@ -22,7 +22,7 @@ index 7aaf9a646..8ac768ead 100644
  
  #include "adb_auth.h"
  #include "adb_io.h"
-@@ -69,7 +67,7 @@ std::string adb_version() {
+@@ -77,7 +75,7 @@ std::string adb_version() {
          "Version %s-%s\n"
          "Installed as %s\n",
          ADB_VERSION_MAJOR, ADB_VERSION_MINOR, ADB_SERVER_VERSION,
@@ -32,7 +32,7 @@ index 7aaf9a646..8ac768ead 100644
  }
  
 diff --git a/fastboot/fastboot.cpp b/fastboot/fastboot.cpp
-index 7fdc28b3d..0144054a3 100644
+index 4bf791ecf..5a24c2286 100644
 --- a/fastboot/fastboot.cpp
 +++ b/fastboot/fastboot.cpp
 @@ -59,10 +59,8 @@
@@ -46,7 +46,7 @@ index 7fdc28b3d..0144054a3 100644
  #include <sparse/sparse.h>
  #include <ziparchive/zip_archive.h>
  
-@@ -1799,7 +1797,7 @@ int FastBootTool::Main(int argc, char* argv[]) {
+@@ -1863,7 +1861,7 @@ int FastBootTool::Main(int argc, char* argv[]) {
                  setvbuf(stdout, nullptr, _IONBF, 0);
                  setvbuf(stderr, nullptr, _IONBF, 0);
              } else if (name == "version") {

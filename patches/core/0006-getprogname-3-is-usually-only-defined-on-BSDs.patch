@@ -1,4 +1,4 @@
-From 412563ae9d6ab910510c7121da7149e2a7fcf8cd Mon Sep 17 00:00:00 2001
+From 34ce68dfefbc64e12ee560f4ea5bf291c8cd7fe0 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 17:27:39 +0100
 Subject: [PATCH] getprogname(3) is usually only defined on BSDs
@@ -6,31 +6,14 @@ Subject: [PATCH] getprogname(3) is usually only defined on BSDs
 musl libc doesn't have it either, therefore just check for __linux__
 instead of __GLIBC__.
 ---
- base/logging.cpp        | 4 ++--
  liblog/logger_write.cpp | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/base/logging.cpp b/base/logging.cpp
-index f42b9966b..45dad1733 100644
---- a/base/logging.cpp
-+++ b/base/logging.cpp
-@@ -66,9 +66,9 @@ namespace android {
- namespace base {
- 
- // BSD-based systems like Android/macOS have getprogname(). Others need us to provide one.
--#if defined(__GLIBC__) || defined(_WIN32)
-+#if defined(__linux__) || defined(_WIN32)
- static const char* getprogname() {
--#if defined(__GLIBC__)
-+#if defined(__linux__)
-   return program_invocation_short_name;
- #elif defined(_WIN32)
-   static bool first = true;
 diff --git a/liblog/logger_write.cpp b/liblog/logger_write.cpp
-index cf82e0f26..aa8ec9b21 100644
+index 22c7ecaff..09802ffd7 100644
 --- a/liblog/logger_write.cpp
 +++ b/liblog/logger_write.cpp
-@@ -109,9 +109,9 @@ void __android_log_close() {
+@@ -108,9 +108,9 @@ void __android_log_close() {
  #endif
  }
  

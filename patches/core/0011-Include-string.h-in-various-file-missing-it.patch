@@ -1,4 +1,4 @@
-From bb7f9dc8ee9112fd8a4133f698d0997c398ea17e Mon Sep 17 00:00:00 2001
+From 75918f8f6eb113d5a36d24f4fcaca86517f765b6 Mon Sep 17 00:00:00 2001
 From: Anatol Pomozov <anatol.pomozov@gmail.com>
 Date: Fri, 25 Aug 2017 23:30:34 +0000
 Subject: [PATCH] Include string.h in various file missing it
@@ -6,9 +6,7 @@ Subject: [PATCH] Include string.h in various file missing it
 Most of these need string.h for strerror(3).
 ---
  adb/sysdeps/posix/network.cpp | 1 +
- base/file.cpp                 | 1 +
- base/logging.cpp              | 1 +
- 3 files changed, 3 insertions(+)
+ 1 file changed, 1 insertion(+)
 
 diff --git a/adb/sysdeps/posix/network.cpp b/adb/sysdeps/posix/network.cpp
 index a4d9013d3..ec4c7c8e6 100644
@@ -22,27 +20,3 @@ index a4d9013d3..ec4c7c8e6 100644
  
  #include <android-base/logging.h>
  #include <android-base/stringprintf.h>
-diff --git a/base/file.cpp b/base/file.cpp
-index 6321fc624..ab072e6b5 100644
---- a/base/file.cpp
-+++ b/base/file.cpp
-@@ -26,6 +26,7 @@
- #include <sys/stat.h>
- #include <sys/types.h>
- #include <unistd.h>
-+#include <string.h>
- 
- #include <memory>
- #include <mutex>
-diff --git a/base/logging.cpp b/base/logging.cpp
-index 45dad1733..8061f9d0b 100644
---- a/base/logging.cpp
-+++ b/base/logging.cpp
-@@ -24,6 +24,7 @@
- #include <inttypes.h>
- #include <libgen.h>
- #include <time.h>
-+#include <string.h>
- 
- // For getprogname(3) or program_invocation_short_name.
- #if defined(__ANDROID__) || defined(__APPLE__)
