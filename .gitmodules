@@ -31,3 +31,6 @@
 [submodule "vendor/base"]
 	path = vendor/base
 	url = https://android.googlesource.com/platform/frameworks/base
+[submodule "vendor/native"]
+	path = vendor/native
+	url = https://android.googlesource.com/platform/frameworks/native
