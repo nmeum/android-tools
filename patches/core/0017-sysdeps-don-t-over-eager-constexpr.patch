@@ -1,0 +1,25 @@
+From c3c4f13f983043b85802fd98f0776e517015c5df Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=C4=90o=C3=A0n=20Tr=E1=BA=A7n=20C=C3=B4ng=20Danh?=
+ <congdanhqx@gmail.com>
+Date: Sat, 31 Oct 2020 21:59:34 +0700
+Subject: [PATCH] sysdeps: don't over eager constexpr
+
+Older gcc (at least 9.3.0) hasn't catched up on this relaxation of
+constexpr.
+---
+ adb/sysdeps.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/adb/sysdeps.h b/adb/sysdeps.h
+index 35de4e597..298c06a8d 100644
+--- a/adb/sysdeps.h
++++ b/adb/sysdeps.h
+@@ -681,7 +681,7 @@ static inline int cast_handle_to_int(int fd) {
+ class Process {
+   public:
+     constexpr explicit Process(pid_t pid) : pid_(pid) {}
+-    constexpr Process(Process&& other) : pid_(std::exchange(other.pid_, -1)) {}
++    Process(Process&& other) : pid_(std::exchange(other.pid_, -1)) {}
+ 
+     constexpr explicit operator bool() const { return pid_ >= 0; }
+ 
