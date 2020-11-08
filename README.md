@@ -5,7 +5,7 @@ utilities provided by [android-tools][android-tools].
 
 # Motivation
 
-[Many][void-linux] [Linux][arch-linux] [distribution][alpine-linux] have
+[Many][void-linux] [Linux][arch-linux] [distributions][alpine-linux] have
 a package called android-tools which ships essential android command
 line tools like adb or fastboot. Sadly the upstream build system for
 those tools is rather complex and doesn't allow building the command
