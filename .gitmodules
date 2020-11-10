@@ -28,3 +28,6 @@
 [submodule "vendor/libziparchive"]
 	path = vendor/libziparchive
 	url = https://android.googlesource.com/platform/system/libziparchive
+[submodule "vendor/base"]
+	path = vendor/base
+	url = https://android.googlesource.com/platform/frameworks/base

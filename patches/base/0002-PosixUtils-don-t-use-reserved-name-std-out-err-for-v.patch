@@ -1,0 +1,125 @@
+From daeea876e2d78b870c38d13d2f6a3afd01bd1b11 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=C4=90o=C3=A0n=20Tr=E1=BA=A7n=20C=C3=B4ng=20Danh?=
+ <congdanhqx@gmail.com>
+Date: Sun, 1 Nov 2020 12:21:46 +0700
+Subject: [PATCH] PosixUtils: don't use reserved name std{out,err} for
+ variables
+
+musl's std{out,err} are macros.
+---
+ libs/androidfw/PosixUtils.cpp                 | 36 +++++++++----------
+ libs/androidfw/include/androidfw/PosixUtils.h |  4 +--
+ libs/androidfw/tests/PosixUtils_test.cpp      |  4 +--
+ 3 files changed, 22 insertions(+), 22 deletions(-)
+
+diff --git a/libs/androidfw/PosixUtils.cpp b/libs/androidfw/PosixUtils.cpp
+index f1ab1493012..d7a2f5a8920 100644
+--- a/libs/androidfw/PosixUtils.cpp
++++ b/libs/androidfw/PosixUtils.cpp
+@@ -50,17 +50,17 @@ namespace android {
+ namespace util {
+ 
+ std::unique_ptr<ProcResult> ExecuteBinary(const std::vector<std::string>& argv) {
+-  int stdout[2];  // stdout[0] read, stdout[1] write
+-  if (pipe(stdout) != 0) {
++  int fdout[2];  // fdout[0] read, fdout[1] write
++  if (pipe(fdout) != 0) {
+     PLOG(ERROR) << "pipe";
+     return nullptr;
+   }
+ 
+-  int stderr[2];  // stdout[0] read, stdout[1] write
+-  if (pipe(stderr) != 0) {
++  int fderr[2];  // fderr[0] read, fderr[1] write
++  if (pipe(fderr) != 0) {
+     PLOG(ERROR) << "pipe";
+-    close(stdout[0]);
+-    close(stdout[1]);
++    close(fdout[0]);
++    close(fdout[1]);
+     return nullptr;
+   }
+ 
+@@ -88,12 +88,12 @@ std::unique_ptr<ProcResult> ExecuteBinary(const std::vector<std::string>& argv)
+         exit(1);
+       }
+ 
+-      close(stdout[0]);
+-      if (dup2(stdout[1], STDOUT_FILENO) == -1) {
++      close(fdout[0]);
++      if (dup2(fdout[1], STDOUT_FILENO) == -1) {
+         abort();
+       }
+-      close(stderr[0]);
+-      if (dup2(stderr[1], STDERR_FILENO) == -1) {
++      close(fderr[0]);
++      if (dup2(fderr[1], STDERR_FILENO) == -1) {
+         abort();
+       }
+       execvp(argv0[0], const_cast<char* const*>(argv0));
+@@ -101,8 +101,8 @@ std::unique_ptr<ProcResult> ExecuteBinary(const std::vector<std::string>& argv)
+       abort();
+     default: // parent
+       free(argv0);
+-      close(stdout[1]);
+-      close(stderr[1]);
++      close(fdout[1]);
++      close(fderr[1]);
+       int status;
+       wait(&status);
+       if (!WIFEXITED(status)) {
+@@ -110,12 +110,12 @@ std::unique_ptr<ProcResult> ExecuteBinary(const std::vector<std::string>& argv)
+       }
+       std::unique_ptr<ProcResult> result(new ProcResult());
+       result->status = status;
+-      const auto out = ReadFile(stdout[0]);
+-      result->stdout = out ? *out : "";
+-      close(stdout[0]);
+-      const auto err = ReadFile(stderr[0]);
+-      result->stderr = err ? *err : "";
+-      close(stderr[0]);
++      const auto out = ReadFile(fdout[0]);
++      result->stdout_ = out ? *out : "";
++      close(fdout[0]);
++      const auto err = ReadFile(fderr[0]);
++      result->stderr_ = err ? *err : "";
++      close(fderr[0]);
+       return result;
+   }
+ }
+diff --git a/libs/androidfw/include/androidfw/PosixUtils.h b/libs/androidfw/include/androidfw/PosixUtils.h
+index 8fc3ee2733c..c6bb3fb4275 100644
+--- a/libs/androidfw/include/androidfw/PosixUtils.h
++++ b/libs/androidfw/include/androidfw/PosixUtils.h
+@@ -23,8 +23,8 @@ namespace util {
+ 
+ struct ProcResult {
+   int status;
+-  std::string stdout;
+-  std::string stderr;
++  std::string stdout_;
++  std::string stderr_;
+ };
+ 
+ // Fork, exec and wait for an external process. Return nullptr if the process could not be launched,
+diff --git a/libs/androidfw/tests/PosixUtils_test.cpp b/libs/androidfw/tests/PosixUtils_test.cpp
+index cf97f87a416..44816b279c1 100644
+--- a/libs/androidfw/tests/PosixUtils_test.cpp
++++ b/libs/androidfw/tests/PosixUtils_test.cpp
+@@ -30,14 +30,14 @@ TEST(PosixUtilsTest, AbsolutePathToBinary) {
+   const auto result = ExecuteBinary({"/bin/date", "--help"});
+   ASSERT_THAT(result, NotNull());
+   ASSERT_EQ(result->status, 0);
+-  ASSERT_EQ(result->stdout.find("usage: date "), 0);
++  ASSERT_EQ(result->stdout_.find("usage: date "), 0);
+ }
+ 
+ TEST(PosixUtilsTest, RelativePathToBinary) {
+   const auto result = ExecuteBinary({"date", "--help"});
+   ASSERT_THAT(result, NotNull());
+   ASSERT_EQ(result->status, 0);
+-  ASSERT_EQ(result->stdout.find("usage: date "), 0);
++  ASSERT_EQ(result->stdout_.find("usage: date "), 0);
+ }
+ 
+ TEST(PosixUtilsTest, BadParameters) {

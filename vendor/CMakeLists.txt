@@ -4,6 +4,7 @@
 add_subdirectory(boringssl EXCLUDE_FROM_ALL)
 set(android-vendored
 	avb
+	base
 	core
 	extras
 	libbase
@@ -29,6 +30,7 @@ if(EXISTS "${ANDROID_PATCH_DIR}/")
 endif()
 
 include(CMakeLists.libbase.txt)
+include(CMakeLists.libandroidfw.txt)
 include(CMakeLists.adb.txt)
 include(CMakeLists.sparse.txt)
 include(CMakeLists.fastboot.txt)

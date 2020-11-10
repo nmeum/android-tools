@@ -1,0 +1,25 @@
+From 90acd16bb50d45520dd57e28f3f047c566423342 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=C4=90o=C3=A0n=20Tr=E1=BA=A7n=20C=C3=B4ng=20Danh?=
+ <congdanhqx@gmail.com>
+Date: Sun, 1 Nov 2020 11:55:28 +0700
+Subject: [PATCH] LoadedArsc: un-const T in std::vector<T>
+
+Despite that C++11 requires T as MoveAssignable, gcc 9.3.0 insists at
+T must be non-const-volatile
+---
+ libs/androidfw/include/androidfw/LoadedArsc.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libs/androidfw/include/androidfw/LoadedArsc.h b/libs/androidfw/include/androidfw/LoadedArsc.h
+index 89ff9f52125..6031116624a 100644
+--- a/libs/androidfw/include/androidfw/LoadedArsc.h
++++ b/libs/androidfw/include/androidfw/LoadedArsc.h
+@@ -284,7 +284,7 @@ class LoadedPackage {
+   ByteBucketArray<TypeSpecPtr> type_specs_;
+   ByteBucketArray<uint32_t> resource_ids_;
+   std::vector<DynamicPackageEntry> dynamic_package_map_;
+-  std::vector<const std::pair<OverlayableInfo, std::unordered_set<uint32_t>>> overlayable_infos_;
++  std::vector<std::pair<OverlayableInfo, std::unordered_set<uint32_t>>> overlayable_infos_;
+ 
+   // A map of overlayable name to actor
+   std::unordered_map<std::string, std::string> overlayable_map_;
