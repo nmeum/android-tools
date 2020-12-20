@@ -49,7 +49,7 @@ The following libraries are required by android-tools:
 
 Additionally the following software is required:
 
-1. A C and C++ compiler (either [GCC][gcc] or [clang][clang])
+1. A C and C++ compiler (either [GCC][gcc] >= 10.X or [clang][clang])
 2. The [Go compiler][golang]
 3. [CMake][cmake]
 4. [Perl][perl]

@@ -34,6 +34,3 @@
 [submodule "vendor/native"]
 	path = vendor/native
 	url = https://android.googlesource.com/platform/frameworks/native
-[submodule "compat/gsl"]
-	path = compat/gsl
-	url = https://github.com/microsoft/GSL.git
