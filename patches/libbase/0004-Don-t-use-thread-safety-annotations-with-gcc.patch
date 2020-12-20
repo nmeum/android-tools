@@ -1,6 +1,7 @@
-From 01479d79f1ea15642d87ee8d029f3c03bb642159 Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
-Date: Mon, 16 Sep 2019 19:24:15 +0200
+From 37928695a68fd96b79b494f08f064ffcd295b564 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=C4=90o=C3=A0n=20Tr=E1=BA=A7n=20C=C3=B4ng=20Danh?=
+ <congdanhqx@gmail.com>
+Date: Sat, 31 Oct 2020 19:41:43 +0700
 Subject: [PATCH] Don't use thread safety annotations with gcc
 
 These annotations are primarily useful for detecting race conditions in
@@ -9,13 +10,13 @@ by gcc.
 
 See: https://clang.llvm.org/docs/ThreadSafetyAnalysis.html
 ---
- base/include/android-base/thread_annotations.h | 4 ++++
+ include/android-base/thread_annotations.h | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/base/include/android-base/thread_annotations.h b/base/include/android-base/thread_annotations.h
-index 53fe6dae9..bc62f80bd 100644
---- a/base/include/android-base/thread_annotations.h
-+++ b/base/include/android-base/thread_annotations.h
+diff --git a/include/android-base/thread_annotations.h b/include/android-base/thread_annotations.h
+index 53fe6da..bc62f80 100644
+--- a/include/android-base/thread_annotations.h
++++ b/include/android-base/thread_annotations.h
 @@ -18,7 +18,11 @@
  
  #include <mutex>

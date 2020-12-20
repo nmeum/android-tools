@@ -1,0 +1,32 @@
+From 7a337fc4491fbb63614063b9b1c93d6fc85fd953 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=C4=90o=C3=A0n=20Tr=E1=BA=A7n=20C=C3=B4ng=20Danh?=
+ <congdanhqx@gmail.com>
+Date: Tue, 10 Nov 2020 21:24:47 +0700
+Subject: [PATCH] nullptr_t: is std namespace
+
+---
+ libs/androidfw/include/androidfw/Idmap.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/libs/androidfw/include/androidfw/Idmap.h b/libs/androidfw/include/androidfw/Idmap.h
+index ecc1ce65d12..73e7891b684 100644
+--- a/libs/androidfw/include/androidfw/Idmap.h
++++ b/libs/androidfw/include/androidfw/Idmap.h
+@@ -90,7 +90,7 @@ class IdmapResMap {
+ 
+     // Returns `true` if the resource is overlaid.
+     inline explicit operator bool() const {
+-      return !std::get_if<nullptr_t>(&data_);
++      return !std::get_if<std::nullptr_t>(&data_);
+     }
+ 
+     inline bool IsResourceId() const {
+@@ -110,7 +110,7 @@ class IdmapResMap {
+     }
+ 
+    private:
+-      std::variant<uint32_t, nullptr_t, ResTable_entry_handle> data_;
++      std::variant<uint32_t, std::nullptr_t, ResTable_entry_handle> data_;
+   };
+ 
+   // Looks up the value that overlays the target resource id.

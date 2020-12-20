@@ -1,16 +1,35 @@
-From 4c4657f706f4ceaf2e297d44db5ac3010d73db91 Mon Sep 17 00:00:00 2001
+From 0e67a19669a836ec75a2e3ae8c0dca9c03270aa4 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 16:30:30 +0100
 Subject: [PATCH] Fix inclusion of stdatomic.h with g++
 
 See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=60932#c5
 ---
- libcutils/include/cutils/trace.h | 5 +++++
- liblog/logger.h                  | 5 +++++
- 2 files changed, 10 insertions(+)
+ libcutils/include/cutils/atomic.h | 6 ++++++
+ libcutils/include/cutils/trace.h  | 5 +++++
+ liblog/logger.h                   | 5 +++++
+ 3 files changed, 16 insertions(+)
 
+diff --git a/libcutils/include/cutils/atomic.h b/libcutils/include/cutils/atomic.h
+index 0c88bfedd..84606e307 100644
+--- a/libcutils/include/cutils/atomic.h
++++ b/libcutils/include/cutils/atomic.h
+@@ -19,7 +19,13 @@
+ 
+ #include <stdint.h>
+ #include <sys/types.h>
++
++#ifdef __cplusplus
++#include <atomic>
++using namespace std;
++#else
+ #include <stdatomic.h>
++#endif
+ 
+ #ifndef ANDROID_ATOMIC_INLINE
+ #define ANDROID_ATOMIC_INLINE static inline
 diff --git a/libcutils/include/cutils/trace.h b/libcutils/include/cutils/trace.h
-index a27831b75..bb8a8e5a6 100644
+index fff652180..771c48336 100644
 --- a/libcutils/include/cutils/trace.h
 +++ b/libcutils/include/cutils/trace.h
 @@ -18,7 +18,12 @@

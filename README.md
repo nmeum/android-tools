@@ -45,10 +45,11 @@ The following libraries are required by android-tools:
 1. [libusb][libusb]
 2. [PCRE][PCRE]
 3. [Google Test][gtest]
+4. [protobuf][protobuf]
 
 Additionally the following software is required:
 
-1. A C and C++ compiler (either [GCC][gcc] or [clang][clang])
+1. A C and C++ compiler (either [GCC][gcc] >= 10.X or [clang][clang])
 2. The [Go compiler][golang]
 3. [CMake][cmake]
 4. [Perl][perl]
@@ -100,3 +101,4 @@ have been copied from Anatol's ruby script.
 [golang]: https://golang.org/
 [cmake]: https://cmake.org/
 [perl]: https://www.perl.org/
+[protobuf]: https://github.com/protocolbuffers/protobuf

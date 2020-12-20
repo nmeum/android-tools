@@ -1,4 +1,4 @@
-From 139c7847746f16f08758122e08ea05b7c785bfc9 Mon Sep 17 00:00:00 2001
+From 7a1dd9ba82b4a734ea3200c92b51b992f2f36ccd Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Sun, 22 Dec 2019 18:42:19 +0100
 Subject: [PATCH] Don't use the internal glibc header sys/cdefs.h
@@ -12,10 +12,11 @@ Subject: [PATCH] Don't use the internal glibc header sys/cdefs.h
 
 https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-get-error-messages-about-%3Ccode%3Esys/cdefs.h%3C/code%3E
 ---
- base/include/android-base/endian.h            |  1 -
- base/include/android-base/properties.h        |  1 -
+ .../include/adb/pairing/pairing_auth.h        |  9 +++++---
+ .../include/adb/pairing/pairing_connection.h  |  9 +++++---
+ .../include/adb/pairing/pairing_server.h      |  9 +++++---
  debuggerd/include/debuggerd/client.h          |  1 -
- debuggerd/include/debuggerd/handler.h         |  9 +++++---
+ debuggerd/include/debuggerd/handler.h         | 10 +++++----
  debuggerd/util.h                              |  1 -
  deprecated-adf/libadf/include/adf/adf.h       |  9 +++++---
  .../libadfhwc/include/adfhwc/adfhwc.h         |  9 +++++---
@@ -32,18 +33,16 @@ https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-
  libcutils/include/cutils/properties.h         |  1 -
  libcutils/include/cutils/str_parms.h          |  9 +++++---
  libcutils/include/cutils/trace.h              |  9 +++++---
- libcutils/include/private/canned_fs_config.h  |  8 +++++--
+ libcutils/include/private/canned_fs_config.h  |  9 +++++---
  libcutils/include/private/fs_config.h         |  9 +++++---
  libkeyutils/include/keyutils.h                |  9 +++++---
+ liblog/include/android/log.h                  |  1 -
  liblog/include/log/log_main.h                 |  9 +++++---
  liblog/logd_reader.h                          |  9 +++++---
  liblog/logger.h                               |  9 +++++---
  liblog/pmsg_reader.h                          |  9 +++++---
  libnetutils/include/netutils/ifc.h            |  9 +++++---
  .../packagelistparser/packagelistparser.h     |  8 +++++--
- libpixelflinger/codeflinger/disassem.c        |  1 -
- libpixelflinger/codeflinger/mips64_disassem.c |  1 -
- libpixelflinger/codeflinger/mips_disassem.c   |  1 -
  libprocessgroup/cgroup_map.h                  |  1 -
  .../cgrouprc/include/android/cgrouprc.h       |  8 +++++--
  .../include/processgroup/processgroup.h       |  9 +++++---
@@ -56,44 +55,110 @@ https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-
  libsystem/include/system/camera.h             |  9 +++++---
  libsystem/include/system/radio.h              |  1 -
  libutils/Singleton_test.h                     |  9 +++++---
- .../include/ziparchive/zip_archive.h          |  1 -
  llkd/include/llkd.h                           | 21 +++++++++++++------
  llkd/libllkd.cpp                              |  1 -
  logcat/logcat.cpp                             |  1 -
  logcat/tests/logcat_test.cpp                  |  1 -
- logd/LogBuffer.cpp                            |  1 -
+ logd/ChattyLogBuffer.cpp                      |  1 -
  logd/LogListener.cpp                          |  1 -
  logd/LogUtils.h                               |  1 -
- logd/libaudit.h                               |  9 +++++---
+ logd/libaudit.h                               | 11 +++++++---
  trusty/gatekeeper/trusty_gatekeeper_ipc.h     |  8 +++++--
  .../ipc/trusty_keymaster_ipc.h                |  8 +++++--
  .../storage/lib/include/trusty/lib/storage.h  |  8 +++++--
- 56 files changed, 213 insertions(+), 118 deletions(-)
+ 54 files changed, 233 insertions(+), 124 deletions(-)
 
-diff --git a/base/include/android-base/endian.h b/base/include/android-base/endian.h
-index 8fa6365ee..1e5cceb9a 100644
---- a/base/include/android-base/endian.h
-+++ b/base/include/android-base/endian.h
-@@ -19,7 +19,6 @@
- /* A cross-platform equivalent of bionic's <sys/endian.h>. */
+diff --git a/adb/pairing_auth/include/adb/pairing/pairing_auth.h b/adb/pairing_auth/include/adb/pairing/pairing_auth.h
+index 9ef97e260..f6b7b2a97 100644
+--- a/adb/pairing_auth/include/adb/pairing/pairing_auth.h
++++ b/adb/pairing_auth/include/adb/pairing/pairing_auth.h
+@@ -18,13 +18,14 @@
  
- /* For __BIONIC__ and __GLIBC__ */
+ #include <stddef.h>
+ #include <stdint.h>
 -#include <sys/cdefs.h>
  
- #if defined(__BIONIC__)
+ #if !defined(__INTRODUCED_IN)
+ #define __INTRODUCED_IN(__api_level) /* nothing */
+ #endif
  
-diff --git a/base/include/android-base/properties.h b/base/include/android-base/properties.h
-index 31823df0a..be1a96b61 100644
---- a/base/include/android-base/properties.h
-+++ b/base/include/android-base/properties.h
-@@ -16,7 +16,6 @@
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ #if !defined(__ANDROID__) || __ANDROID_API__ >= 30
  
- #pragma once
+ /**
+@@ -183,4 +184,6 @@ bool pairing_auth_decrypt(PairingAuthCtx* ctx, const uint8_t* inbuf, size_t inle
+                           size_t* outlen) __INTRODUCED_IN(30);
  
+ #endif  //!__ANDROID__ || __ANDROID_API__ >= 30
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+diff --git a/adb/pairing_connection/include/adb/pairing/pairing_connection.h b/adb/pairing_connection/include/adb/pairing/pairing_connection.h
+index 3543b8738..ad34dc48a 100644
+--- a/adb/pairing_connection/include/adb/pairing/pairing_connection.h
++++ b/adb/pairing_connection/include/adb/pairing/pairing_connection.h
+@@ -18,7 +18,6 @@
+ 
+ #include <stddef.h>
+ #include <stdint.h>
 -#include <sys/cdefs.h>
  
- #include <chrono>
- #include <limits>
+ #if !defined(__INTRODUCED_IN)
+ #define __INTRODUCED_IN(__api_level) /* nothing */
+@@ -35,7 +34,9 @@
+ //
+ // If both sides have authenticated, they will exchange their peer information
+ // (see #PeerInfo).
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ #if !defined(__ANDROID__) || __ANDROID_API__ >= 30
+ 
+ const uint32_t kMaxPeerInfoSize = 8192;
+@@ -127,4 +128,6 @@ PairingConnectionCtx* pairing_connection_server_new(const uint8_t* pswd, size_t
+ void pairing_connection_destroy(PairingConnectionCtx* ctx) __INTRODUCED_IN(30);
+ 
+ #endif  //!__ANDROID__ || __ANDROID_API__ >= 30
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+diff --git a/adb/pairing_connection/include/adb/pairing/pairing_server.h b/adb/pairing_connection/include/adb/pairing/pairing_server.h
+index 178a174bd..0a8d67684 100644
+--- a/adb/pairing_connection/include/adb/pairing/pairing_server.h
++++ b/adb/pairing_connection/include/adb/pairing/pairing_server.h
+@@ -18,7 +18,6 @@
+ 
+ #include <stddef.h>
+ #include <stdint.h>
+-#include <sys/cdefs.h>
+ 
+ #include <functional>
+ #include <memory>
+@@ -31,7 +30,9 @@
+ #define __INTRODUCED_IN(__api_level) /* nothing */
+ #endif
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ #if !defined(__ANDROID__) || __ANDROID_API__ >= 30
+ 
+ // PairingServerCtx is a wrapper around the #PairingConnectionCtx APIs,
+@@ -108,4 +109,6 @@ PairingServerCtx* pairing_server_new_no_cert(const uint8_t* pswd, size_t pswd_le
+ void pairing_server_destroy(PairingServerCtx* ctx) __INTRODUCED_IN(30);
+ 
+ #endif  //!__ANDROID__ || __ANDROID_API__ >= 30
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
 diff --git a/debuggerd/include/debuggerd/client.h b/debuggerd/include/debuggerd/client.h
 index b7284b08e..b85b6e542 100644
 --- a/debuggerd/include/debuggerd/client.h
@@ -107,14 +172,15 @@ index b7284b08e..b85b6e542 100644
  
  #include <android-base/unique_fd.h>
 diff --git a/debuggerd/include/debuggerd/handler.h b/debuggerd/include/debuggerd/handler.h
-index cd6fc0510..8219d15a8 100644
+index 254ed4f7b..2f6d80f9e 100644
 --- a/debuggerd/include/debuggerd/handler.h
 +++ b/debuggerd/include/debuggerd/handler.h
-@@ -19,10 +19,11 @@
- #include <bionic/reserved_signals.h>
+@@ -20,11 +20,11 @@
  #include <signal.h>
  #include <stdint.h>
+ #include <string.h>
 -#include <sys/cdefs.h>
+-#include <sys/system_properties.h>
  #include <sys/types.h>
  
 -__BEGIN_DECLS
@@ -122,9 +188,9 @@ index cd6fc0510..8219d15a8 100644
 +extern "C" {
 +#endif
  
- // These callbacks are called in a signal handler, and thus must be async signal safe.
- // If null, the callbacks will not be called.
-@@ -54,4 +55,6 @@ static void __attribute__((__unused__)) debuggerd_register_handlers(struct sigac
+ // Forward declare these classes so not everyone has to include GWP-ASan
+ // headers.
+@@ -79,4 +79,6 @@ static void __attribute__((__unused__)) debuggerd_register_handlers(struct sigac
    sigaction(BIONIC_SIGNAL_DEBUGGER, action, nullptr);
  }
  
@@ -133,7 +199,7 @@ index cd6fc0510..8219d15a8 100644
 +}
 +#endif
 diff --git a/debuggerd/util.h b/debuggerd/util.h
-index e96442360..43d430314 100644
+index 07e7e992c..02b7eefdb 100644
 --- a/debuggerd/util.h
 +++ b/debuggerd/util.h
 @@ -18,7 +18,6 @@
@@ -235,7 +301,7 @@ index adec38329..40e852489 100644
  #include <sys/ioctl.h>
  #include <sys/types.h>
 diff --git a/init/reboot.cpp b/init/reboot.cpp
-index 38e822711..0a6e7b1fc 100644
+index 49baf9e68..1a7275f60 100644
 --- a/init/reboot.cpp
 +++ b/init/reboot.cpp
 @@ -23,7 +23,6 @@
@@ -308,7 +374,7 @@ index a83026918..40edc2d37 100644
 +}
 +#endif
 diff --git a/libcutils/include/cutils/android_reboot.h b/libcutils/include/cutils/android_reboot.h
-index cd27eef88..2e86f6cb8 100644
+index 24e32d560..56a31bc7a 100644
 --- a/libcutils/include/cutils/android_reboot.h
 +++ b/libcutils/include/cutils/android_reboot.h
 @@ -16,9 +16,10 @@
@@ -324,7 +390,7 @@ index cd27eef88..2e86f6cb8 100644
  
  /* Commands */
  #define ANDROID_RB_RESTART 0xDEAD0001 /* deprecated. Use RESTART2. */
-@@ -39,4 +40,6 @@ __BEGIN_DECLS
+@@ -40,4 +41,6 @@ __BEGIN_DECLS
   */
  int android_reboot(unsigned cmd, int flags, const char* arg);
  
@@ -413,17 +479,17 @@ index 8bc9b48b3..ff1d13a06 100644
  
  #endif /* __CUTILS_PARTITION_WIPED_H__ */
 diff --git a/libcutils/include/cutils/properties.h b/libcutils/include/cutils/properties.h
-index d2e08712a..7e0eb2ac0 100644
+index 78d8bc654..9f8721203 100644
 --- a/libcutils/include/cutils/properties.h
 +++ b/libcutils/include/cutils/properties.h
-@@ -17,7 +17,6 @@
- #ifndef __CUTILS_PROPERTIES_H
- #define __CUTILS_PROPERTIES_H
+@@ -16,7 +16,6 @@
+ 
+ #pragma once
  
 -#include <sys/cdefs.h>
  #include <stddef.h>
- #include <sys/system_properties.h>
  #include <stdint.h>
+ 
 diff --git a/libcutils/include/cutils/str_parms.h b/libcutils/include/cutils/str_parms.h
 index aa1435a08..160792a37 100644
 --- a/libcutils/include/cutils/str_parms.h
@@ -452,7 +518,7 @@ index aa1435a08..160792a37 100644
  
  #endif /* __CUTILS_STR_PARMS_H */
 diff --git a/libcutils/include/cutils/trace.h b/libcutils/include/cutils/trace.h
-index e12c32cff..a27831b75 100644
+index 793e2ce8a..fff652180 100644
 --- a/libcutils/include/cutils/trace.h
 +++ b/libcutils/include/cutils/trace.h
 @@ -22,12 +22,13 @@
@@ -471,7 +537,7 @@ index e12c32cff..a27831b75 100644
  
  /**
   * The ATRACE_TAG macro can be defined before including this header to trace
-@@ -271,6 +272,8 @@ static inline void atrace_int64(uint64_t tag, const char* name, int64_t value)
+@@ -242,6 +243,8 @@ static inline void atrace_int64(uint64_t tag, const char* name, int64_t value)
      }
  }
  
@@ -482,12 +548,14 @@ index e12c32cff..a27831b75 100644
  
  #endif // _LIBS_CUTILS_TRACE_H
 diff --git a/libcutils/include/private/canned_fs_config.h b/libcutils/include/private/canned_fs_config.h
-index 135b91c6c..c155a8945 100644
+index ad4de4ce6..caf4b6186 100644
 --- a/libcutils/include/private/canned_fs_config.h
 +++ b/libcutils/include/private/canned_fs_config.h
-@@ -19,12 +19,16 @@
+@@ -17,12 +17,15 @@
+ #pragma once
  
  #include <inttypes.h>
+-#include <sys/cdefs.h>
  
 -__BEGIN_DECLS
 +#ifdef __cplusplus
@@ -502,8 +570,6 @@ index 135b91c6c..c155a8945 100644
 +#ifdef __cplusplus
 +}
 +#endif
- 
- #endif
 diff --git a/libcutils/include/private/fs_config.h b/libcutils/include/private/fs_config.h
 index 8a9a1ffd7..40cb55f23 100644
 --- a/libcutils/include/private/fs_config.h
@@ -562,6 +628,18 @@ index c508f2790..2c3b4b0b1 100644
 +#endif
  
  #endif
+diff --git a/liblog/include/android/log.h b/liblog/include/android/log.h
+index 8a0ebf22f..e80432e81 100644
+--- a/liblog/include/android/log.h
++++ b/liblog/include/android/log.h
+@@ -57,7 +57,6 @@
+ #include <stdarg.h>
+ #include <stddef.h>
+ #include <stdint.h>
+-#include <sys/cdefs.h>
+ 
+ #if !defined(__BIONIC__) && !defined(__INTRODUCED_IN)
+ #define __INTRODUCED_IN(x)
 diff --git a/liblog/include/log/log_main.h b/liblog/include/log/log_main.h
 index 1bd1c8aec..c71bbdd45 100644
 --- a/liblog/include/log/log_main.h
@@ -721,42 +799,6 @@ index e89cb5400..86b6604ca 100644
 +#ifdef __cplusplus
 +}
 +#endif
-diff --git a/libpixelflinger/codeflinger/disassem.c b/libpixelflinger/codeflinger/disassem.c
-index 5cbd63db8..294b13800 100644
---- a/libpixelflinger/codeflinger/disassem.c
-+++ b/libpixelflinger/codeflinger/disassem.c
-@@ -47,7 +47,6 @@
-  * This code is not complete. Not all instructions are disassembled.
-  */
- 
--#include <sys/cdefs.h>
- //__FBSDID("$FreeBSD: /repoman/r/ncvs/src/sys/arm/arm/disassem.c,v 1.2 2005/01/05 21:58:47 imp Exp $");
- #include <sys/param.h>
- #include <stdio.h>
-diff --git a/libpixelflinger/codeflinger/mips64_disassem.c b/libpixelflinger/codeflinger/mips64_disassem.c
-index 852829984..2f1272d6b 100644
---- a/libpixelflinger/codeflinger/mips64_disassem.c
-+++ b/libpixelflinger/codeflinger/mips64_disassem.c
-@@ -38,7 +38,6 @@
- #include <stdbool.h>
- #include <stdint.h>
- #include <stdio.h>
--#include <sys/cdefs.h>
- #include <sys/types.h>
- 
- #include <android/log.h>
-diff --git a/libpixelflinger/codeflinger/mips_disassem.c b/libpixelflinger/codeflinger/mips_disassem.c
-index 1fe680675..200c4abaa 100644
---- a/libpixelflinger/codeflinger/mips_disassem.c
-+++ b/libpixelflinger/codeflinger/mips_disassem.c
-@@ -38,7 +38,6 @@
- #include <stdint.h>
- #include <stdarg.h>
- #include <stdbool.h>
--#include <sys/cdefs.h>
- 
- #include <sys/types.h>
- #include "mips_opcode.h"
 diff --git a/libprocessgroup/cgroup_map.h b/libprocessgroup/cgroup_map.h
 index 427d71b40..62984037d 100644
 --- a/libprocessgroup/cgroup_map.h
@@ -770,7 +812,7 @@ index 427d71b40..62984037d 100644
  
  #include <map>
 diff --git a/libprocessgroup/cgrouprc/include/android/cgrouprc.h b/libprocessgroup/cgrouprc/include/android/cgrouprc.h
-index 0ce51237a..ede70e815 100644
+index 7e74432f7..f0113ee38 100644
 --- a/libprocessgroup/cgrouprc/include/android/cgrouprc.h
 +++ b/libprocessgroup/cgrouprc/include/android/cgrouprc.h
 @@ -18,7 +18,9 @@
@@ -784,7 +826,7 @@ index 0ce51237a..ede70e815 100644
  
  // For host builds, __INTRODUCED_IN is not defined.
  #ifndef __INTRODUCED_IN
-@@ -95,6 +97,8 @@ __attribute__((warn_unused_result)) const char* ACgroupController_getName(const
+@@ -96,6 +98,8 @@ __attribute__((warn_unused_result)) const char* ACgroupController_getName(const
  __attribute__((warn_unused_result)) const char* ACgroupController_getPath(const ACgroupController*)
          __INTRODUCED_IN(29);
  
@@ -795,7 +837,7 @@ index 0ce51237a..ede70e815 100644
  
  #endif
 diff --git a/libprocessgroup/include/processgroup/processgroup.h b/libprocessgroup/include/processgroup/processgroup.h
-index 0b38b6bce..c8d9c0642 100644
+index 4aa439a6f..0621fca48 100644
 --- a/libprocessgroup/include/processgroup/processgroup.h
 +++ b/libprocessgroup/include/processgroup/processgroup.h
 @@ -16,12 +16,13 @@
@@ -814,7 +856,7 @@ index 0b38b6bce..c8d9c0642 100644
  
  static constexpr const char* CGROUPV2_CONTROLLER_NAME = "cgroup2";
  
-@@ -68,4 +69,6 @@ void removeAllProcessGroups(void);
+@@ -67,4 +68,6 @@ void removeAllProcessGroups(void);
  
  #endif // __ANDROID_VNDK__
  
@@ -823,7 +865,7 @@ index 0b38b6bce..c8d9c0642 100644
 +}
 +#endif
 diff --git a/libprocessgroup/task_profiles.h b/libprocessgroup/task_profiles.h
-index a64ca50ad..d6ffefe53 100644
+index 2983a09b3..a578da992 100644
 --- a/libprocessgroup/task_profiles.h
 +++ b/libprocessgroup/task_profiles.h
 @@ -16,7 +16,6 @@
@@ -1033,20 +1075,8 @@ index c77d9ffe6..00bd56242 100644
  
  }
  
-diff --git a/libziparchive/include/ziparchive/zip_archive.h b/libziparchive/include/ziparchive/zip_archive.h
-index 047af90f2..1b10be4fd 100644
---- a/libziparchive/include/ziparchive/zip_archive.h
-+++ b/libziparchive/include/ziparchive/zip_archive.h
-@@ -22,7 +22,6 @@
- 
- #include <stdint.h>
- #include <string.h>
--#include <sys/cdefs.h>
- #include <sys/types.h>
- 
- #include <string>
 diff --git a/llkd/include/llkd.h b/llkd/include/llkd.h
-index 3586ca1b1..b606c60d8 100644
+index 4b20a56da..fa18f65da 100644
 --- a/llkd/include/llkd.h
 +++ b/llkd/include/llkd.h
 @@ -22,9 +22,10 @@
@@ -1063,7 +1093,7 @@ index 3586ca1b1..b606c60d8 100644
  bool llkInit(const char* threadname); /* threadname NULL, not spawned */
  unsigned llkCheckMilliseconds(void);
 @@ -63,17 +64,25 @@ unsigned llkCheckMilliseconds(void);
- #define LLK_BLACKLIST_STACK_DEFAULT    "init,lmkd.llkd,llkd,keystore,ueventd,apexd"
+ #define LLK_IGNORELIST_STACK_DEFAULT    "init,lmkd.llkd,llkd,keystore,ueventd,apexd"
  /* clang-format on */
  
 -__END_DECLS
@@ -1093,7 +1123,7 @@ index 3586ca1b1..b606c60d8 100644
  
  /* clang-format off */
 diff --git a/llkd/libllkd.cpp b/llkd/libllkd.cpp
-index 1c3acb821..c9f0725dc 100644
+index a24d900dc..95ef0c9c0 100644
 --- a/llkd/libllkd.cpp
 +++ b/llkd/libllkd.cpp
 @@ -25,7 +25,6 @@
@@ -1105,7 +1135,7 @@ index 1c3acb821..c9f0725dc 100644
  #include <sys/prctl.h>
  #include <sys/stat.h>     // lstat()
 diff --git a/logcat/logcat.cpp b/logcat/logcat.cpp
-index 08e3d2254..51c363da8 100644
+index 6b7e016a4..8b1992ce4 100644
 --- a/logcat/logcat.cpp
 +++ b/logcat/logcat.cpp
 @@ -26,7 +26,6 @@
@@ -1117,10 +1147,10 @@ index 08e3d2254..51c363da8 100644
  #include <sys/resource.h>
  #include <sys/stat.h>
 diff --git a/logcat/tests/logcat_test.cpp b/logcat/tests/logcat_test.cpp
-index b32b43737..a9f0a7738 100644
+index 735fd94ca..808998420 100644
 --- a/logcat/tests/logcat_test.cpp
 +++ b/logcat/tests/logcat_test.cpp
-@@ -21,7 +21,6 @@
+@@ -22,7 +22,6 @@
  #include <stdio.h>
  #include <stdlib.h>
  #include <string.h>
@@ -1128,11 +1158,11 @@ index b32b43737..a9f0a7738 100644
  #include <sys/stat.h>
  #include <sys/types.h>
  #include <sys/wait.h>
-diff --git a/logd/LogBuffer.cpp b/logd/LogBuffer.cpp
-index 834b20b6b..ce994d610 100644
---- a/logd/LogBuffer.cpp
-+++ b/logd/LogBuffer.cpp
-@@ -21,7 +21,6 @@
+diff --git a/logd/ChattyLogBuffer.cpp b/logd/ChattyLogBuffer.cpp
+index fd183e4d6..da4580045 100644
+--- a/logd/ChattyLogBuffer.cpp
++++ b/logd/ChattyLogBuffer.cpp
+@@ -23,7 +23,6 @@
  #include <errno.h>
  #include <stdio.h>
  #include <string.h>
@@ -1141,7 +1171,7 @@ index 834b20b6b..ce994d610 100644
  #include <time.h>
  #include <unistd.h>
 diff --git a/logd/LogListener.cpp b/logd/LogListener.cpp
-index ba610424f..6c276da43 100644
+index a6ab50b8a..641def0fe 100644
 --- a/logd/LogListener.cpp
 +++ b/logd/LogListener.cpp
 @@ -15,7 +15,6 @@
@@ -1153,23 +1183,23 @@ index ba610424f..6c276da43 100644
  #include <sys/socket.h>
  #include <sys/types.h>
 diff --git a/logd/LogUtils.h b/logd/LogUtils.h
-index fa9f39895..67d448e4e 100644
+index c0f62d39c..5c7597930 100644
 --- a/logd/LogUtils.h
 +++ b/logd/LogUtils.h
-@@ -17,7 +17,6 @@
- #ifndef _LOGD_LOG_UTILS_H__
- #define _LOGD_LOG_UTILS_H__
+@@ -16,7 +16,6 @@
+ 
+ #pragma once
  
 -#include <sys/cdefs.h>
  #include <sys/types.h>
  
  #include <private/android_logger.h>
 diff --git a/logd/libaudit.h b/logd/libaudit.h
-index b4a92a8a3..6cf37914e 100644
+index 27b086693..a3c68544c 100644
 --- a/logd/libaudit.h
 +++ b/logd/libaudit.h
-@@ -21,14 +21,15 @@
- #define _LIBAUDIT_H_
+@@ -20,14 +20,15 @@
+ #pragma once
  
  #include <stdint.h>
 -#include <sys/cdefs.h>
@@ -1186,7 +1216,7 @@ index b4a92a8a3..6cf37914e 100644
  
  #define MAX_AUDIT_MESSAGE_LENGTH 8970
  
-@@ -101,6 +102,8 @@ extern int audit_setup(int fd, pid_t pid);
+@@ -100,4 +101,8 @@ extern int audit_setup(int fd, pid_t pid);
   */
  extern int audit_rate_limit(int fd, uint32_t limit);
  
@@ -1194,8 +1224,8 @@ index b4a92a8a3..6cf37914e 100644
 +#ifdef __cplusplus
 +}
 +#endif
- 
- #endif
++
++#endif
 diff --git a/trusty/gatekeeper/trusty_gatekeeper_ipc.h b/trusty/gatekeeper/trusty_gatekeeper_ipc.h
 index f8de7f873..fa8fd4019 100644
 --- a/trusty/gatekeeper/trusty_gatekeeper_ipc.h

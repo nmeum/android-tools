@@ -1,8 +1,16 @@
 add_library(libzip STATIC
-	core/libziparchive/zip_archive.cc)
+	libziparchive/zip_archive.cc
+	libziparchive/zip_archive_stream_entry.cc
+	libziparchive/zip_cd_entry_map.cc
+	libziparchive/zip_error.cpp
+	libziparchive/zip_writer.cc)
 
+target_compile_definitions(libzip PRIVATE -DZLIB_CONST)
 target_include_directories(libzip PUBLIC
-	core/base/include core/include core/libziparchive/include)
+	libziparchive/include
+	core/include
+	core/liblog/include
+	libbase/include)
 
 add_library(libutil STATIC
 	core/libutils/FileMap.cpp
@@ -13,7 +21,10 @@ add_library(libutil STATIC
 	core/libutils/Unicode.cpp)
 
 target_include_directories(libutil PUBLIC
-	core/include core/base/include)
+	core/include
+	core/liblog/include
+	core/libutils/include
+	libbase/include)
 
 add_library(libext4 STATIC
 	extras/ext4_utils/ext4_utils.cpp
@@ -22,7 +33,7 @@ add_library(libext4 STATIC
 
 target_include_directories(libext4 PUBLIC
 	core/libsparse/include core/include selinux/libselinux/include
-	extras/ext4_utils/include core/base/include)
+	extras/ext4_utils/include libbase/include)
 
 add_library(libfsmgr STATIC
 	core/fs_mgr/liblp/images.cpp
@@ -31,7 +42,7 @@ add_library(libfsmgr STATIC
 	core/fs_mgr/liblp/utility.cpp
 	core/fs_mgr/liblp/writer.cpp)
 target_include_directories(libfsmgr PRIVATE
-	core/fs_mgr/liblp/include core/base/include
+	core/fs_mgr/liblp/include libbase/include
 	extras/ext4_utils/include core/libsparse/include
 	boringssl/include)
 
@@ -110,7 +121,7 @@ add_executable(fastboot
 	core/fastboot/util.cpp)
 
 target_include_directories(fastboot PRIVATE
-	core/base/include core/include core/adb core/libsparse/include
+	libbase/include core/include core/adb core/libsparse/include
 	extras/ext4_utils/include extras/f2fs_utils
 	core/libziparchive/include mkbootimg/include/bootimg
 	core/fs_mgr/liblp/include avb)

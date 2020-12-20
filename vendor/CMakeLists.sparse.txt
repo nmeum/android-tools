@@ -7,7 +7,7 @@ add_library(libsparse STATIC
 	core/libsparse/sparse_read.cpp)
 
 target_include_directories(libsparse PUBLIC
-	core/libsparse/include core/base/include)
+	core/libsparse/include libbase/include)
 
 add_executable(simg2img
 	core/libsparse/simg2img.cpp)

@@ -1,0 +1,29 @@
+From e709f4f37f32d43fdbd2377ca98da2c9151fca55 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=C4=90o=C3=A0n=20Tr=E1=BA=A7n=20C=C3=B4ng=20Danh?=
+ <congdanhqx@gmail.com>
+Date: Sat, 31 Oct 2020 19:40:34 +0700
+Subject: [PATCH] logging.h: only activate ostream warnings when clang is used
+
+---
+ include/android-base/logging.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/include/android-base/logging.h b/include/android-base/logging.h
+index ce0374b..b81775c 100644
+--- a/include/android-base/logging.h
++++ b/include/android-base/logging.h
+@@ -482,6 +482,7 @@ namespace std {  // NOLINT(cert-dcl58-cpp)
+ // Note: to print the pointer, use "<< static_cast<const void*>(string_pointer)" instead.
+ // Note: a not-recommended alternative is to let Clang ignore the warning by adding
+ //       -Wno-user-defined-warnings to CPPFLAGS.
++#ifdef __clang__
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wgcc-compat"
+ #define OSTREAM_STRING_POINTER_USAGE_WARNING \
+@@ -491,5 +492,6 @@ std::ostream& operator<<(std::ostream& stream, const std::string* string_pointer
+   return stream << static_cast<const void*>(string_pointer);
+ }
+ #pragma clang diagnostic pop
++#endif /* defined(__clang__) */
+ 
+ }  // namespace std

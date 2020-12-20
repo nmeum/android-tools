@@ -4,8 +4,12 @@
 add_subdirectory(boringssl EXCLUDE_FROM_ALL)
 set(android-vendored
 	avb
+	base
 	core
 	extras
+	libbase
+	libziparchive
+	native
 	selinux
 	f2fs-tools
 	e2fsprogs)
@@ -26,6 +30,12 @@ if(EXISTS "${ANDROID_PATCH_DIR}/")
 	endforeach(v)
 endif()
 
+find_package(Protobuf REQUIRED)
+include_directories(${PROTOBUF_INCLUDE_DIRS})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+include(CMakeLists.libbase.txt)
+include(CMakeLists.libandroidfw.txt)
 include(CMakeLists.adb.txt)
 include(CMakeLists.sparse.txt)
 include(CMakeLists.fastboot.txt)

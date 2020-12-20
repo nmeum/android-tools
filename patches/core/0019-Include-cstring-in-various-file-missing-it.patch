@@ -1,16 +1,29 @@
-From cd49cb97d5991bbfde3fa1fc570a170e133b9646 Mon Sep 17 00:00:00 2001
+From 75584e523d59365df8badd95887593824969dcf9 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Sun, 1 Sep 2019 14:22:06 +0000
 Subject: [PATCH] Include cstring in various file missing it
 
 ---
- adb/types.h             | 1 +
- fs_mgr/liblp/reader.cpp | 1 +
- fs_mgr/liblp/writer.cpp | 1 +
- 3 files changed, 3 insertions(+)
+ adb/crypto/x509_generator.cpp | 1 +
+ adb/types.h                   | 1 +
+ fs_mgr/liblp/reader.cpp       | 1 +
+ fs_mgr/liblp/writer.cpp       | 1 +
+ 4 files changed, 4 insertions(+)
 
+diff --git a/adb/crypto/x509_generator.cpp b/adb/crypto/x509_generator.cpp
+index 43b815304..8a0cf6079 100644
+--- a/adb/crypto/x509_generator.cpp
++++ b/adb/crypto/x509_generator.cpp
+@@ -16,6 +16,7 @@
+ 
+ #include "adb/crypto/x509_generator.h"
+ 
++#include <cstring>
+ #include <vector>
+ 
+ #include <android-base/logging.h>
 diff --git a/adb/types.h b/adb/types.h
-index c619fffcf..b7d6e3bfb 100644
+index 620aa8eb7..e263651e5 100644
 --- a/adb/types.h
 +++ b/adb/types.h
 @@ -22,6 +22,7 @@
@@ -22,7 +35,7 @@ index c619fffcf..b7d6e3bfb 100644
  #include <android-base/logging.h>
  
 diff --git a/fs_mgr/liblp/reader.cpp b/fs_mgr/liblp/reader.cpp
-index e6fd9f72a..f63ffd7ad 100644
+index 24ccc0f9d..90809ade4 100644
 --- a/fs_mgr/liblp/reader.cpp
 +++ b/fs_mgr/liblp/reader.cpp
 @@ -20,6 +20,7 @@
@@ -34,7 +47,7 @@ index e6fd9f72a..f63ffd7ad 100644
  #include <functional>
  
 diff --git a/fs_mgr/liblp/writer.cpp b/fs_mgr/liblp/writer.cpp
-index 8bf1ee923..aff410f37 100644
+index 2708efa15..63617137d 100644
 --- a/fs_mgr/liblp/writer.cpp
 +++ b/fs_mgr/liblp/writer.cpp
 @@ -20,6 +20,7 @@

@@ -22,3 +22,15 @@
 [submodule "vendor/avb"]
 	path = vendor/avb
 	url = https://android.googlesource.com/platform/external/avb
+[submodule "vendor/libbase"]
+	path = vendor/libbase
+	url = https://android.googlesource.com/platform/system/libbase
+[submodule "vendor/libziparchive"]
+	path = vendor/libziparchive
+	url = https://android.googlesource.com/platform/system/libziparchive
+[submodule "vendor/base"]
+	path = vendor/base
+	url = https://android.googlesource.com/platform/frameworks/base
+[submodule "vendor/native"]
+	path = vendor/native
+	url = https://android.googlesource.com/platform/frameworks/native
