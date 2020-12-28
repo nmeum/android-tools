@@ -47,6 +47,8 @@ The following libraries are required by android-tools:
 3. [Google Test][gtest]
 4. [protobuf][protobuf]
 5. [brotli][brotli]
+6. [zstd][zstd]
+7. [lz4][lz4]
 
 Additionally the following software is required:
 
@@ -104,3 +106,5 @@ have been copied from Anatol's ruby script.
 [perl]: https://www.perl.org/
 [protobuf]: https://github.com/protocolbuffers/protobuf
 [brotli]: https://github.com/google/brotli
+[zstd]: https://facebook.github.io/zstd/
+[lz4]: https://github.com/lz4/lz4
