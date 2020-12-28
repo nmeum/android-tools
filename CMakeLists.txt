@@ -28,7 +28,8 @@ set(CPACK_SOURCE_GENERATOR "TXZ")
 set(CPACK_SOURCE_PACKAGE_FILE_NAME "${PROJECT_NAME}-${ANDROID_VERSION}")
 set(CPACK_SOURCE_IGNORE_FILES "/patches/" "/build/" "/.git/" "/tests/"
 	"/testdata/" "/extras/simpleperf/scripts/" "\\\\.so$" "\\\\.zip$"
-	"/vendor/base/[a-k].*" "/vendor/base/[m-z].*"
-	"\\\\.orig" "\\\\.rej"
-	"/fuzz/" "\\\\.tar$" "\\\\.tar\\\\..*$" "\\\\.tgz$" "\\\\.data$")
+	"/vendor/base/[a-k].*" "/vendor/base/[m-z].*" "without_trace_offcpu.html"
+	"\\\\.orig" "\\\\.rej" "aes_128_gcm.txt" "aes_256_gcm.txt"
+	"/fuzz/" "\\\\.tar$" "\\\\.tar\\\\..*$" "\\\\.tgz$" "\\\\.data$"
+	"/wycheproof_testvectors/")
 include(CPack)
