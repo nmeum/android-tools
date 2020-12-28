@@ -46,6 +46,7 @@ The following libraries are required by android-tools:
 2. [PCRE][PCRE]
 3. [Google Test][gtest]
 4. [protobuf][protobuf]
+5. [brotli][brotli]
 
 Additionally the following software is required:
 
@@ -102,3 +103,4 @@ have been copied from Anatol's ruby script.
 [cmake]: https://cmake.org/
 [perl]: https://www.perl.org/
 [protobuf]: https://github.com/protocolbuffers/protobuf
+[brotli]: https://github.com/google/brotli
