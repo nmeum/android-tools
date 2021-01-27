@@ -50,14 +50,14 @@ The following libraries are required by android-tools:
 6. [zstd][zstd]
 7. [lz4][lz4]
 
-Additionally the following software is required:
+Additionally the following software is required at compile-time:
 
 1. A C and C++ compiler (either [GCC][gcc] >= 10.X or [clang][clang])
 2. The [Go compiler][golang]
 3. [CMake][cmake]
 4. [Perl][perl]
 
-*Currently the build system doesn't check whether these are installed.*
+*Currently the build system doesn't check whether all of these are installed.*
 
 # Installation
 
