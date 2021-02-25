@@ -1,19 +1,19 @@
-From 0256a5bd192c128b155138d2770d68d2f05ca929 Mon Sep 17 00:00:00 2001
+From 66e742d342d89f2e19efa799ebae132ca9d208b3 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?=C4=90o=C3=A0n=20Tr=E1=BA=A7n=20C=C3=B4ng=20Danh?=
  <congdanhqx@gmail.com>
-Date: Sun, 1 Nov 2020 19:09:53 +0700
+Date: Sun, 1 Nov 2020 15:09:53 +0700
 Subject: [PATCH] adb: disable mDNS
 
 ---
  adb/adb.cpp         | 15 ---------------
- adb/socket_spec.cpp | 25 -------------------------
- 2 files changed, 40 deletions(-)
+ adb/socket_spec.cpp | 25 +------------------------
+ 2 files changed, 1 insertion(+), 39 deletions(-)
 
 diff --git a/adb/adb.cpp b/adb/adb.cpp
-index daae0e103..ebc653375 100644
+index 08986b77e..1352ed5a9 100644
 --- a/adb/adb.cpp
 +++ b/adb/adb.cpp
-@@ -1077,21 +1077,6 @@ void adb_set_reject_kill_server(bool value) {
+@@ -1079,21 +1079,6 @@ void adb_set_reject_kill_server(bool value) {
  }
  
  static bool handle_mdns_request(std::string_view service, int reply_fd) {
@@ -36,14 +36,13 @@ index daae0e103..ebc653375 100644
  }
  
 diff --git a/adb/socket_spec.cpp b/adb/socket_spec.cpp
-index 5cad70d09..056240e96 100644
+index 5cad70d09..fe079337b 100644
 --- a/adb/socket_spec.cpp
 +++ b/adb/socket_spec.cpp
-@@ -194,31 +194,6 @@ bool socket_spec_connect(unique_fd* fd, std::string_view address, int* port, std
- 
+@@ -195,30 +195,7 @@ bool socket_spec_connect(unique_fd* fd, std::string_view address, int* port, std
          if (tcp_host_is_local(hostname)) {
              fd->reset(network_loopback_client(port_value, SOCK_STREAM, error));
--        } else {
+         } else {
 -#if ADB_HOST
 -            // Check if the address is an mdns service we can connect to.
 -            if (auto mdns_info = mdns_get_connect_service_info(address.substr(4));
@@ -68,6 +67,7 @@ index 5cad70d09..056240e96 100644
 -            *error = "adbd does not support arbitrary tcp connections";
 -            return false;
 -#endif
++            fd->reset(network_connect(hostname, port_value, SOCK_STREAM, 0, error));
          }
  
          if (fd->get() > 0) {
