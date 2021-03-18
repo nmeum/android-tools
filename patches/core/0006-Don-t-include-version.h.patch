@@ -1,38 +1,15 @@
-From 286944c8dce3f6766c112855b87d4043bae66e78 Mon Sep 17 00:00:00 2001
+From 629cd0404b0de0469aff1ea636b91002e5bfaa5d Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Sun, 1 Sep 2019 13:40:05 +0000
 Subject: [PATCH] Don't include version.h
 
 Version is set using a CPPFLAG.
 ---
- adb/adb.cpp           | 4 +---
  fastboot/fastboot.cpp | 4 +---
- 2 files changed, 2 insertions(+), 6 deletions(-)
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/adb/adb.cpp b/adb/adb.cpp
-index 8fcb4c62a..daae0e103 100644
---- a/adb/adb.cpp
-+++ b/adb/adb.cpp
-@@ -45,8 +45,6 @@
- #include <android-base/parsenetaddress.h>
- #include <android-base/stringprintf.h>
- #include <android-base/strings.h>
--#include <build/version.h>
--#include <platform_tools_version.h>
- 
- #include "adb_auth.h"
- #include "adb_io.h"
-@@ -77,7 +75,7 @@ std::string adb_version() {
-         "Version %s-%s\n"
-         "Installed as %s\n",
-         ADB_VERSION_MAJOR, ADB_VERSION_MINOR, ADB_SERVER_VERSION,
--        PLATFORM_TOOLS_VERSION, android::build::GetBuildNumber().c_str(),
-+        PLATFORM_TOOLS_VERSION, PLATFORM_TOOLS_VENDOR,
-         android::base::GetExecutablePath().c_str());
- }
- 
 diff --git a/fastboot/fastboot.cpp b/fastboot/fastboot.cpp
-index 4bf791ecf..5a24c2286 100644
+index f7edf8e61..679aec8b1 100644
 --- a/fastboot/fastboot.cpp
 +++ b/fastboot/fastboot.cpp
 @@ -59,10 +59,8 @@
@@ -46,7 +23,7 @@ index 4bf791ecf..5a24c2286 100644
  #include <sparse/sparse.h>
  #include <ziparchive/zip_archive.h>
  
-@@ -1863,7 +1861,7 @@ int FastBootTool::Main(int argc, char* argv[]) {
+@@ -1870,7 +1868,7 @@ int FastBootTool::Main(int argc, char* argv[]) {
                  setvbuf(stdout, nullptr, _IONBF, 0);
                  setvbuf(stderr, nullptr, _IONBF, 0);
              } else if (name == "version") {

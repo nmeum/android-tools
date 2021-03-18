@@ -1,4 +1,4 @@
-From 654465f64c446077ad34586555aa71d9604165d0 Mon Sep 17 00:00:00 2001
+From 0287fb7244568a5f08c0ac153dcb464df67ff140 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 17:37:12 +0100
 Subject: [PATCH] fix "initializer element is not constant"-error when building
@@ -9,10 +9,10 @@ Subject: [PATCH] fix "initializer element is not constant"-error when building
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/liblog/logprint.cpp b/liblog/logprint.cpp
-index e32878acf..72e9279c9 100644
+index a5c5edd0..71868a35 100644
 --- a/liblog/logprint.cpp
 +++ b/liblog/logprint.cpp
-@@ -883,9 +883,9 @@ static int android_log_printBinaryEvent(const unsigned char** pEventData, size_t
+@@ -884,9 +884,9 @@ static int android_log_printBinaryEvent(const unsigned char** pEventData, size_t
            }
            break;
          case TYPE_MONOTONIC: {

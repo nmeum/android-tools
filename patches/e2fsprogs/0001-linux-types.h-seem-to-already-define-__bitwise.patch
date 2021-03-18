@@ -1,4 +1,4 @@
-From e575cbedf5e5b061ac83c1db2d0d6efe757f6c7f Mon Sep 17 00:00:00 2001
+From 620d340a086136b1222c841318c8cdf84c09c2c9 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 19 Jun 2018 12:44:59 +0000
 Subject: [PATCH] linux/types.h seem to already define __bitwise
@@ -10,7 +10,7 @@ Thus #undef it before defining it again.
  2 files changed, 8 insertions(+)
 
 diff --git a/lib/blkid/blkid_types.h b/lib/blkid/blkid_types.h
-index a8d7cff1..4230845a 100644
+index 297a69da..b45eabb0 100644
 --- a/lib/blkid/blkid_types.h
 +++ b/lib/blkid/blkid_types.h
 @@ -23,6 +23,10 @@ typedef __signed__ long long __s64;
@@ -25,7 +25,7 @@ index a8d7cff1..4230845a 100644
  #ifndef __bitwise
  #define __bitwise		__attribute__((bitwise))
 diff --git a/lib/ext2fs/ext2_types.h b/lib/ext2fs/ext2_types.h
-index a8d7cff1..4230845a 100644
+index 0e5ebe67..40dbd3f9 100644
 --- a/lib/ext2fs/ext2_types.h
 +++ b/lib/ext2fs/ext2_types.h
 @@ -23,6 +23,10 @@ typedef __signed__ long long __s64;

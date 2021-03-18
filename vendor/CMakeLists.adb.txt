@@ -1,39 +1,39 @@
 protobuf_generate_cpp(ADB_APP_PROCESSES_PROTO_SRCS ADB_APP_PROCESSES_PROTO_HDRS
-	core/adb/proto/app_processes.proto)
+	adb/proto/app_processes.proto)
 protobuf_generate_cpp(ADB_KEY_TYPE_PROTO_SRCS ADB_KEY_TYPE_PROTO_HDRS
-	core/adb/proto/key_type.proto)
+	adb/proto/key_type.proto)
 protobuf_generate_cpp(ADB_KNOWN_HOSTS_PROTO_SRCS ADB_KNOWN_HOSTS_PROTO_HDRS
-	core/adb/proto/adb_known_hosts.proto)
+	adb/proto/adb_known_hosts.proto)
 protobuf_generate_cpp(ADB_PAIRING_PROTO_SRCS ADB_PAIRING_PROTO_HDRS
-	core/adb/proto/pairing.proto)
+	adb/proto/pairing.proto)
 
 # No fastdeploy because it requires deployagent.inc
 add_library(libadb STATIC
-	core/adb/client/adb_client.cpp
-	core/adb/client/adb_install.cpp
-	core/adb/client/adb_wifi.cpp
-	core/adb/client/auth.cpp
-	core/adb/client/bugreport.cpp
-	core/adb/client/commandline.cpp
-	core/adb/client/console.cpp
-	core/adb/client/file_sync_client.cpp
-	core/adb/client/incremental.cpp
-	core/adb/client/incremental_server.cpp
-	core/adb/client/incremental_utils.cpp
-	core/adb/client/line_printer.cpp
-	core/adb/client/main.cpp
-	core/adb/client/pairing/pairing_client.cpp
-	core/adb/client/usb_dispatch.cpp
-	core/adb/client/usb_libusb.cpp
-	core/adb/client/usb_linux.cpp
-	core/adb/pairing_auth/aes_128_gcm.cpp
-	core/adb/pairing_auth/pairing_auth.cpp
-	core/adb/pairing_connection/pairing_connection.cpp
-	core/adb/services.cpp
-	core/adb/socket_spec.cpp
-	core/adb/sysdeps_unix.cpp
-	core/adb/sysdeps/errno.cpp
-	core/adb/sysdeps/posix/network.cpp
+	adb/client/adb_client.cpp
+	adb/client/adb_install.cpp
+	adb/client/adb_wifi.cpp
+	adb/client/auth.cpp
+	adb/client/bugreport.cpp
+	adb/client/commandline.cpp
+	adb/client/console.cpp
+	adb/client/file_sync_client.cpp
+	adb/client/incremental.cpp
+	adb/client/incremental_server.cpp
+	adb/client/incremental_utils.cpp
+	adb/client/line_printer.cpp
+	adb/client/main.cpp
+	adb/client/pairing/pairing_client.cpp
+	adb/client/usb_dispatch.cpp
+	adb/client/usb_libusb.cpp
+	adb/client/usb_linux.cpp
+	adb/pairing_auth/aes_128_gcm.cpp
+	adb/pairing_auth/pairing_auth.cpp
+	adb/pairing_connection/pairing_connection.cpp
+	adb/services.cpp
+	adb/socket_spec.cpp
+	adb/sysdeps_unix.cpp
+	adb/sysdeps/errno.cpp
+	adb/sysdeps/posix/network.cpp
 	${ADB_APP_PROCESSES_PROTO_SRCS} ${ADB_APP_PROCESSES_PROTO_HDRS}
 	${ADB_KNOWN_HOSTS_PROTO_SRCS} ${ADB_KNOWN_HOSTS_PROTO_HDRS}
 	${ADB_KEY_TYPE_PROTO_SRCS} ${ADB_KEY_TYPE_PROTO_HDRS}
@@ -44,11 +44,11 @@ target_compile_definitions(libadb PUBLIC -DADB_HOST=1)
 target_include_directories(libadb PUBLIC
 	base/libs/androidfw/include
 	boringssl/include
-	core/adb
-	core/adb/crypto/include
-	core/adb/pairing_auth/include
-	core/adb/pairing_connection/include
-	core/adb/tls/include
+	adb
+	adb/crypto/include
+	adb/pairing_auth/include
+	adb/pairing_connection/include
+	adb/tls/include
 	core/include
 	core/libcrypto_utils/include
 	core/libcutils/include
@@ -57,43 +57,43 @@ target_include_directories(libadb PUBLIC
 	native/include)
 
 add_library(libadb_crypto_defaults STATIC
-	core/adb/crypto/key.cpp
-	core/adb/crypto/rsa_2048_key.cpp
-	core/adb/crypto/x509_generator.cpp
+	adb/crypto/key.cpp
+	adb/crypto/rsa_2048_key.cpp
+	adb/crypto/x509_generator.cpp
 	${ADB_KEY_TYPE_PROTO_HDRS})
 
 target_include_directories(libadb_crypto_defaults PUBLIC
-	core/adb
-	core/adb/crypto/include
+	adb
+	adb/crypto/include
 	boringssl/include
 	core/libcrypto_utils/include
 	libbase/include)
 
 
 add_library(libadb_tls_connection_defaults STATIC
-	core/adb/tls/adb_ca_list.cpp
-	core/adb/tls/tls_connection.cpp)
+	adb/tls/adb_ca_list.cpp
+	adb/tls/tls_connection.cpp)
 
 target_include_directories(libadb_tls_connection_defaults PUBLIC
-	core/adb
-	core/adb/tls/include
+	adb
+	adb/tls/include
 	boringssl/include
 	libbase/include)
 
 add_library(liblog STATIC
-	core/liblog/log_event_list.cpp
-	core/liblog/log_event_write.cpp
-	core/liblog/logger_name.cpp
-	core/liblog/logger_read.cpp
-	core/liblog/logger_write.cpp
-	core/liblog/properties.cpp
-	core/liblog/logprint.cpp)
+	logging/liblog/log_event_list.cpp
+	logging/liblog/log_event_write.cpp
+	logging/liblog/logger_name.cpp
+	logging/liblog/logger_read.cpp
+	logging/liblog/logger_write.cpp
+	logging/liblog/properties.cpp
+	logging/liblog/logprint.cpp)
 
 target_compile_definitions(liblog PRIVATE
 	-DLIBLOG_LOG_TAG=1006 -D_XOPEN_SOURCE=700 -DFAKE_LOG_DEVICE=1)
 target_include_directories(liblog PUBLIC
 	core/include
-	core/liblog/include
+	logging/liblog/include
 	core/libcutils/include
 	libbase/include)
 
@@ -124,7 +124,7 @@ add_library(libcutils STATIC
 
 target_compile_definitions(libcutils PRIVATE -D_GNU_SOURCE)
 target_include_directories(libcutils PRIVATE
-	core/liblog/include core/libutils/include)
+	logging/liblog/include core/libutils/include)
 target_include_directories(libcutils PUBLIC
 	core/libcutils/include libbase/include)
 
@@ -137,10 +137,10 @@ target_include_directories(libdiagnoseusb PUBLIC
 	core/include libbase/include)
 
 add_library(libadb_sysdeps STATIC
-	core/adb/sysdeps/env.cpp)
+	adb/sysdeps/env.cpp)
 target_include_directories(libadb_sysdeps PUBLIC
 	libbase/include
-	core/adb)
+	adb)
 
 add_library(libcrypto STATIC
 	core/libcrypto_utils/android_pubkey.cpp)
@@ -149,30 +149,30 @@ target_include_directories(libcrypto PUBLIC
 	core/libcrypto_utils/include boringssl/include)
 
 add_executable(adb
-	  core/adb/adb.cpp
-	  core/adb/adb_io.cpp
-	  core/adb/adb_listeners.cpp
-	  core/adb/adb_trace.cpp
-	  core/adb/adb_unique_fd.cpp
-	  core/adb/adb_utils.cpp
-	  core/adb/fdevent/fdevent.cpp
-	  core/adb/fdevent/fdevent_poll.cpp
-	  core/adb/fdevent/fdevent_epoll.cpp
-	  core/adb/shell_service_protocol.cpp
-	  core/adb/sockets.cpp
-	  core/adb/socket_spec.cpp
-	  core/adb/transport.cpp
-	  core/adb/transport_fd.cpp
-	  core/adb/client/transport_local.cpp
-	  core/adb/client/transport_usb.cpp
-	  core/adb/types.cpp
+	  adb/adb.cpp
+	  adb/adb_io.cpp
+	  adb/adb_listeners.cpp
+	  adb/adb_trace.cpp
+	  adb/adb_unique_fd.cpp
+	  adb/adb_utils.cpp
+	  adb/fdevent/fdevent.cpp
+	  adb/fdevent/fdevent_poll.cpp
+	  adb/fdevent/fdevent_epoll.cpp
+	  adb/shell_service_protocol.cpp
+	  adb/sockets.cpp
+	  adb/socket_spec.cpp
+	  adb/transport.cpp
+	  adb/transport_fd.cpp
+	  adb/client/transport_local.cpp
+	  adb/client/transport_usb.cpp
+	  adb/types.cpp
 	  ${ADB_KEY_TYPE_PROTO_HDRS})
 
 target_compile_definitions(adb PRIVATE
 	-DPLATFORM_TOOLS_VERSION="${ANDROID_VERSION}"
 	-DPLATFORM_TOOLS_VENDOR="${ANDROID_VENDOR}")
 target_include_directories(adb PRIVATE
-	core/include libbase/include core/adb
+	core/include libbase/include adb
 	core/libcrypto_utils/include boringssl/include)
 target_link_libraries(adb
 	libadb

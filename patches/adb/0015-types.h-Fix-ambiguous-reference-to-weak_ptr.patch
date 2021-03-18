@@ -1,4 +1,4 @@
-From 6b0d0347fb5e1c4a4bfbdd07cff011537976ece8 Mon Sep 17 00:00:00 2001
+From 5fe87e9e222ee960aab4c6d56b70b0da5352aa19 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Sat, 7 Mar 2020 13:48:50 +0100
 Subject: [PATCH] types.h: Fix ambiguous reference to weak_ptr
@@ -9,13 +9,13 @@ Without this patch the build fails with:
 
 As there also seems to be a definition of weak_ptr in the std namespace.
 ---
- adb/types.h | 6 +++---
+ types.h | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/adb/types.h b/adb/types.h
-index e263651e5..6e4eabb8c 100644
---- a/adb/types.h
-+++ b/adb/types.h
+diff --git a/types.h b/types.h
+index e263651e..6e4eabb8 100644
+--- a/types.h
++++ b/types.h
 @@ -347,13 +347,13 @@ struct enable_weak_from_this {
          }
      }

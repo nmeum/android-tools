@@ -1,0 +1,230 @@
+From 71ea766e0a45c4082e49962009342958b2c764e1 Mon Sep 17 00:00:00 2001
+From: John Zimmermann <me@johnnynator.dev>
+Date: Thu, 18 Mar 2021 15:08:33 +0100
+Subject: [PATCH] Don't use the internal glibc header sys/cdefs.h
+
+---
+ liblog/include/android/log.h  | 1 -
+ liblog/include/log/log_main.h | 9 ++++++---
+ liblog/logd_reader.h          | 9 ++++++---
+ liblog/logger.h               | 9 ++++++---
+ liblog/pmsg_reader.h          | 9 ++++++---
+ logcat/logcat.cpp             | 1 -
+ logcat/tests/logcat_test.cpp  | 1 -
+ logd/ChattyLogBuffer.cpp      | 1 -
+ logd/LogListener.cpp          | 1 -
+ logd/LogUtils.h               | 1 -
+ logd/libaudit.h               | 9 ++++++---
+ 11 files changed, 30 insertions(+), 21 deletions(-)
+
+diff --git a/liblog/include/android/log.h b/liblog/include/android/log.h
+index 5dc365a4..12de5958 100644
+--- a/liblog/include/android/log.h
++++ b/liblog/include/android/log.h
+@@ -57,7 +57,6 @@
+ #include <stdarg.h>
+ #include <stddef.h>
+ #include <stdint.h>
+-#include <sys/cdefs.h>
+ 
+ #if !defined(__BIONIC__) && !defined(__INTRODUCED_IN)
+ #define __INTRODUCED_IN(x)
+diff --git a/liblog/include/log/log_main.h b/liblog/include/log/log_main.h
+index 1bd1c8ae..c71bbdd4 100644
+--- a/liblog/include/log/log_main.h
++++ b/liblog/include/log/log_main.h
+@@ -17,12 +17,13 @@
+ #pragma once
+ 
+ #include <stdbool.h>
+-#include <sys/cdefs.h>
+ #include <sys/types.h>
+ 
+ #include <android/log.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ /*
+  * Normally we strip the effects of ALOGV (VERBOSE messages),
+@@ -377,4 +378,6 @@ int __android_log_is_loggable_len(int prio, const char* tag, size_t len, int def
+ #pragma clang diagnostic pop
+ #endif
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+diff --git a/liblog/logd_reader.h b/liblog/logd_reader.h
+index 68eef027..64e400ff 100644
+--- a/liblog/logd_reader.h
++++ b/liblog/logd_reader.h
+@@ -16,16 +16,19 @@
+ 
+ #pragma once
+ 
+-#include <sys/cdefs.h>
+ #include <unistd.h>
+ 
+ #include "log/log_read.h"
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ int LogdRead(struct logger_list* logger_list, struct log_msg* log_msg);
+ void LogdClose(struct logger_list* logger_list);
+ 
+ ssize_t SendLogdControlMessage(char* buf, size_t buf_size);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+diff --git a/liblog/logger.h b/liblog/logger.h
+index ddff19dd..263859db 100644
+--- a/liblog/logger.h
++++ b/liblog/logger.h
+@@ -17,13 +17,14 @@
+ #pragma once
+ 
+ #include <stdatomic.h>
+-#include <sys/cdefs.h>
+ 
+ #include <log/log.h>
+ 
+ #include "uio.h"
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ struct logger_list {
+   atomic_int fd;
+@@ -48,4 +49,6 @@ inline bool android_logger_is_logd(struct logger* logger) {
+   return reinterpret_cast<uintptr_t>(logger) & LOGGER_LOGD;
+ }
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+diff --git a/liblog/pmsg_reader.h b/liblog/pmsg_reader.h
+index b784f9ff..88aeec9c 100644
+--- a/liblog/pmsg_reader.h
++++ b/liblog/pmsg_reader.h
+@@ -16,14 +16,17 @@
+ 
+ #pragma once
+ 
+-#include <sys/cdefs.h>
+ #include <unistd.h>
+ 
+ #include "log/log_read.h"
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ int PmsgRead(struct logger_list* logger_list, struct log_msg* log_msg);
+ void PmsgClose(struct logger_list* logger_list);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+diff --git a/logcat/logcat.cpp b/logcat/logcat.cpp
+index 084003e7..9eecf737 100644
+--- a/logcat/logcat.cpp
++++ b/logcat/logcat.cpp
+@@ -26,7 +26,6 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#include <sys/cdefs.h>
+ #include <sys/ioctl.h>
+ #include <sys/resource.h>
+ #include <sys/stat.h>
+diff --git a/logcat/tests/logcat_test.cpp b/logcat/tests/logcat_test.cpp
+index b835bd5a..25cb94c5 100644
+--- a/logcat/tests/logcat_test.cpp
++++ b/logcat/tests/logcat_test.cpp
+@@ -22,7 +22,6 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#include <sys/cdefs.h>
+ #include <sys/stat.h>
+ #include <sys/types.h>
+ #include <sys/wait.h>
+diff --git a/logd/ChattyLogBuffer.cpp b/logd/ChattyLogBuffer.cpp
+index 19dad178..89d71144 100644
+--- a/logd/ChattyLogBuffer.cpp
++++ b/logd/ChattyLogBuffer.cpp
+@@ -23,7 +23,6 @@
+ #include <errno.h>
+ #include <stdio.h>
+ #include <string.h>
+-#include <sys/cdefs.h>
+ #include <sys/user.h>
+ #include <time.h>
+ #include <unistd.h>
+diff --git a/logd/LogListener.cpp b/logd/LogListener.cpp
+index a6ab50b8..641def0f 100644
+--- a/logd/LogListener.cpp
++++ b/logd/LogListener.cpp
+@@ -15,7 +15,6 @@
+  */
+ 
+ #include <limits.h>
+-#include <sys/cdefs.h>
+ #include <sys/prctl.h>
+ #include <sys/socket.h>
+ #include <sys/types.h>
+diff --git a/logd/LogUtils.h b/logd/LogUtils.h
+index c0f62d39..5c759793 100644
+--- a/logd/LogUtils.h
++++ b/logd/LogUtils.h
+@@ -16,7 +16,6 @@
+ 
+ #pragma once
+ 
+-#include <sys/cdefs.h>
+ #include <sys/types.h>
+ 
+ #include <private/android_logger.h>
+diff --git a/logd/libaudit.h b/logd/libaudit.h
+index 27b08669..872d6996 100644
+--- a/logd/libaudit.h
++++ b/logd/libaudit.h
+@@ -20,14 +20,15 @@
+ #pragma once
+ 
+ #include <stdint.h>
+-#include <sys/cdefs.h>
+ #include <sys/socket.h>
+ #include <sys/types.h>
+ 
+ #include <linux/audit.h>
+ #include <linux/netlink.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ #define MAX_AUDIT_MESSAGE_LENGTH 8970
+ 
+@@ -100,4 +101,6 @@ extern int audit_setup(int fd, pid_t pid);
+  */
+ extern int audit_rate_limit(int fd, uint32_t limit);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif

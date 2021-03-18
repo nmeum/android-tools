@@ -1,4 +1,4 @@
-From 0e67a19669a836ec75a2e3ae8c0dca9c03270aa4 Mon Sep 17 00:00:00 2001
+From d8915a02a80b1e7719b71d9af8d4909fbab2bea9 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 16:30:30 +0100
 Subject: [PATCH] Fix inclusion of stdatomic.h with g++
@@ -7,8 +7,7 @@ See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=60932#c5
 ---
  libcutils/include/cutils/atomic.h | 6 ++++++
  libcutils/include/cutils/trace.h  | 5 +++++
- liblog/logger.h                   | 5 +++++
- 3 files changed, 16 insertions(+)
+ 2 files changed, 11 insertions(+)
 
 diff --git a/libcutils/include/cutils/atomic.h b/libcutils/include/cutils/atomic.h
 index 0c88bfedd..84606e307 100644
@@ -29,7 +28,7 @@ index 0c88bfedd..84606e307 100644
  #ifndef ANDROID_ATOMIC_INLINE
  #define ANDROID_ATOMIC_INLINE static inline
 diff --git a/libcutils/include/cutils/trace.h b/libcutils/include/cutils/trace.h
-index fff652180..771c48336 100644
+index 793e2ce8a..b469e40e7 100644
 --- a/libcutils/include/cutils/trace.h
 +++ b/libcutils/include/cutils/trace.h
 @@ -18,7 +18,12 @@
@@ -45,20 +44,3 @@ index fff652180..771c48336 100644
  #include <stdbool.h>
  #include <stdint.h>
  #include <stdio.h>
-diff --git a/liblog/logger.h b/liblog/logger.h
-index 263859dbd..46361731d 100644
---- a/liblog/logger.h
-+++ b/liblog/logger.h
-@@ -16,7 +16,12 @@
- 
- #pragma once
- 
-+#ifdef __cplusplus
-+#include <atomic>
-+using namespace std;
-+#else
- #include <stdatomic.h>
-+#endif
- 
- #include <log/log.h>
- 

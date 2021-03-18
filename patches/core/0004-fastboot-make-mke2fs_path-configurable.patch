@@ -1,4 +1,4 @@
-From 0b00b7e623ac1bfe25702306ec16b88787f27f28 Mon Sep 17 00:00:00 2001
+From fb6d0026658f29b3dcb8afde08ebe964e74ce0ce Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Mon, 18 Jun 2018 23:25:14 +0200
 Subject: [PATCH] fastboot: make mke2fs_path configurable
@@ -11,7 +11,7 @@ See: https://bugs.archlinux.org/task/56955
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/fastboot/fs.cpp b/fastboot/fs.cpp
-index 8c0aa6bf4..51c480b62 100644
+index 458a7a184..c59ed0e97 100644
 --- a/fastboot/fs.cpp
 +++ b/fastboot/fs.cpp
 @@ -117,7 +117,7 @@ static int generate_ext4_image(const char* fileName, long long partSize,

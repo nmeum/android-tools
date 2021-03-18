@@ -1,16 +1,16 @@
-From 0abc1280436c0c904b39818f39ee6eb5ab796e4f Mon Sep 17 00:00:00 2001
+From 5d652942e21ebf93dbd70093f10f9c2ecefa9bba Mon Sep 17 00:00:00 2001
 From: Anatol Pomozov <anatol.pomozov@gmail.com>
 Date: Fri, 25 Aug 2017 23:30:34 +0000
 Subject: [PATCH] Include libusb-1.0/libusb.h instead of libusb/libusb.h
 
 ---
- adb/client/usb_libusb.cpp | 2 +-
+ client/usb_libusb.cpp | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/adb/client/usb_libusb.cpp b/adb/client/usb_libusb.cpp
-index 53f01a0ce..b4c3aadc2 100644
---- a/adb/client/usb_libusb.cpp
-+++ b/adb/client/usb_libusb.cpp
+diff --git a/client/usb_libusb.cpp b/client/usb_libusb.cpp
+index 07cbc941..61453921 100644
+--- a/client/usb_libusb.cpp
++++ b/client/usb_libusb.cpp
 @@ -30,7 +30,7 @@
  #include <thread>
  #include <unordered_map>
