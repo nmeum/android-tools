@@ -1,4 +1,4 @@
-From 205c4961a3813ccff239319167fd39d5fbe4d0e2 Mon Sep 17 00:00:00 2001
+From c7a08091b22ce42c078cc094e33ffc657a0abbaa Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?=C4=90o=C3=A0n=20Tr=E1=BA=A7n=20C=C3=B4ng=20Danh?=
  <congdanhqx@gmail.com>
 Date: Sat, 31 Oct 2020 19:35:03 +0700
@@ -9,10 +9,10 @@ Subject: [PATCH] getprogname: provides fallback if __linux__
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/logging.cpp b/logging.cpp
-index 5bd21da..67da436 100644
+index 54f3fcc..d71a261 100644
 --- a/logging.cpp
 +++ b/logging.cpp
-@@ -67,9 +67,9 @@ namespace android {
+@@ -66,9 +66,9 @@ namespace android {
  namespace base {
  
  // BSD-based systems like Android/macOS have getprogname(). Others need us to provide one.

@@ -1,4 +1,4 @@
-From 1cb04230c5ff8cea3adaa65de7ddc4d3210931a7 Mon Sep 17 00:00:00 2001
+From c110ef12a7037279862ab7cfa3b211094d3cbe8f Mon Sep 17 00:00:00 2001
 From: Minecrell <minecrell@minecrell.net>
 Date: Thu, 27 Feb 2020 14:06:16 +0100
 Subject: [PATCH] adb: disable fastdeploy support
@@ -10,14 +10,14 @@ see: https://git.archlinux.org/svntogit/community.git/commit/trunk/PKGBUILD?h=pa
 For now lets just disable it (like it was on platform-tools-29.0.4).
 If someone wants to make it work, feel free to :)
 ---
- adb/client/adb_install.cpp | 10 ++++++++++
- adb/client/fastdeploy.h    |  4 ++++
+ client/adb_install.cpp | 10 ++++++++++
+ client/fastdeploy.h    |  4 ++++
  2 files changed, 14 insertions(+)
 
-diff --git a/adb/client/adb_install.cpp b/adb/client/adb_install.cpp
-index ea50f591a..27f448807 100644
---- a/adb/client/adb_install.cpp
-+++ b/adb/client/adb_install.cpp
+diff --git a/client/adb_install.cpp b/client/adb_install.cpp
+index ea50f591..27f44880 100644
+--- a/client/adb_install.cpp
++++ b/client/adb_install.cpp
 @@ -185,6 +185,7 @@ static int install_app_streamed(int argc, const char** argv, bool use_fastdeploy
      }
  
@@ -70,10 +70,10 @@ index ea50f591a..27f448807 100644
  
      if (passthrough_argv.size() < 2) {
          error_exit("install requires an apk argument");
-diff --git a/adb/client/fastdeploy.h b/adb/client/fastdeploy.h
-index 830aeb2ca..25f3f9efe 100644
---- a/adb/client/fastdeploy.h
-+++ b/adb/client/fastdeploy.h
+diff --git a/client/fastdeploy.h b/client/fastdeploy.h
+index 830aeb2c..25f3f9ef 100644
+--- a/client/fastdeploy.h
++++ b/client/fastdeploy.h
 @@ -16,12 +16,14 @@
  
  #pragma once

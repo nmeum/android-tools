@@ -1,17 +1,17 @@
-From 4d01ecdacb06ec9867ff55dfbf656ec85bdb18fc Mon Sep 17 00:00:00 2001
+From efe70298a9b043861bd8fd2048790e5c253cc60e Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?=C4=90o=C3=A0n=20Tr=E1=BA=A7n=20C=C3=B4ng=20Danh?=
  <congdanhqx@gmail.com>
 Date: Sun, 1 Nov 2020 19:44:01 +0700
 Subject: [PATCH] adb_wifi: remove mDNS
 
 ---
- adb/client/adb_wifi.cpp | 10 ++--------
+ client/adb_wifi.cpp | 10 ++--------
  1 file changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/adb/client/adb_wifi.cpp b/adb/client/adb_wifi.cpp
-index 61a9a480c..9a3f21a72 100644
---- a/adb/client/adb_wifi.cpp
-+++ b/adb/client/adb_wifi.cpp
+diff --git a/client/adb_wifi.cpp b/client/adb_wifi.cpp
+index 61a9a480..9a3f21a7 100644
+--- a/client/adb_wifi.cpp
++++ b/client/adb_wifi.cpp
 @@ -179,9 +179,7 @@ bool adb_wifi_is_known_host(const std::string& host) {
  
  void adb_wifi_pair_device(const std::string& host, const std::string& password,

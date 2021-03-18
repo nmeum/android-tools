@@ -1,4 +1,4 @@
-From 4ebddcc89aca9b112d2a5e170541f4f6cd0a9d3c Mon Sep 17 00:00:00 2001
+From b333cb076b53e899e3650de47854fab1d853bbbc Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 17:24:05 +0100
 Subject: [PATCH] group_member is a nonstandard GNU extension
@@ -9,7 +9,7 @@ Only use that function if __GLIBC__ is defined.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/diagnose_usb/diagnose_usb.cpp b/diagnose_usb/diagnose_usb.cpp
-index 5695ecec5..1a155d0c1 100644
+index 35edb5e05..977a4e09b 100644
 --- a/diagnose_usb/diagnose_usb.cpp
 +++ b/diagnose_usb/diagnose_usb.cpp
 @@ -33,7 +33,7 @@ static const char kPermissionsHelpUrl[] = "http://developer.android.com/tools/de

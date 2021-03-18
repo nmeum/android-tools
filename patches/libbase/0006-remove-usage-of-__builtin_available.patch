@@ -1,0 +1,95 @@
+From eeed6a8ba037863cf96323ecc57b1368eeaddac3 Mon Sep 17 00:00:00 2001
+From: John Zimmermann <me@johnnynator.dev>
+Date: Thu, 18 Mar 2021 15:27:47 +0100
+Subject: [PATCH] remove usage of __builtin_available
+
+s/__builtin_available([^\)]*)/false/g
+---
+ logging.cpp | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/logging.cpp b/logging.cpp
+index d71a261..d07b2fb 100644
+--- a/logging.cpp
++++ b/logging.cpp
+@@ -213,7 +213,7 @@ static std::recursive_mutex& TagLock() {
+ static std::string* gDefaultTag;
+ 
+ void SetDefaultTag(const std::string& tag) {
+-  if (__builtin_available(android 30, *)) {
++  if (false) {
+     __android_log_set_default_tag(tag.c_str());
+   } else {
+     std::lock_guard<std::recursive_mutex> lock(TagLock());
+@@ -316,7 +316,7 @@ static void LogdLogChunk(LogId id, LogSeverity severity, const char* tag, const
+   int32_t lg_id = LogIdTolog_id_t(id);
+   int32_t priority = LogSeverityToPriority(severity);
+ 
+-  if (__builtin_available(android 30, *)) {
++  if (false) {
+     __android_log_message log_message = {sizeof(__android_log_message),     lg_id, priority, tag,
+                                          static_cast<const char*>(nullptr), 0,     message};
+     __android_log_logd_logger(&log_message);
+@@ -398,7 +398,7 @@ LogFunction SetLogger(LogFunction&& logger) {
+   LogFunction old_logger = std::move(Logger());
+   Logger() = std::move(logger);
+ 
+-  if (__builtin_available(android 30, *)) {
++  if (false) {
+     __android_log_set_logger([](const struct __android_log_message* log_message) {
+       auto log_id = log_id_tToLogId(log_message->buffer_id);
+       auto severity = PriorityToLogSeverity(log_message->priority);
+@@ -414,7 +414,7 @@ AbortFunction SetAborter(AbortFunction&& aborter) {
+   AbortFunction old_aborter = std::move(Aborter());
+   Aborter() = std::move(aborter);
+ 
+-  if (__builtin_available(android 30, *)) {
++  if (false) {
+     __android_log_set_aborter([](const char* abort_message) { Aborter()(abort_message); });
+   }
+   return old_aborter;
+@@ -502,7 +502,7 @@ LogMessage::~LogMessage() {
+ 
+   // Abort if necessary.
+   if (data_->GetSeverity() == FATAL) {
+-    if (__builtin_available(android 30, *)) {
++    if (false) {
+       __android_log_call_aborter(msg.c_str());
+     } else {
+       Aborter()(msg.c_str());
+@@ -517,7 +517,7 @@ std::ostream& LogMessage::stream() {
+ void LogMessage::LogLine(const char* file, unsigned int line, LogSeverity severity, const char* tag,
+                          const char* message) {
+   int32_t priority = LogSeverityToPriority(severity);
+-  if (__builtin_available(android 30, *)) {
++  if (false) {
+     __android_log_message log_message = {
+         sizeof(__android_log_message), LOG_ID_DEFAULT, priority, tag, file, line, message};
+     __android_log_write_log_message(&log_message);
+@@ -536,7 +536,7 @@ void LogMessage::LogLine(const char* file, unsigned int line, LogSeverity severi
+ }
+ 
+ LogSeverity GetMinimumLogSeverity() {
+-  if (__builtin_available(android 30, *)) {
++  if (false) {
+     return PriorityToLogSeverity(__android_log_get_minimum_priority());
+   } else {
+     return gMinimumLogSeverity;
+@@ -547,7 +547,7 @@ bool ShouldLog(LogSeverity severity, const char* tag) {
+   // Even though we're not using the R liblog functions in this function, if we're running on Q,
+   // we need to fall back to using gMinimumLogSeverity, since __android_log_is_loggable() will not
+   // take into consideration the value from SetMinimumLogSeverity().
+-  if (__builtin_available(android 30, *)) {
++  if (false) {
+     int32_t priority = LogSeverityToPriority(severity);
+     return __android_log_is_loggable(priority, tag, ANDROID_LOG_INFO);
+   } else {
+@@ -556,7 +556,7 @@ bool ShouldLog(LogSeverity severity, const char* tag) {
+ }
+ 
+ LogSeverity SetMinimumLogSeverity(LogSeverity new_severity) {
+-  if (__builtin_available(android 30, *)) {
++  if (false) {
+     int32_t priority = LogSeverityToPriority(new_severity);
+     return PriorityToLogSeverity(__android_log_set_minimum_priority(priority));
+   } else {

@@ -1,17 +1,17 @@
-From 26953b91d16539683fb7ebbd5f1f55ffb129de27 Mon Sep 17 00:00:00 2001
+From 0fcd97eb7f46cacdf77a699c00d346e59d4dfc02 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 17:48:49 +0100
 Subject: [PATCH] Define clang-only nullability specifiers when __clang__ is
  not defined
 
 ---
- adb/sysdeps.h | 6 ++++--
+ sysdeps.h | 6 ++++--
  1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/adb/sysdeps.h b/adb/sysdeps.h
-index 7326ab137..35de4e597 100644
---- a/adb/sysdeps.h
-+++ b/adb/sysdeps.h
+diff --git a/sysdeps.h b/sysdeps.h
+index 7326ab13..35de4e59 100644
+--- a/sysdeps.h
++++ b/sysdeps.h
 @@ -48,11 +48,13 @@ static inline void* mempcpy(void* dst, const void* src, size_t n) {
  }
  #endif

@@ -1,0 +1,27 @@
+From e878c6856f9b828a9538b7bc962c7697039e58d5 Mon Sep 17 00:00:00 2001
+From: John Zimmermann <me@johnnynator.dev>
+Date: Thu, 18 Mar 2021 15:14:03 +0100
+Subject: [PATCH] Fix inclusion of stdatomic.h with g++
+
+See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=60932#c5
+---
+ liblog/logger.h | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/liblog/logger.h b/liblog/logger.h
+index 263859db..46361731 100644
+--- a/liblog/logger.h
++++ b/liblog/logger.h
+@@ -16,7 +16,12 @@
+ 
+ #pragma once
+ 
++#ifdef __cplusplus
++#include <atomic>
++using namespace std;
++#else
+ #include <stdatomic.h>
++#endif
+ 
+ #include <log/log.h>
+ 

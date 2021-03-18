@@ -1,0 +1,102 @@
+From 43bd4fbbd8ccd4d36dd12d046bb8a311a73507a4 Mon Sep 17 00:00:00 2001
+From: John Zimmermann <me@johnnynator.dev>
+Date: Thu, 18 Mar 2021 12:42:29 +0100
+Subject: [PATCH] Don't use the internal glibc header sys/cdefs.h
+
+---
+ pairing_auth/include/adb/pairing/pairing_auth.h          | 9 ++++++---
+ .../include/adb/pairing/pairing_connection.h             | 9 ++++++---
+ pairing_connection/include/adb/pairing/pairing_server.h  | 9 ++++++---
+ 3 files changed, 18 insertions(+), 9 deletions(-)
+
+diff --git a/pairing_auth/include/adb/pairing/pairing_auth.h b/pairing_auth/include/adb/pairing/pairing_auth.h
+index 9ef97e26..f6b7b2a9 100644
+--- a/pairing_auth/include/adb/pairing/pairing_auth.h
++++ b/pairing_auth/include/adb/pairing/pairing_auth.h
+@@ -18,13 +18,14 @@
+ 
+ #include <stddef.h>
+ #include <stdint.h>
+-#include <sys/cdefs.h>
+ 
+ #if !defined(__INTRODUCED_IN)
+ #define __INTRODUCED_IN(__api_level) /* nothing */
+ #endif
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ #if !defined(__ANDROID__) || __ANDROID_API__ >= 30
+ 
+ /**
+@@ -183,4 +184,6 @@ bool pairing_auth_decrypt(PairingAuthCtx* ctx, const uint8_t* inbuf, size_t inle
+                           size_t* outlen) __INTRODUCED_IN(30);
+ 
+ #endif  //!__ANDROID__ || __ANDROID_API__ >= 30
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+diff --git a/pairing_connection/include/adb/pairing/pairing_connection.h b/pairing_connection/include/adb/pairing/pairing_connection.h
+index 3543b873..ad34dc48 100644
+--- a/pairing_connection/include/adb/pairing/pairing_connection.h
++++ b/pairing_connection/include/adb/pairing/pairing_connection.h
+@@ -18,7 +18,6 @@
+ 
+ #include <stddef.h>
+ #include <stdint.h>
+-#include <sys/cdefs.h>
+ 
+ #if !defined(__INTRODUCED_IN)
+ #define __INTRODUCED_IN(__api_level) /* nothing */
+@@ -35,7 +34,9 @@
+ //
+ // If both sides have authenticated, they will exchange their peer information
+ // (see #PeerInfo).
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ #if !defined(__ANDROID__) || __ANDROID_API__ >= 30
+ 
+ const uint32_t kMaxPeerInfoSize = 8192;
+@@ -127,4 +128,6 @@ PairingConnectionCtx* pairing_connection_server_new(const uint8_t* pswd, size_t
+ void pairing_connection_destroy(PairingConnectionCtx* ctx) __INTRODUCED_IN(30);
+ 
+ #endif  //!__ANDROID__ || __ANDROID_API__ >= 30
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+diff --git a/pairing_connection/include/adb/pairing/pairing_server.h b/pairing_connection/include/adb/pairing/pairing_server.h
+index 178a174b..0a8d6768 100644
+--- a/pairing_connection/include/adb/pairing/pairing_server.h
++++ b/pairing_connection/include/adb/pairing/pairing_server.h
+@@ -18,7 +18,6 @@
+ 
+ #include <stddef.h>
+ #include <stdint.h>
+-#include <sys/cdefs.h>
+ 
+ #include <functional>
+ #include <memory>
+@@ -31,7 +30,9 @@
+ #define __INTRODUCED_IN(__api_level) /* nothing */
+ #endif
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ #if !defined(__ANDROID__) || __ANDROID_API__ >= 30
+ 
+ // PairingServerCtx is a wrapper around the #PairingConnectionCtx APIs,
+@@ -108,4 +109,6 @@ PairingServerCtx* pairing_server_new_no_cert(const uint8_t* pswd, size_t pswd_le
+ void pairing_server_destroy(PairingServerCtx* ctx) __INTRODUCED_IN(30);
+ 
+ #endif  //!__ANDROID__ || __ANDROID_API__ >= 30
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif

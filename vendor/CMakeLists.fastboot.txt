@@ -9,7 +9,7 @@ target_compile_definitions(libzip PRIVATE -DZLIB_CONST)
 target_include_directories(libzip PUBLIC
 	libziparchive/include
 	core/include
-	core/liblog/include
+	logging/liblog/include
 	libbase/include)
 
 add_library(libutil STATIC
@@ -22,7 +22,7 @@ add_library(libutil STATIC
 
 target_include_directories(libutil PUBLIC
 	core/include
-	core/liblog/include
+	logging/liblog/include
 	core/libutils/include
 	libbase/include)
 

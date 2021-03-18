@@ -4,11 +4,13 @@
 add_subdirectory(boringssl EXCLUDE_FROM_ALL)
 set(android-vendored
 	avb
+	adb
 	base
 	core
 	extras
 	libbase
 	libziparchive
+	logging
 	native
 	selinux
 	f2fs-tools

@@ -27,7 +27,7 @@ target_compile_definitions(libandroidfw PRIVATE -D_GNU_SOURCE)
 target_include_directories(libandroidfw PUBLIC
 	base/libs/androidfw/include
 	core/libcutils/include
-	core/liblog/include
+	logging/liblog/include
 	core/libsystem/include
 	core/libutils/include
 	libbase/include

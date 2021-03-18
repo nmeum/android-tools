@@ -1,17 +1,17 @@
-From d547c8ee94112ddbf8cdd4cbc35766e249b73496 Mon Sep 17 00:00:00 2001
+From f2751a977257e206763a286f0b29ec8973879d3e Mon Sep 17 00:00:00 2001
 From: Robert Yang <decatf@gmail.com>
 Date: Wed, 24 Oct 2018 09:48:40 -0400
 Subject: [PATCH] adb: Reduce fallback size for _SC_GETPW_R_SIZE_MAX
 
 See: https://github.com/nmeum/android-tools/pull/5#discussion_r227946282
 ---
- adb/adb_utils.cpp | 2 +-
+ adb_utils.cpp | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/adb/adb_utils.cpp b/adb/adb_utils.cpp
-index d1910f1c3..593448a0a 100644
---- a/adb/adb_utils.cpp
-+++ b/adb/adb_utils.cpp
+diff --git a/adb_utils.cpp b/adb_utils.cpp
+index d1910f1c..593448a0 100644
+--- a/adb_utils.cpp
++++ b/adb_utils.cpp
 @@ -294,7 +294,7 @@ std::string adb_get_homedir_path() {
      struct passwd* result;
      int pwent_max = sysconf(_SC_GETPW_R_SIZE_MAX);

@@ -1,16 +1,16 @@
-From 01fd9170d13097981708aba54cda003815a983b0 Mon Sep 17 00:00:00 2001
+From 27a46fca7d6a94a3b1577ae95a8184910aa3fad1 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 19 Jun 2018 12:47:09 +0000
 Subject: [PATCH] usb_linux.cpp: include sys/sysmacros.h for minor/major
 
 ---
- adb/client/usb_linux.cpp | 1 +
+ client/usb_linux.cpp | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/adb/client/usb_linux.cpp b/adb/client/usb_linux.cpp
-index 95b1817dc..ec88c423d 100644
---- a/adb/client/usb_linux.cpp
-+++ b/adb/client/usb_linux.cpp
+diff --git a/client/usb_linux.cpp b/client/usb_linux.cpp
+index 95b1817d..ec88c423 100644
+--- a/client/usb_linux.cpp
++++ b/client/usb_linux.cpp
 @@ -34,6 +34,7 @@
  #include <sys/time.h>
  #include <sys/sysmacros.h>

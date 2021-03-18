@@ -34,3 +34,9 @@
 [submodule "vendor/native"]
 	path = vendor/native
 	url = https://android.googlesource.com/platform/frameworks/native
+[submodule "vendor/adb"]
+	path = vendor/adb
+	url = https://android.googlesource.com/platform/packages/modules/adb.git
+[submodule "vendor/logging"]
+	path = vendor/logging
+	url = https://android.googlesource.com/platform/system/logging.git

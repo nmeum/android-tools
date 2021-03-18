@@ -1,17 +1,17 @@
-From 75918f8f6eb113d5a36d24f4fcaca86517f765b6 Mon Sep 17 00:00:00 2001
+From 3a46c04cdd8eaeeb7401c96e558e89f2a6c58dc3 Mon Sep 17 00:00:00 2001
 From: Anatol Pomozov <anatol.pomozov@gmail.com>
 Date: Fri, 25 Aug 2017 23:30:34 +0000
 Subject: [PATCH] Include string.h in various file missing it
 
 Most of these need string.h for strerror(3).
 ---
- adb/sysdeps/posix/network.cpp | 1 +
+ sysdeps/posix/network.cpp | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/adb/sysdeps/posix/network.cpp b/adb/sysdeps/posix/network.cpp
-index a4d9013d3..ec4c7c8e6 100644
---- a/adb/sysdeps/posix/network.cpp
-+++ b/adb/sysdeps/posix/network.cpp
+diff --git a/sysdeps/posix/network.cpp b/sysdeps/posix/network.cpp
+index a4d9013d..ec4c7c8e 100644
+--- a/sysdeps/posix/network.cpp
++++ b/sysdeps/posix/network.cpp
 @@ -22,6 +22,7 @@
  #include <sys/socket.h>
  
