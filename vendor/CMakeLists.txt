@@ -61,3 +61,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_FILE_OFFSET_BITS=64")
 # Targets which should be installed by `make install`.
 install(TARGETS adb fastboot "${ANDROID_MKE2FS_NAME}"
 	simg2img img2simg append2simg DESTINATION bin)
+
+# Install bash completion files.
+set(BASH_COMPLETION "${CMAKE_INSTALL_PREFIX}/share/bash-completion/completions")
+install(FILES core/adb/adb.bash RENAME adb DESTINATION "${BASH_COMPLETION}")
+install(FILES core/fastboot/fastboot.bash RENAME fastboot DESTINATION "${BASH_COMPLETION}")
