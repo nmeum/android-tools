@@ -72,3 +72,7 @@ install(TARGETS adb fastboot "${ANDROID_MKE2FS_NAME}"
 set(BASH_COMPLETION_DIR "${CMAKE_INSTALL_FULL_DATADIR}/bash-completion/completions")
 install(FILES adb/adb.bash RENAME adb DESTINATION "${BASH_COMPLETION_DIR}")
 install(FILES core/fastboot/fastboot.bash RENAME fastboot DESTINATION "${BASH_COMPLETION_DIR}")
+
+# Install license files.
+set(LICENSE_DIR "${CMAKE_INSTALL_FULL_DATADIR}/licenses/android-tools")
+install(FILES core/NOTICE RENAME AOSP_LICENSE DESTINATION "${LICENSE_DIR}")
