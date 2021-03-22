@@ -43,6 +43,10 @@ include(CMakeLists.sparse.txt)
 include(CMakeLists.fastboot.txt)
 include(CMakeLists.mke2fs.txt)
 
+# To ease installation of utility files such as bash completions, etc.
+# See: https://cmake.org/cmake/help/latest/module/GNUInstallDirs.html
+include(GNUInstallDirs)
+
 # Various C++20 features are used across the codebase, e.g.
 # std::string_view.starts_with. Additionally, GNU extension
 # (such as typeof) are used occasionally.
