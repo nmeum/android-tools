@@ -43,10 +43,6 @@ include(CMakeLists.sparse.txt)
 include(CMakeLists.fastboot.txt)
 include(CMakeLists.mke2fs.txt)
 
-# To ease installation of utility files such as bash completions, etc.
-# See: https://cmake.org/cmake/help/latest/module/GNUInstallDirs.html
-include(GNUInstallDirs)
-
 # Various C++20 features are used across the codebase, e.g.
 # std::string_view.starts_with. Additionally, GNU extension
 # (such as typeof) are used occasionally.
@@ -68,10 +64,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_FILE_OFFSET_BITS=64")
 install(TARGETS adb fastboot "${ANDROID_MKE2FS_NAME}"
 	simg2img img2simg append2simg DESTINATION bin)
 
-# Install bash completion files.
-set(BASH_COMPLETION_DIR "${CMAKE_INSTALL_FULL_DATADIR}/bash-completion/completions")
-install(FILES adb/adb.bash RENAME adb DESTINATION "${BASH_COMPLETION_DIR}")
-install(FILES core/fastboot/fastboot.bash RENAME fastboot DESTINATION "${BASH_COMPLETION_DIR}")
+# Install common completion files.
+install(FILES adb/adb.bash RENAME adb DESTINATION "${COMPLETION_COMMON_DIR}")
+install(FILES core/fastboot/fastboot.bash RENAME fastboot DESTINATION "${COMPLETION_COMMON_DIR}")
 
 # Install license files.
 set(LICENSE_DIR "${CMAKE_INSTALL_FULL_DATADIR}/licenses/android-tools")
