@@ -1,0 +1,43 @@
+From ee81c8aff8276d489c4271a89d44c62ff0b516d5 Mon Sep 17 00:00:00 2001
+From: Oliver Smith <ollieparanoid@postmarketos.org>
+Date: Wed, 28 Apr 2021 23:37:46 +0200
+Subject: [PATCH] fastboot: don't die if can't parse boot part size
+
+Don't crash in copy_boot_avb_footer() if bootloaders do not properly
+expose the size of the boot partition.
+
+This makes "fastboot flasher boot" usable again on lots of
+non-avb-devices, where it has been broken since
+I5a5e25fb54dc9d6a2930fda63434968808ffa1f0.
+
+Related: https://gitlab.com/postmarketOS/pmbootstrap/-/issues/2007
+Change-Id: I0825bdad0f541ec0b073900b02d2cf7966aa9ce7
+---
+ fastboot/fastboot.cpp | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/fastboot/fastboot.cpp b/fastboot/fastboot.cpp
+index 679aec8..38a0e3b 100644
+--- a/fastboot/fastboot.cpp
++++ b/fastboot/fastboot.cpp
+@@ -1017,13 +1017,15 @@ static void copy_boot_avb_footer(const std::string& partition, struct fastboot_b
+ 
+     std::string partition_size_str;
+     if (fb->GetVar("partition-size:" + partition, &partition_size_str) != fastboot::SUCCESS) {
+-        die("cannot get boot partition size");
++        verbose("cannot get boot partition size, assuming non-avb device");
++        return;
+     }
+ 
+     partition_size_str = fb_fix_numeric_var(partition_size_str);
+     int64_t partition_size;
+     if (!android::base::ParseInt(partition_size_str, &partition_size)) {
+-        die("Couldn't parse partition size '%s'.", partition_size_str.c_str());
++        verbose("Couldn't parse partition size '%s', assuming non-avb device", partition_size_str.c_str());
++        return;
+     }
+     if (partition_size == buf->sz) {
+         return;
+-- 
+2.20.1
+
