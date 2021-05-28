@@ -14,7 +14,8 @@ set(android-vendored
 	native
 	selinux
 	f2fs-tools
-	e2fsprogs)
+	e2fsprogs
+	incremental_delivery)
 
 if(EXISTS "${ANDROID_PATCH_DIR}/")
 	execute_process(COMMAND git submodule --quiet update)
@@ -33,6 +34,8 @@ if(EXISTS "${ANDROID_PATCH_DIR}/")
 endif()
 
 find_package(Protobuf REQUIRED)
+find_package(fmt REQUIRED)
+include_directories(${fmt_INCLUDE_DIRS})
 include_directories(${PROTOBUF_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
