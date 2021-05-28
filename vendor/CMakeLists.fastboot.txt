@@ -118,13 +118,14 @@ add_executable(fastboot
 	core/fastboot/tcp.cpp
 	core/fastboot/udp.cpp
 	core/fastboot/usb_linux.cpp
+	core/fastboot/vendor_boot_img_utils.cpp
 	core/fastboot/util.cpp)
 
 target_include_directories(fastboot PRIVATE
 	libbase/include core/include core/adb core/libsparse/include
 	extras/ext4_utils/include extras/f2fs_utils
 	core/libziparchive/include mkbootimg/include/bootimg
-	core/fs_mgr/liblp/include avb)
+	core/fs_mgr/liblp/include core/fs_mgr/libstorage_literals avb)
 target_compile_definitions(fastboot PRIVATE
 	-DPLATFORM_TOOLS_VERSION="${ANDROID_VERSION}"
 	-DPLATFORM_TOOLS_VENDOR="${ANDROID_VENDOR}"
@@ -133,4 +134,4 @@ target_compile_definitions(fastboot PRIVATE
 target_link_libraries(fastboot
 	libsparse libzip libcutils liblog libfsmgr libutil
 	libbase libext4 libselinux libsepol libdiagnoseusb crypto
-	z pcre2-8 pthread dl)
+	z pcre2-8 pthread dl fmt::fmt)

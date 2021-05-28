@@ -1,0 +1,37 @@
+From 8831613cd3cfe9a757909859f9e1e7500fef9ac8 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
+Date: Sun, 23 May 2021 21:08:49 +0200
+Subject: [PATCH] Add prototype for opreator-- to iterator
+
+Otherwise, g++ 10.X refuses to compile this code:
+
+	In file included from /usr/include/c++/10.3.1/bits/stl_algobase.h:66,
+			 from /usr/include/c++/10.3.1/memory:63,
+			 from /home/soeren/src/android-tools/vendor/base/libs/androidfw/include/androidfw/LoadedArsc.h:20,
+			 from /home/soeren/src/android-tools/vendor/base/libs/androidfw/LoadedArsc.cpp:19:
+	/usr/include/c++/10.3.1/bits/stl_iterator_base_funcs.h: In instantiation of 'constexpr void std::__advance(_RandomAccessIterator&, _Distance, std::random_access_iterator_tag) [with _RandomAccessIterator = android::incfs::map_ptr<android::ResTable_sparseTypeEntry, false>::const_iterator; _Distance = long int]':
+	/usr/include/c++/10.3.1/bits/stl_iterator_base_funcs.h:206:21:   required from 'constexpr void std::advance(_InputIterator&, _Distance) [with _InputIterator = android::incfs::map_ptr<android::ResTable_sparseTypeEntry, false>::const_iterator; _Distance = long int]'
+	/usr/include/c++/10.3.1/bits/stl_algobase.h:1321:16:   required from 'constexpr _ForwardIterator std::__lower_bound(_ForwardIterator, _ForwardIterator, const _Tp&, _Compare) [with _ForwardIterator = android::incfs::map_ptr<android::ResTable_sparseTypeEntry, false>::const_iterator; _Tp = short unsigned int; _Compare = __gnu_cxx::__ops::_Iter_comp_val<android::LoadedPackage::GetEntryOffset(android::incfs::verified_map_ptr<android::ResTable_type>, uint16_t)::<lambda(const android::incfs::map_ptr<android::ResTable_sparseTypeEntry, false>&, uint16_t)> >]'
+	/usr/include/c++/10.3.1/bits/stl_algo.h:2046:32:   required from 'constexpr _FIter std::lower_bound(_FIter, _FIter, const _Tp&, _Compare) [with _FIter = android::incfs::map_ptr<android::ResTable_sparseTypeEntry, false>::const_iterator; _Tp = short unsigned int; _Compare = android::LoadedPackage::GetEntryOffset(android::incfs::verified_map_ptr<android::ResTable_type>, uint16_t)::<lambda(const android::incfs::map_ptr<android::ResTable_sparseTypeEntry, false>&, uint16_t)>]'
+	/home/soeren/src/android-tools/vendor/base/libs/androidfw/LoadedArsc.cpp:276:6:   required from here
+	/usr/include/c++/10.3.1/bits/stl_iterator_base_funcs.h:183:2: error: no match for 'operator--' (operand type is 'android::incfs::map_ptr<android::ResTable_sparseTypeEntry, false>::const_iterator')
+	  183 |  --__i;
+	      |  ^~~~~
+---
+ incfs/util/include/util/map_ptr.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/incfs/util/include/util/map_ptr.h b/incfs/util/include/util/map_ptr.h
+index cda80f9..6fd38ee 100644
+--- a/incfs/util/include/util/map_ptr.h
++++ b/incfs/util/include/util/map_ptr.h
+@@ -163,6 +163,9 @@ public:
+ 
+         reference operator*() const { return safe_ptr_; }
+ 
++        /* Prototype needed to make this compile with g++ for some reason */
++        const const_iterator& operator--();
++
+         const const_iterator& operator++() {
+             safe_ptr_++;
+             return *this;

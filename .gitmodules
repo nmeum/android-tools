@@ -40,3 +40,6 @@
 [submodule "vendor/logging"]
 	path = vendor/logging
 	url = https://android.googlesource.com/platform/system/logging.git
+[submodule "vendor/incremental_delivery"]
+	path = vendor/incremental_delivery
+	url = https://android.googlesource.com/platform/system/incremental_delivery

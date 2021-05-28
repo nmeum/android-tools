@@ -1,15 +1,14 @@
-From 4d9b724512a458a65f0d3d7afac1efe275ae640b Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?=C4=90o=C3=A0n=20Tr=E1=BA=A7n=20C=C3=B4ng=20Danh?=
- <congdanhqx@gmail.com>
-Date: Tue, 10 Nov 2020 21:19:27 +0700
+From 83e3d0145c7b8c97a4c9901614ae899f38816e5c Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
+Date: Fri, 28 May 2021 11:35:29 +0200
 Subject: [PATCH] Don't use the internal glibc header sys/cdefs.h
 
-        for file in $(ag -l '__BEGIN_DECLS|sys/cdefs.h'); do
-                sed -i "${file}" \
-                        -e 's/__BEGIN_DECLS/#ifdef __cplusplus\nextern "C" {\n#endif/g' \
-                        -e 's/__END_DECLS/#ifdef __cplusplus\n}\n#endif/g' \
-                        -e '/#include <sys\/cdefs.h>/d'
-        done
+	for file in $(ag -l '__BEGIN_DECLS|sys/cdefs.h'); do
+		sed -i "${file}" \
+			-e 's/__BEGIN_DECLS/#ifdef __cplusplus\nextern "C" {\n#endif/g' \
+			-e 's/__END_DECLS/#ifdef __cplusplus\n}\n#endif/g' \
+			-e '/#include <sys\/cdefs.h>/d'
+	done
 
 https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-get-error-messages-about-%3Ccode%3Esys/cdefs.h%3C/code%3E
 ---
@@ -32,13 +31,12 @@ https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-
  include/android/trace.h                                  | 1 -
  include/diskusage/dirsize.h                              | 8 ++++++--
  libs/adbd_auth/include/adbd_auth.h                       | 9 ++++++---
- libs/binder/include/binder/Debug.h                       | 9 ++++++---
  libs/binder/ndk/include_ndk/android/binder_ibinder.h     | 9 ++++++---
  libs/binder/ndk/include_ndk/android/binder_ibinder_jni.h | 8 ++++++--
  libs/binder/ndk/include_ndk/android/binder_parcel.h      | 9 ++++++---
  libs/binder/ndk/include_ndk/android/binder_parcel_jni.h  | 8 ++++++--
  libs/binder/ndk/include_ndk/android/binder_status.h      | 9 ++++++---
- .../binder/ndk/include_platform/android/binder_context.h | 8 ++++++--
+ .../include_platform/android/binder_ibinder_platform.h   | 8 ++++++--
  .../binder/ndk/include_platform/android/binder_manager.h | 9 ++++++---
  .../include_platform/android/binder_parcel_platform.h    | 8 ++++++--
  .../binder/ndk/include_platform/android/binder_process.h | 9 ++++++---
@@ -74,7 +72,7 @@ https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-
  libs/vr/libdvr/include/dvr/dvr_tracking_types.h          | 9 ++++++---
  libs/vr/libdvr/include/dvr/dvr_vsync.h                   | 9 ++++++---
  vulkan/include/hardware/hwvulkan.h                       | 8 ++++++--
- 61 files changed, 282 insertions(+), 140 deletions(-)
+ 60 files changed, 276 insertions(+), 137 deletions(-)
 
 diff --git a/include/android/asset_manager.h b/include/android/asset_manager.h
 index 2ac7d4d35..8a7517e4a 100644
@@ -89,7 +87,7 @@ index 2ac7d4d35..8a7517e4a 100644
  
  #ifdef __cplusplus
 diff --git a/include/android/choreographer.h b/include/android/choreographer.h
-index e9f559cd8..ab9ba7abe 100644
+index 8039bb0d7..3e15dfb99 100644
 --- a/include/android/choreographer.h
 +++ b/include/android/choreographer.h
 @@ -27,9 +27,10 @@
@@ -105,9 +103,9 @@ index e9f559cd8..ab9ba7abe 100644
  
  struct AChoreographer;
  typedef struct AChoreographer AChoreographer;
-@@ -162,7 +163,9 @@ void AChoreographer_unregisterRefreshRateCallback(AChoreographer* choreographer,
+@@ -151,7 +152,9 @@ void AChoreographer_unregisterRefreshRateCallback(AChoreographer* choreographer,
+                                                   AChoreographer_refreshRateCallback, void* data)
          __INTRODUCED_IN(30);
- #endif /* __ANDROID_API__ >= 30 */
  
 -__END_DECLS
 +#ifdef __cplusplus
@@ -117,7 +115,7 @@ index e9f559cd8..ab9ba7abe 100644
  #endif // ANDROID_CHOREOGRAPHER_H
  
 diff --git a/include/android/configuration.h b/include/android/configuration.h
-index ccf3e5906..5c1bde282 100644
+index 88019ae05..dd28fa8b0 100644
 --- a/include/android/configuration.h
 +++ b/include/android/configuration.h
 @@ -26,7 +26,6 @@
@@ -129,7 +127,7 @@ index ccf3e5906..5c1bde282 100644
  #include <android/asset_manager.h>
  
 diff --git a/include/android/font.h b/include/android/font.h
-index 1618096d6..5357ebf3b 100644
+index a17261882..47fe58a88 100644
 --- a/include/android/font.h
 +++ b/include/android/font.h
 @@ -31,7 +31,6 @@
@@ -149,11 +147,11 @@ index 1618096d6..5357ebf3b 100644
 +extern "C" {
 +#endif
  
- #if __ANDROID_API__ >= 29
- 
-@@ -299,7 +300,9 @@ float AFont_getAxisValue(const AFont* _Nonnull font, uint32_t axisIndex)
- 
- #endif // __ANDROID_API__ >= 29
+ enum {
+     /** The minimum value fot the font weight value. */
+@@ -295,7 +296,9 @@ uint32_t AFont_getAxisTag(const AFont* _Nonnull font, uint32_t axisIndex)
+ float AFont_getAxisValue(const AFont* _Nonnull font, uint32_t axisIndex)
+       __INTRODUCED_IN(29);
  
 -__END_DECLS
 +#ifdef __cplusplus
@@ -163,7 +161,7 @@ index 1618096d6..5357ebf3b 100644
  #endif // ANDROID_FONT_H
  
 diff --git a/include/android/font_matcher.h b/include/android/font_matcher.h
-index d4bd892bf..c69e75437 100644
+index 49e478c2f..dbba01f51 100644
 --- a/include/android/font_matcher.h
 +++ b/include/android/font_matcher.h
 @@ -75,7 +75,6 @@
@@ -183,11 +181,11 @@ index d4bd892bf..c69e75437 100644
 +extern "C" {
 +#endif
  
- #if __ANDROID_API__ >= 29
- 
-@@ -219,7 +220,9 @@ AFont* _Nonnull AFontMatcher_match(
- 
- #endif // __ANDROID_API__ >= 29
+ enum {
+     /** A family variant value for the system default variant. */
+@@ -215,7 +216,9 @@ AFont* _Nonnull AFontMatcher_match(
+         const uint32_t textLength,
+         uint32_t* _Nullable runLengthOut) __INTRODUCED_IN(29);
  
 -__END_DECLS
 +#ifdef __cplusplus
@@ -241,7 +239,7 @@ index dbfd61eb0..150bf0614 100644
  /******************************************************************
   *
 diff --git a/include/android/multinetwork.h b/include/android/multinetwork.h
-index c6d1c94c0..0fe08e010 100644
+index 424299d66..42d89184d 100644
 --- a/include/android/multinetwork.h
 +++ b/include/android/multinetwork.h
 @@ -28,9 +28,10 @@
@@ -257,9 +255,9 @@ index c6d1c94c0..0fe08e010 100644
  
  /**
   * The corresponding C type for android.net.Network#getNetworkHandle() return
-@@ -189,7 +190,9 @@ void android_res_cancel(int nsend_fd) __INTRODUCED_IN(29);
- 
- #endif /* __ANDROID_API__ >= 29 */
+@@ -181,7 +182,9 @@ int android_res_nresult(int fd,
+  */
+ void android_res_cancel(int nsend_fd) __INTRODUCED_IN(29);
  
 -__END_DECLS
 +#ifdef __cplusplus
@@ -269,7 +267,7 @@ index c6d1c94c0..0fe08e010 100644
  #endif  // ANDROID_MULTINETWORK_H
  
 diff --git a/include/android/native_window_jni.h b/include/android/native_window_jni.h
-index 3a77ffe86..a48d9e1ad 100644
+index 071ec798b..38e5cc6f9 100644
 --- a/include/android/native_window_jni.h
 +++ b/include/android/native_window_jni.h
 @@ -26,7 +26,6 @@
@@ -281,7 +279,7 @@ index 3a77ffe86..a48d9e1ad 100644
  #include <android/native_window.h>
  
 diff --git a/include/android/sharedmem.h b/include/android/sharedmem.h
-index 5f74682b4..c3c2762b7 100644
+index 7994aa991..253f2f734 100644
 --- a/include/android/sharedmem.h
 +++ b/include/android/sharedmem.h
 @@ -28,7 +28,6 @@
@@ -293,7 +291,7 @@ index 5f74682b4..c3c2762b7 100644
  /******************************************************************
   *
 diff --git a/include/android/sharedmem_jni.h b/include/android/sharedmem_jni.h
-index 13e56e6f0..2a0bcdd7d 100644
+index bbac785a3..5abc24508 100644
 --- a/include/android/sharedmem_jni.h
 +++ b/include/android/sharedmem_jni.h
 @@ -30,7 +30,6 @@
@@ -305,7 +303,7 @@ index 13e56e6f0..2a0bcdd7d 100644
  /******************************************************************
   *
 diff --git a/include/android/surface_control.h b/include/android/surface_control.h
-index cbcf6ec5c..2f988582b 100644
+index 27b880d2e..fe448c432 100644
 --- a/include/android/surface_control.h
 +++ b/include/android/surface_control.h
 @@ -26,14 +26,15 @@
@@ -324,11 +322,11 @@ index cbcf6ec5c..2f988582b 100644
 +extern "C" {
 +#endif
  
- #if __ANDROID_API__ >= 29
+ struct ASurfaceControl;
  
-@@ -437,6 +438,8 @@ void ASurfaceTransaction_setFrameRate(ASurfaceTransaction* transaction,
- 
- #endif // __ANDROID_API__ >= 30
+@@ -429,6 +430,8 @@ void ASurfaceTransaction_setFrameRate(ASurfaceTransaction* transaction,
+                                       ASurfaceControl* surface_control, float frameRate,
+                                       int8_t compatibility) __INTRODUCED_IN(30);
  
 -__END_DECLS
 +#ifdef __cplusplus
@@ -337,7 +335,7 @@ index cbcf6ec5c..2f988582b 100644
  
  #endif // ANDROID_SURFACE_CONTROL_H
 diff --git a/include/android/surface_texture.h b/include/android/surface_texture.h
-index dde7eaa0b..a5f811bc8 100644
+index b227b324f..470ca3fa2 100644
 --- a/include/android/surface_texture.h
 +++ b/include/android/surface_texture.h
 @@ -43,11 +43,12 @@
@@ -355,9 +353,9 @@ index dde7eaa0b..a5f811bc8 100644
  
  struct ASurfaceTexture;
  
-@@ -177,6 +178,8 @@ int64_t ASurfaceTexture_getTimestamp(ASurfaceTexture* st) __INTRODUCED_IN(28);
- 
- #endif /* __ANDROID_API__ >= 28 */
+@@ -173,6 +174,8 @@ void ASurfaceTexture_getTransformMatrix(ASurfaceTexture* st, float mtx[16]) __IN
+  */
+ int64_t ASurfaceTexture_getTimestamp(ASurfaceTexture* st) __INTRODUCED_IN(28);
  
 -__END_DECLS
 +#ifdef __cplusplus
@@ -366,7 +364,7 @@ index dde7eaa0b..a5f811bc8 100644
  
  #endif /* ANDROID_NATIVE_SURFACE_TEXTURE_H */
 diff --git a/include/android/surface_texture_jni.h b/include/android/surface_texture_jni.h
-index 2266d541f..f6ca5a934 100644
+index e40686d96..0ceaaac36 100644
 --- a/include/android/surface_texture_jni.h
 +++ b/include/android/surface_texture_jni.h
 @@ -30,7 +30,9 @@
@@ -378,11 +376,11 @@ index 2266d541f..f6ca5a934 100644
 +extern "C" {
 +#endif
  
- #if __ANDROID_API__ >= 28
- 
-@@ -54,6 +56,8 @@ ASurfaceTexture* ASurfaceTexture_fromSurfaceTexture(JNIEnv* env, jobject surface
- 
- #endif
+ /**
+  * Get a reference to the native ASurfaceTexture from the corresponding java object.
+@@ -50,6 +52,8 @@ __BEGIN_DECLS
+  */
+ ASurfaceTexture* ASurfaceTexture_fromSurfaceTexture(JNIEnv* env, jobject surfacetexture) __INTRODUCED_IN(28);
  
 -__END_DECLS
 +#ifdef __cplusplus
@@ -391,7 +389,7 @@ index 2266d541f..f6ca5a934 100644
  
  #endif /* ANDROID_NATIVE_SURFACE_TEXTURE_JNI_H */
 diff --git a/include/android/system_fonts.h b/include/android/system_fonts.h
-index 6fd7d2c0a..f6a55aa41 100644
+index b0bbb954a..2b43ff408 100644
 --- a/include/android/system_fonts.h
 +++ b/include/android/system_fonts.h
 @@ -65,7 +65,6 @@
@@ -411,11 +409,11 @@ index 6fd7d2c0a..f6a55aa41 100644
 +extern "C" {
 +#endif
  
- #if __ANDROID_API__ >= 29
- 
-@@ -130,7 +131,9 @@ AFont* _Nullable ASystemFontIterator_next(ASystemFontIterator* _Nonnull iterator
- 
- #endif // __ANDROID_API__ >= 29
+ /**
+  * ASystemFontIterator provides access to the system font configuration.
+@@ -126,7 +127,9 @@ void ASystemFontIterator_close(ASystemFontIterator* _Nullable iterator) __INTROD
+  */
+ AFont* _Nullable ASystemFontIterator_next(ASystemFontIterator* _Nonnull iterator) __INTRODUCED_IN(29);
  
 -__END_DECLS
 +#ifdef __cplusplus
@@ -425,7 +423,7 @@ index 6fd7d2c0a..f6a55aa41 100644
  #endif // ANDROID_SYSTEM_FONTS_H
  
 diff --git a/include/android/thermal.h b/include/android/thermal.h
-index 83582d679..6ba33e30c 100644
+index 6ec68d99f..279fc719e 100644
 --- a/include/android/thermal.h
 +++ b/include/android/thermal.h
 @@ -26,7 +26,6 @@
@@ -437,7 +435,7 @@ index 83582d679..6ba33e30c 100644
  /******************************************************************
   *
 diff --git a/include/android/trace.h b/include/android/trace.h
-index dbad6f6f2..96ddcb394 100644
+index dcefffb20..d69106dcd 100644
 --- a/include/android/trace.h
 +++ b/include/android/trace.h
 @@ -34,7 +34,6 @@
@@ -471,7 +469,7 @@ index 34236c0e6..8500bd1a8 100644
  
  #endif /* __LIBDISKUSAGE_DIRSIZE_H */
 diff --git a/libs/adbd_auth/include/adbd_auth.h b/libs/adbd_auth/include/adbd_auth.h
-index 8f834df62..29425f471 100644
+index 1dcf540cf..f5221c2fa 100644
 --- a/libs/adbd_auth/include/adbd_auth.h
 +++ b/libs/adbd_auth/include/adbd_auth.h
 @@ -18,14 +18,15 @@
@@ -489,51 +487,19 @@ index 8f834df62..29425f471 100644
 +#ifdef __cplusplus
 +extern "C" {
 +#endif
- #if !defined(__ANDROID__) || __ANDROID_API__ >= 30
  
  // The transport type of the device connection.
-@@ -187,4 +188,6 @@ enum AdbdAuthFeature : int32_t {
+ enum AdbTransportType : int32_t {
+@@ -185,4 +186,6 @@ enum AdbdAuthFeature : int32_t {
+  */
  bool adbd_auth_supports_feature(AdbdAuthFeature feature);
  
- #endif  //!__ANDROID__ || __ANDROID_API__ >= 30
 -__END_DECLS
 +#ifdef __cplusplus
 +}
 +#endif
-diff --git a/libs/binder/include/binder/Debug.h b/libs/binder/include/binder/Debug.h
-index 324e5c1c8..6e25be821 100644
---- a/libs/binder/include/binder/Debug.h
-+++ b/libs/binder/include/binder/Debug.h
-@@ -18,13 +18,14 @@
- #define ANDROID_BINDER_DEBUG_H
- 
- #include <stdint.h>
--#include <sys/cdefs.h>
- #include <sys/types.h>
- 
- namespace android {
- // ---------------------------------------------------------------------------
- 
--__BEGIN_DECLS
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
- 
- const char* stringForIndent(int32_t indentLevel);
- 
-@@ -41,7 +42,9 @@ void printHexData(int32_t indent, const void *buf, size_t length,
- 
- ssize_t getBinderKernelReferences(size_t count, uintptr_t* buf);
- 
--__END_DECLS
-+#ifdef __cplusplus
-+}
-+#endif
- 
- // ---------------------------------------------------------------------------
- } // namespace android
 diff --git a/libs/binder/ndk/include_ndk/android/binder_ibinder.h b/libs/binder/ndk/include_ndk/android/binder_ibinder.h
-index 33763d58b..0b192a4d8 100644
+index 8941e4996..a1f5a499b 100644
 --- a/libs/binder/ndk/include_ndk/android/binder_ibinder.h
 +++ b/libs/binder/ndk/include_ndk/android/binder_ibinder.h
 @@ -28,13 +28,14 @@
@@ -551,11 +517,11 @@ index 33763d58b..0b192a4d8 100644
 +extern "C" {
 +#endif
  
- #ifndef __ANDROID_API__
- #error Android builds must be compiled against a specific API. If this is an \
-@@ -643,6 +644,8 @@ binder_status_t AIBinder_setExtension(AIBinder* binder, AIBinder* ext) __INTRODU
- 
- #endif  //__ANDROID_API__ >= 30
+ typedef uint32_t binder_flags_t;
+ enum {
+@@ -713,6 +714,8 @@ AIBinder_Weak* AIBinder_Weak_clone(const AIBinder_Weak* weak);
+  */
+ bool AIBinder_Weak_lt(const AIBinder_Weak* lhs, const AIBinder_Weak* rhs);
  
 -__END_DECLS
 +#ifdef __cplusplus
@@ -564,7 +530,7 @@ index 33763d58b..0b192a4d8 100644
  
  /** @} */
 diff --git a/libs/binder/ndk/include_ndk/android/binder_ibinder_jni.h b/libs/binder/ndk/include_ndk/android/binder_ibinder_jni.h
-index cd1ff1fd7..422af2261 100644
+index 6880d86e1..1e3508264 100644
 --- a/libs/binder/ndk/include_ndk/android/binder_ibinder_jni.h
 +++ b/libs/binder/ndk/include_ndk/android/binder_ibinder_jni.h
 @@ -30,7 +30,9 @@
@@ -575,13 +541,13 @@ index cd1ff1fd7..422af2261 100644
 +#ifdef __cplusplus
 +extern "C" {
 +#endif
- #if __ANDROID_API__ >= 29
  
  /**
-@@ -68,6 +70,8 @@ __attribute__((warn_unused_result)) jobject AIBinder_toJavaBinder(JNIEnv* env, A
+  * Converts an android.os.IBinder object into an AIBinder* object.
+@@ -66,6 +68,8 @@ __attribute__((warn_unused_result)) AIBinder* AIBinder_fromJavaBinder(JNIEnv* en
+ __attribute__((warn_unused_result)) jobject AIBinder_toJavaBinder(JNIEnv* env, AIBinder* binder)
          __INTRODUCED_IN(29);
  
- #endif  //__ANDROID_API__ >= 29
 -__END_DECLS
 +#ifdef __cplusplus
 +}
@@ -589,7 +555,7 @@ index cd1ff1fd7..422af2261 100644
  
  /** @} */
 diff --git a/libs/binder/ndk/include_ndk/android/binder_parcel.h b/libs/binder/ndk/include_ndk/android/binder_parcel.h
-index a031e2973..7aed4a94e 100644
+index 527b15145..a32eeca9e 100644
 --- a/libs/binder/ndk/include_ndk/android/binder_parcel.h
 +++ b/libs/binder/ndk/include_ndk/android/binder_parcel.h
 @@ -28,14 +28,15 @@
@@ -607,13 +573,13 @@ index a031e2973..7aed4a94e 100644
 +#ifdef __cplusplus
 +extern "C" {
 +#endif
- #if __ANDROID_API__ >= 29
  
  /**
-@@ -1120,6 +1121,8 @@ binder_status_t AParcel_readByteArray(const AParcel* parcel, void* arrayData,
- // @END-PRIMITIVE-READ-WRITE
- 
- #endif  //__ANDROID_API__ >= 29
+  * This object represents a package of data that can be sent between processes. When transacting, an
+@@ -1163,6 +1164,8 @@ binder_status_t AParcel_appendFrom(const AParcel* from, AParcel* to, int32_t sta
+  * \return A parcel which is not related to any IBinder objects.
+  */
+ AParcel* AParcel_create() __INTRODUCED_IN(31);
 -__END_DECLS
 +#ifdef __cplusplus
 +}
@@ -621,7 +587,7 @@ index a031e2973..7aed4a94e 100644
  
  /** @} */
 diff --git a/libs/binder/ndk/include_ndk/android/binder_parcel_jni.h b/libs/binder/ndk/include_ndk/android/binder_parcel_jni.h
-index 65e170443..0e8f7c0c0 100644
+index 384d4f777..e4d22d1d8 100644
 --- a/libs/binder/ndk/include_ndk/android/binder_parcel_jni.h
 +++ b/libs/binder/ndk/include_ndk/android/binder_parcel_jni.h
 @@ -30,7 +30,9 @@
@@ -632,13 +598,13 @@ index 65e170443..0e8f7c0c0 100644
 +#ifdef __cplusplus
 +extern "C" {
 +#endif
- #if __ANDROID_API__ >= 30
  
  /**
-@@ -51,6 +53,8 @@ __attribute__((warn_unused_result)) AParcel* AParcel_fromJavaParcel(JNIEnv* env,
+  * Converts an android.os.Parcel object into an AParcel* object.
+@@ -49,6 +51,8 @@ __BEGIN_DECLS
+ __attribute__((warn_unused_result)) AParcel* AParcel_fromJavaParcel(JNIEnv* env, jobject parcel)
          __INTRODUCED_IN(30);
  
- #endif  //__ANDROID_API__ >= 30
 -__END_DECLS
 +#ifdef __cplusplus
 +}
@@ -646,7 +612,7 @@ index 65e170443..0e8f7c0c0 100644
  
  /** @} */
 diff --git a/libs/binder/ndk/include_ndk/android/binder_status.h b/libs/binder/ndk/include_ndk/android/binder_status.h
-index 3a55f9480..c0d098d43 100644
+index b4dc08a49..67d79a0fc 100644
 --- a/libs/binder/ndk/include_ndk/android/binder_status.h
 +++ b/libs/binder/ndk/include_ndk/android/binder_status.h
 @@ -28,9 +28,10 @@
@@ -659,23 +625,23 @@ index 3a55f9480..c0d098d43 100644
 +#ifdef __cplusplus
 +extern "C" {
 +#endif
- #if __ANDROID_API__ >= 29
  
- enum {
-@@ -276,6 +277,8 @@ void AStatus_deleteDescription(const char* description) __INTRODUCED_IN(30);
+ #ifndef __ANDROID_API__
+ #error Android builds must be compiled against a specific API. If this is an \
+@@ -289,6 +290,8 @@ void AStatus_deleteDescription(const char* description) __INTRODUCED_IN(30);
+  */
  void AStatus_delete(AStatus* status) __INTRODUCED_IN(29);
  
- #endif  //__ANDROID_API__ >= 29
 -__END_DECLS
 +#ifdef __cplusplus
 +}
 +#endif
  
  /** @} */
-diff --git a/libs/binder/ndk/include_platform/android/binder_context.h b/libs/binder/ndk/include_platform/android/binder_context.h
-index a99d5559e..a1b579c53 100644
---- a/libs/binder/ndk/include_platform/android/binder_context.h
-+++ b/libs/binder/ndk/include_platform/android/binder_context.h
+diff --git a/libs/binder/ndk/include_platform/android/binder_ibinder_platform.h b/libs/binder/ndk/include_platform/android/binder_ibinder_platform.h
+index e315c798e..1546d74fe 100644
+--- a/libs/binder/ndk/include_platform/android/binder_ibinder_platform.h
++++ b/libs/binder/ndk/include_platform/android/binder_ibinder_platform.h
 @@ -18,7 +18,9 @@
  
  #include <android/binder_ibinder.h>
@@ -685,9 +651,9 @@ index a99d5559e..a1b579c53 100644
 +extern "C" {
 +#endif
  
- /**
-  * Makes calls to AIBinder_getCallingSid work if the kernel supports it. This
-@@ -44,4 +46,6 @@ __attribute__((weak)) void AIBinder_setRequestingSid(AIBinder* binder, bool requ
+ // platform values for binder_flags_t
+ enum {
+@@ -55,4 +57,6 @@ __attribute__((weak)) void AIBinder_setRequestingSid(AIBinder* binder, bool requ
   */
  __attribute__((weak, warn_unused_result)) const char* AIBinder_getCallingSid() __INTRODUCED_IN(31);
  
@@ -696,7 +662,7 @@ index a99d5559e..a1b579c53 100644
 +}
 +#endif
 diff --git a/libs/binder/ndk/include_platform/android/binder_manager.h b/libs/binder/ndk/include_platform/android/binder_manager.h
-index 2784aa823..18501c2a7 100644
+index 066847224..af51c50d0 100644
 --- a/libs/binder/ndk/include_platform/android/binder_manager.h
 +++ b/libs/binder/ndk/include_platform/android/binder_manager.h
 @@ -18,9 +18,10 @@
@@ -712,16 +678,16 @@ index 2784aa823..18501c2a7 100644
  
  /**
   * This registers the service with the default service manager under this instance name. This does
-@@ -94,4 +95,6 @@ __attribute__((warn_unused_result)) AIBinder* AServiceManager_waitForService(con
+@@ -171,4 +172,6 @@ bool AServiceManager_tryUnregister() __INTRODUCED_IN(31);
   */
- bool AServiceManager_isDeclared(const char* instance) __INTRODUCED_IN(31);
+ void AServiceManager_reRegister() __INTRODUCED_IN(31);
  
 -__END_DECLS
 +#ifdef __cplusplus
 +}
 +#endif
 diff --git a/libs/binder/ndk/include_platform/android/binder_parcel_platform.h b/libs/binder/ndk/include_platform/android/binder_parcel_platform.h
-index 114a78123..f6fa0b451 100644
+index 637244971..487731508 100644
 --- a/libs/binder/ndk/include_platform/android/binder_parcel_platform.h
 +++ b/libs/binder/ndk/include_platform/android/binder_parcel_platform.h
 @@ -18,7 +18,9 @@
@@ -733,11 +699,11 @@ index 114a78123..f6fa0b451 100644
 +extern "C" {
 +#endif
  
- #if defined(__ANDROID_APEX__) || defined(__ANDROID_VNDK__)
- #error this is only for platform code
-@@ -33,4 +35,6 @@ __BEGIN_DECLS
-  */
- bool AParcel_getAllowFds(const AParcel*);
+ #if !defined(__ANDROID_APEX__) && !defined(__ANDROID_VNDK__)
+ 
+@@ -46,4 +48,6 @@ bool AParcel_getAllowFds(const AParcel*);
+ void AParcel_markSensitive(const AParcel* parcel);
+ #endif
  
 -__END_DECLS
 +#ifdef __cplusplus
@@ -953,7 +919,7 @@ index e759513a6..a15dc9c37 100644
  
  #endif // ANDROID_DATA_SPACE_H
 diff --git a/libs/nativewindow/include/android/hardware_buffer.h b/libs/nativewindow/include/android/hardware_buffer.h
-index ae5e47ba9..d533d83c3 100644
+index dcb05b553..f3ba02ac6 100644
 --- a/libs/nativewindow/include/android/hardware_buffer.h
 +++ b/libs/nativewindow/include/android/hardware_buffer.h
 @@ -47,11 +47,12 @@
@@ -971,9 +937,9 @@ index ae5e47ba9..d533d83c3 100644
  
  /**
   * Buffer pixel formats.
-@@ -542,7 +543,9 @@ int AHardwareBuffer_lockAndGetInfo(AHardwareBuffer* buffer, uint64_t usage,
+@@ -535,7 +536,9 @@ int AHardwareBuffer_lockAndGetInfo(AHardwareBuffer* buffer, uint64_t usage,
+         int32_t fence, const ARect* rect, void** outVirtualAddress,
          int32_t* outBytesPerPixel, int32_t* outBytesPerStride) __INTRODUCED_IN(29);
- #endif // __ANDROID_API__ >= 29
  
 -__END_DECLS
 +#ifdef __cplusplus
@@ -1010,7 +976,7 @@ index 88772a92f..07b48e958 100644
  
  #endif // ANDROID_HDR_METADATA_H
 diff --git a/libs/nativewindow/include/android/native_window.h b/libs/nativewindow/include/android/native_window.h
-index 36aad2ece..25123d8e9 100644
+index a3a45e370..834a68f3f 100644
 --- a/libs/nativewindow/include/android/native_window.h
 +++ b/libs/nativewindow/include/android/native_window.h
 @@ -34,7 +34,6 @@
