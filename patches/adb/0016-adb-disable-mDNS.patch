@@ -1,19 +1,20 @@
-From 09ef5e32470f990a02ffaa6e75c497c9a8643690 Mon Sep 17 00:00:00 2001
+From 8027ec77633890c20b2cec0d35e732ac83a48365 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?=C4=90o=C3=A0n=20Tr=E1=BA=A7n=20C=C3=B4ng=20Danh?=
  <congdanhqx@gmail.com>
-Date: Sun, 1 Nov 2020 15:09:53 +0700
+Date: Sun, 1 Nov 2020 15:51:35 +0700
 Subject: [PATCH] adb: disable mDNS
 
 ---
  adb.cpp         | 15 ---------------
+ client/main.cpp |  2 --
  socket_spec.cpp | 25 +------------------------
- 2 files changed, 1 insertion(+), 39 deletions(-)
+ 3 files changed, 1 insertion(+), 41 deletions(-)
 
 diff --git a/adb.cpp b/adb.cpp
-index daae0e10..ebc65337 100644
+index e829908a..23360304 100644
 --- a/adb.cpp
 +++ b/adb.cpp
-@@ -1077,21 +1077,6 @@ void adb_set_reject_kill_server(bool value) {
+@@ -1102,21 +1102,6 @@ void adb_set_reject_kill_server(bool value) {
  }
  
  static bool handle_mdns_request(std::string_view service, int reply_fd) {
@@ -35,8 +36,24 @@ index daae0e10..ebc65337 100644
      return false;
  }
  
+diff --git a/client/main.cpp b/client/main.cpp
+index c74a5cc5..b402f834 100644
+--- a/client/main.cpp
++++ b/client/main.cpp
+@@ -68,11 +68,9 @@ void adb_server_cleanup() {
+     //   1. close_smartsockets, so that we don't get any new clients
+     //   2. kick_all_transports, to avoid writing only part of a packet to a transport.
+     //   3. usb_cleanup, to tear down the USB stack.
+-    //   4. mdns_cleanup, to tear down mdns stack.
+     close_smartsockets();
+     kick_all_transports();
+     usb_cleanup();
+-    mdns_cleanup();
+ }
+ 
+ static void intentionally_leak() {
 diff --git a/socket_spec.cpp b/socket_spec.cpp
-index 5cad70d0..fe079337 100644
+index 91ebb360..3cf24e17 100644
 --- a/socket_spec.cpp
 +++ b/socket_spec.cpp
 @@ -195,30 +195,7 @@ bool socket_spec_connect(unique_fd* fd, std::string_view address, int* port, std
@@ -45,7 +62,7 @@ index 5cad70d0..fe079337 100644
          } else {
 -#if ADB_HOST
 -            // Check if the address is an mdns service we can connect to.
--            if (auto mdns_info = mdns_get_connect_service_info(address.substr(4));
+-            if (auto mdns_info = mdns_get_connect_service_info(std::string(address.substr(4)));
 -                mdns_info != std::nullopt) {
 -                fd->reset(network_connect(mdns_info->addr, mdns_info->port, SOCK_STREAM, 0, error));
 -                if (fd->get() != -1) {
