@@ -1,4 +1,4 @@
-From b4f85d50d0f133dcafe43fb5aec0bb9eeac28782 Mon Sep 17 00:00:00 2001
+From bc72891f83ba8784bf7a1f86f982e6c194d9549a Mon Sep 17 00:00:00 2001
 From: John Zimmermann <me@johnnynator.dev>
 Date: Thu, 18 Mar 2021 12:22:51 +0100
 Subject: [PATCH] Don't use the internal glibc header sys/cdefs.h
@@ -64,7 +64,7 @@ index b7284b08e..b85b6e542 100644
  
  #include <android-base/unique_fd.h>
 diff --git a/debuggerd/include/debuggerd/handler.h b/debuggerd/include/debuggerd/handler.h
-index 254ed4f7b..5afdc3fbd 100644
+index bc08327a1..862a3bddd 100644
 --- a/debuggerd/include/debuggerd/handler.h
 +++ b/debuggerd/include/debuggerd/handler.h
 @@ -20,11 +20,12 @@
@@ -82,7 +82,7 @@ index 254ed4f7b..5afdc3fbd 100644
  
  // Forward declare these classes so not everyone has to include GWP-ASan
  // headers.
-@@ -79,4 +80,6 @@ static void __attribute__((__unused__)) debuggerd_register_handlers(struct sigac
+@@ -80,4 +81,6 @@ static void __attribute__((__unused__)) debuggerd_register_handlers(struct sigac
    sigaction(BIONIC_SIGNAL_DEBUGGER, action, nullptr);
  }
  
@@ -103,7 +103,7 @@ index 07e7e992c..02b7eefdb 100644
  
  std::string get_process_name(pid_t pid);
 diff --git a/fs_mgr/fs_mgr_priv_boot_config.h b/fs_mgr/fs_mgr_priv_boot_config.h
-index 417fb380b..6528248a9 100644
+index 6a3840131..c081c3da2 100644
 --- a/fs_mgr/fs_mgr_priv_boot_config.h
 +++ b/fs_mgr/fs_mgr_priv_boot_config.h
 @@ -17,7 +17,6 @@
@@ -127,7 +127,7 @@ index adec38329..40e852489 100644
  #include <sys/ioctl.h>
  #include <sys/types.h>
 diff --git a/init/reboot.cpp b/init/reboot.cpp
-index e3aaa38e9..672f90460 100644
+index d9acee57f..464746d46 100644
 --- a/init/reboot.cpp
 +++ b/init/reboot.cpp
 @@ -23,7 +23,6 @@
@@ -317,7 +317,7 @@ index aa1435a08..160792a37 100644
  
  #endif /* __CUTILS_STR_PARMS_H */
 diff --git a/libcutils/include/cutils/trace.h b/libcutils/include/cutils/trace.h
-index b469e40e7..771c48336 100644
+index f7d7ccc3c..d4666d8c7 100644
 --- a/libcutils/include/cutils/trace.h
 +++ b/libcutils/include/cutils/trace.h
 @@ -27,12 +27,13 @@ using namespace std;
@@ -336,7 +336,7 @@ index b469e40e7..771c48336 100644
  
  /**
   * The ATRACE_TAG macro can be defined before including this header to trace
-@@ -247,6 +248,8 @@ static inline void atrace_int64(uint64_t tag, const char* name, int64_t value)
+@@ -239,6 +240,8 @@ static inline void atrace_int64(uint64_t tag, const char* name, int64_t value)
      }
  }
  
@@ -490,7 +490,7 @@ index 427d71b40..62984037d 100644
  
  #include <map>
 diff --git a/libprocessgroup/cgrouprc/include/android/cgrouprc.h b/libprocessgroup/cgrouprc/include/android/cgrouprc.h
-index 9a799547d..7bd3351a2 100644
+index 100d60ea9..e65aa4a7f 100644
 --- a/libprocessgroup/cgrouprc/include/android/cgrouprc.h
 +++ b/libprocessgroup/cgrouprc/include/android/cgrouprc.h
 @@ -18,7 +18,9 @@
@@ -504,7 +504,7 @@ index 9a799547d..7bd3351a2 100644
  
  // For host builds, __INTRODUCED_IN is not defined.
  #ifndef __INTRODUCED_IN
-@@ -90,4 +92,6 @@ __attribute__((warn_unused_result)) const char* ACgroupController_getName(const
+@@ -91,4 +93,6 @@ __attribute__((warn_unused_result)) const char* ACgroupController_getName(const
  __attribute__((warn_unused_result)) const char* ACgroupController_getPath(const ACgroupController*)
          __INTRODUCED_IN(29);
  
@@ -513,7 +513,7 @@ index 9a799547d..7bd3351a2 100644
 +}
 +#endif
 diff --git a/libprocessgroup/include/processgroup/processgroup.h b/libprocessgroup/include/processgroup/processgroup.h
-index 4aa439a6f..0621fca48 100644
+index fa2642d86..1dc376d4f 100644
 --- a/libprocessgroup/include/processgroup/processgroup.h
 +++ b/libprocessgroup/include/processgroup/processgroup.h
 @@ -16,12 +16,13 @@
@@ -532,7 +532,7 @@ index 4aa439a6f..0621fca48 100644
  
  static constexpr const char* CGROUPV2_CONTROLLER_NAME = "cgroup2";
  
-@@ -67,4 +68,6 @@ void removeAllProcessGroups(void);
+@@ -71,4 +72,6 @@ bool getAttributePathForTask(const std::string& attr_name, int tid, std::string*
  
  #endif // __ANDROID_VNDK__
  
@@ -752,7 +752,7 @@ index c77d9ffe6..00bd56242 100644
  }
  
 diff --git a/llkd/include/llkd.h b/llkd/include/llkd.h
-index 4b20a56da..fa18f65da 100644
+index 0822a3e2b..a4e3037c1 100644
 --- a/llkd/include/llkd.h
 +++ b/llkd/include/llkd.h
 @@ -22,9 +22,10 @@
@@ -769,7 +769,7 @@ index 4b20a56da..fa18f65da 100644
  bool llkInit(const char* threadname); /* threadname NULL, not spawned */
  unsigned llkCheckMilliseconds(void);
 @@ -63,17 +64,25 @@ unsigned llkCheckMilliseconds(void);
- #define LLK_IGNORELIST_STACK_DEFAULT    "init,lmkd.llkd,llkd,keystore,ueventd,apexd"
+ #define LLK_IGNORELIST_STACK_DEFAULT    "init,lmkd.llkd,llkd,keystore,keystore2,ueventd,apexd"
  /* clang-format on */
  
 -__END_DECLS
@@ -799,7 +799,7 @@ index 4b20a56da..fa18f65da 100644
  
  /* clang-format off */
 diff --git a/llkd/libllkd.cpp b/llkd/libllkd.cpp
-index a24d900dc..95ef0c9c0 100644
+index c4c58eef3..2004896fa 100644
 --- a/llkd/libllkd.cpp
 +++ b/llkd/libllkd.cpp
 @@ -25,7 +25,6 @@
