@@ -87,7 +87,7 @@ Release Page][release-page].
 
 # See also
 
-The Arch Linux [android-tools package][arch-linux] by Anatol Pomozov
+The Arch Linux [android-tools package][arch-linux] by [Anatol Pomozov][anatol.pomozov]
 which inspired this project. Most definitions in the `CMakeLists.txt`
 have been copied from Anatol's ruby script.
 
@@ -108,3 +108,4 @@ have been copied from Anatol's ruby script.
 [brotli]: https://github.com/google/brotli
 [zstd]: https://facebook.github.io/zstd/
 [lz4]: https://github.com/lz4/lz4
+[anatol.pomozov]: https://github.com/anatol
