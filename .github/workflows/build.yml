@@ -1,0 +1,106 @@
+
+name: build
+
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  #push:
+  #  branches: [ master ]
+  #pull_request:
+  #  branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # for single tests (comment all the other defs)
+        #os: ["opensuse/leap:15.3"]
+        #pkgs: ["clang gcc10 gcc10-c++"]
+        #vars1: ["CC=clang CXX=clang++"]
+        os: ["opensuse/leap:15.3"]
+        pkgs: ["gcc10 gcc10-c++"]
+        vars1: ["CC=gcc-10 CXX=g++-10"]
+        include:
+          - os: "opensuse/leap:15.3"
+            pkgs: "clang gcc10 gcc10-c++"
+            vars1: "CC=clang CXX=clang++"
+          - os: "opensuse/tumbleweed"
+            pkgs: "gcc gcc-c++"
+            vars1: "CFLAGS='-Wno-error=array-parameter -Wno-error=array-bounds -Wno-error=stringop-overflow'"
+            vars2: "CXXFLAGS=\"$CFLAGS\""
+          - os: "opensuse/tumbleweed"
+            pkgs: clang
+            vars1: "CC=clang CXX=clang++"
+          - os: "archlinux:base"
+            pkgs: gcc
+            vars1: "CFLAGS='-Wno-error=array-parameter -Wno-error=array-bounds -Wno-error=stringop-overflow'"
+            vars2: "CXXFLAGS=\"$CFLAGS\""
+          - os: "archlinux:base"
+            pkgs: clang
+            vars1: "CC=clang CXX=clang++"
+          # build fails
+          #- os: "ubuntu:20.04"
+          #  pkgs: "gcc-10 g++-10"
+          #  vars1: "CC=gcc-10 CXX=g++-10"
+          # build fails
+          #- os: "ubuntu:20.04"
+          #  pkgs: clang
+          #  vars1: "CC=clang CXX=clang++"
+
+    container:
+      image: ${{ matrix.os }}
+
+    steps:
+      - name: prep opensuse
+        if: startsWith(matrix.os, 'opensuse')
+        run: |
+          zypper -n ref
+          zypper -n in ${{ matrix.pkgs }} cmake git go gtest pcre2-devel pkgconfig \
+            'pkgconfig(fmt)' 'pkgconfig(libbrotlicommon)' 'pkgconfig(liblz4)' \
+            'pkgconfig(libunwind-generic)' 'pkgconfig(libusb-1.0)' \
+            'pkgconfig(libzstd)' 'pkgconfig(protobuf)'
+
+      - name: prep archlinux
+        if: startsWith(matrix.os, 'archlinux')
+        run: |
+          pacman -Syu --needed --noconfirm \
+            ${{ matrix.pkgs }} brotli cmake fmt git go gtest libunwind \
+            libusb lz4 make pcre2 pkgconfig protobuf zstd
+
+      - name: prep ubuntu
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -yq \
+            ${{ matrix.pkgs }} cmake git golang libbrotli-dev libfmt-dev \
+            libgtest-dev liblz4-dev libpcre2-dev libprotobuf-dev libunwind-dev \
+            libusb-1.0-0-dev libzstd-dev make pkg-config
+
+      # required for patches
+      - name: git config
+        run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: build & install
+        run: |
+          test -n "${{ matrix.vars1 }}" && export ${{ matrix.vars1 }}
+          test -n "${{ matrix.vars2 }}" && export ${{ matrix.vars2 }}
+          mkdir build && cd build
+          cmake -DCMAKE_C_FLAGS="$CFLAGS" -DCMAKE_CXX_FLAGS="$CXXFLAGS" -DCMAKE_BUILD_TYPE=Release -DCMAKE_VERBOSE_MAKEFILE=ON ..
+          make -O VERBOSE=1 -j
+          echo -e "\n### make install ###\n"
+          make install
+          echo -e "\n### make package_source ###\n"
+          make package_source
+          echo -e "\n### all done ###\n"
