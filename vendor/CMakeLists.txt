@@ -1,7 +1,6 @@
 # TODO: https://cmake.org/cmake/help/v3.0/module/ExternalProject.html
 # To patch the submodule
 
-add_subdirectory(boringssl EXCLUDE_FROM_ALL)
 set(android-vendored
 	avb
 	adb
@@ -15,7 +14,8 @@ set(android-vendored
 	selinux
 	f2fs-tools
 	e2fsprogs
-	incremental_delivery)
+	incremental_delivery
+	boringssl)
 
 if(EXISTS "${ANDROID_PATCH_DIR}/")
 	execute_process(COMMAND git submodule --quiet update)
@@ -33,6 +33,7 @@ if(EXISTS "${ANDROID_PATCH_DIR}/")
 	endforeach(v)
 endif()
 
+add_subdirectory(boringssl EXCLUDE_FROM_ALL)
 find_package(Protobuf REQUIRED)
 find_package(fmt REQUIRED)
 include_directories(${fmt_INCLUDE_DIRS})
