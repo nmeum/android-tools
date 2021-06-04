@@ -67,6 +67,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_FILE_OFFSET_BITS=64")
 install(TARGETS adb fastboot "${ANDROID_MKE2FS_NAME}"
 	simg2img img2simg append2simg DESTINATION bin)
 
+# Install some python3 tools
+install(PROGRAMS avb/aftltool.py RENAME aftltool DESTINATION bin)
+install(PROGRAMS avb/avbtool.py RENAME avbtool DESTINATION bin)
+install(PROGRAMS mkbootimg/mkbootimg.py RENAME mkbootimg DESTINATION bin)
+
 # Install common completion files.
 install(FILES adb/adb.bash RENAME adb DESTINATION "${COMPLETION_COMMON_DIR}")
 install(FILES core/fastboot/fastboot.bash RENAME fastboot DESTINATION "${COMPLETION_COMMON_DIR}")
