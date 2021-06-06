@@ -73,5 +73,6 @@ install(FILES adb/adb.bash RENAME adb DESTINATION "${COMPLETION_COMMON_DIR}")
 install(FILES core/fastboot/fastboot.bash RENAME fastboot DESTINATION "${COMPLETION_COMMON_DIR}")
 
 # Install license files.
-set(LICENSE_DIR "${CMAKE_INSTALL_FULL_DATADIR}/licenses/android-tools")
-install(FILES core/NOTICE RENAME AOSP_LICENSE DESTINATION "${LICENSE_DIR}")
+# Disabled for now, see https://github.com/nmeum/android-tools/issues/30#issuecomment-855365636
+#set(LICENSE_DIR "${CMAKE_INSTALL_FULL_DATADIR}/licenses/android-tools")
+#install(FILES core/NOTICE RENAME AOSP_LICENSE DESTINATION "${LICENSE_DIR}")
