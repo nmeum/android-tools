@@ -11,7 +11,7 @@ jobs:
         run: |
           sudo apt-get update
           DEBIAN_FRONTEND=noninteractive sudo apt-get install -yq \
-            ${{ matrix.pkgs }} cmake git golang libbrotli-dev libfmt-dev \
+            ${{ matrix.pkgs }} cmake git golang libbrotli-dev \
             libgtest-dev liblz4-dev libpcre2-dev libprotobuf-dev libunwind-dev \
             libusb-1.0-0-dev libzstd-dev make pkg-config
       - name: checkout
@@ -71,7 +71,7 @@ jobs:
         run: |
           zypper -n ref
           zypper -n in ${{ matrix.pkgs }} cmake git go gtest pcre2-devel pkgconfig \
-            'pkgconfig(fmt)' 'pkgconfig(libbrotlicommon)' 'pkgconfig(liblz4)' \
+            'pkgconfig(libbrotlicommon)' 'pkgconfig(liblz4)' \
             'pkgconfig(libunwind-generic)' 'pkgconfig(libusb-1.0)' \
             'pkgconfig(libzstd)' 'pkgconfig(protobuf)' ninja
 
@@ -79,7 +79,7 @@ jobs:
         if: startsWith(matrix.os, 'archlinux')
         run: |
           pacman -Syu --needed --noconfirm \
-            ${{ matrix.pkgs }} brotli cmake fmt git go gtest libunwind \
+            ${{ matrix.pkgs }} brotli cmake git go gtest libunwind \
             libusb lz4 pcre2 pkgconfig protobuf zstd ninja
 
       - name: prep ubuntu
@@ -87,7 +87,7 @@ jobs:
         run: |
           apt-get update
           DEBIAN_FRONTEND=noninteractive apt-get install -yq \
-            ${{ matrix.pkgs }} cmake git golang libbrotli-dev libfmt-dev \
+            ${{ matrix.pkgs }} cmake git golang libbrotli-dev \
             libgtest-dev liblz4-dev libpcre2-dev libprotobuf-dev libunwind-dev \
             libusb-1.0-0-dev libzstd-dev pkg-config protobuf-compiler ninja-build
 
@@ -95,7 +95,7 @@ jobs:
         if: startsWith(matrix.os, 'alpine')
         run: |
           apk add build-base pcre2-dev linux-headers libusb-dev gtest-dev samurai \
-          go git perl cmake protobuf-dev brotli-dev zstd-dev lz4-dev fmt-dev
+          go git perl cmake protobuf-dev brotli-dev zstd-dev lz4-dev
 
       # required for patches
       - name: git config

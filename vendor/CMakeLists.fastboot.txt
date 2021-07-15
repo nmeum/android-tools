@@ -45,6 +45,7 @@ target_include_directories(libfsmgr PRIVATE
 	core/fs_mgr/liblp/include libbase/include
 	extras/ext4_utils/include core/libsparse/include
 	boringssl/include)
+target_link_libraries(libfsmgr PUBLIC fmt::fmt)
 
 add_library(libselinux STATIC
 	selinux/libselinux/src/booleans.c
@@ -134,4 +135,4 @@ target_compile_definitions(fastboot PRIVATE
 target_link_libraries(fastboot
 	libsparse libzip libcutils liblog libfsmgr libutil
 	libbase libext4 libselinux libsepol libdiagnoseusb crypto
-	z pcre2-8 pthread dl fmt::fmt)
+	z pcre2-8 pthread dl)

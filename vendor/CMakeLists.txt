@@ -15,6 +15,7 @@ set(android-vendored
 	f2fs-tools
 	e2fsprogs
 	incremental_delivery
+	fmtlib
 	boringssl)
 
 if(EXISTS "${ANDROID_PATCH_DIR}/")
@@ -34,9 +35,8 @@ if(EXISTS "${ANDROID_PATCH_DIR}/")
 endif()
 
 add_subdirectory(boringssl EXCLUDE_FROM_ALL)
+add_subdirectory(fmtlib EXCLUDE_FROM_ALL)
 find_package(Protobuf REQUIRED)
-find_package(fmt REQUIRED)
-include_directories(${fmt_INCLUDE_DIRS})
 include_directories(${PROTOBUF_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 

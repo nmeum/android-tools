@@ -58,3 +58,7 @@
 	shallow = true
 	path = vendor/incremental_delivery
 	url = https://android.googlesource.com/platform/system/incremental_delivery
+[submodule "vendor/fmtlib"]
+	shallow = true
+	path = vendor/fmtlib
+	url = https://android.googlesource.com/platform/external/fmtlib.git

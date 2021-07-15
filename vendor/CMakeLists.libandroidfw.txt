@@ -34,3 +34,4 @@ target_include_directories(libandroidfw PUBLIC
 	native/include
 	libziparchive/include
 	incremental_delivery/incfs/util/include)
+target_link_libraries(libandroidfw PUBLIC fmt::fmt)

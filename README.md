@@ -49,7 +49,6 @@ The following libraries are required by android-tools:
 5. [brotli][brotli]
 6. [zstd][zstd]
 7. [lz4][lz4]
-8. [fmt][fmt]
 
 Additionally the following software is required at compile-time:
 
@@ -109,5 +108,4 @@ have been copied from Anatol's ruby script.
 [brotli]: https://github.com/google/brotli
 [zstd]: https://facebook.github.io/zstd/
 [lz4]: https://github.com/lz4/lz4
-[fmt]: https://github.com/fmtlib/fmt
 [anatol.pomozov]: https://github.com/anatol
