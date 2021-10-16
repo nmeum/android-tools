@@ -1,4 +1,4 @@
-From 1cec87c358a34906811bf64900c309488678aa30 Mon Sep 17 00:00:00 2001
+From 6dbde5f1925e8b3e089dc34c330f044ccc3385c4 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <tempel@uni-bremen.de>
 Date: Mon, 28 Dec 2020 08:46:23 +0100
 Subject: [PATCH] pairing_auth: include <cstring> for memcpy

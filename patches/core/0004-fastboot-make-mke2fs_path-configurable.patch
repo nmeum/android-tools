@@ -1,4 +1,4 @@
-From fb6d0026658f29b3dcb8afde08ebe964e74ce0ce Mon Sep 17 00:00:00 2001
+From 461112433a5e9714fbf3efe668ea42873f84cc98 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Mon, 18 Jun 2018 23:25:14 +0200
 Subject: [PATCH] fastboot: make mke2fs_path configurable

@@ -1,19 +1,19 @@
-From daeea876e2d78b870c38d13d2f6a3afd01bd1b11 Mon Sep 17 00:00:00 2001
+From f68ef5cc81b1823b9e47ee33d65b0130f9bcc192 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?=C4=90o=C3=A0n=20Tr=E1=BA=A7n=20C=C3=B4ng=20Danh?=
  <congdanhqx@gmail.com>
-Date: Sun, 1 Nov 2020 12:21:46 +0700
+Date: Sun, 1 Nov 2020 08:30:09 +0700
 Subject: [PATCH] PosixUtils: don't use reserved name std{out,err} for
  variables
 
 musl's std{out,err} are macros.
 ---
- libs/androidfw/PosixUtils.cpp                 | 36 +++++++++----------
- libs/androidfw/include/androidfw/PosixUtils.h |  4 +--
- libs/androidfw/tests/PosixUtils_test.cpp      |  4 +--
- 3 files changed, 22 insertions(+), 22 deletions(-)
+ libs/androidfw/PosixUtils.cpp                 | 40 +++++++++----------
+ libs/androidfw/include/androidfw/PosixUtils.h |  4 +-
+ libs/androidfw/tests/PosixUtils_test.cpp      |  4 +-
+ 3 files changed, 24 insertions(+), 24 deletions(-)
 
 diff --git a/libs/androidfw/PosixUtils.cpp b/libs/androidfw/PosixUtils.cpp
-index f1ab1493012..d7a2f5a8920 100644
+index 4ec525a01da5..c01bfcd29eb8 100644
 --- a/libs/androidfw/PosixUtils.cpp
 +++ b/libs/androidfw/PosixUtils.cpp
 @@ -50,17 +50,17 @@ namespace android {
@@ -40,7 +40,7 @@ index f1ab1493012..d7a2f5a8920 100644
      return nullptr;
    }
  
-@@ -88,12 +88,12 @@ std::unique_ptr<ProcResult> ExecuteBinary(const std::vector<std::string>& argv)
+@@ -89,12 +89,12 @@ std::unique_ptr<ProcResult> ExecuteBinary(const std::vector<std::string>& argv)
          exit(1);
        }
  
@@ -57,7 +57,7 @@ index f1ab1493012..d7a2f5a8920 100644
          abort();
        }
        execvp(argv0[0], const_cast<char* const*>(argv0));
-@@ -101,8 +101,8 @@ std::unique_ptr<ProcResult> ExecuteBinary(const std::vector<std::string>& argv)
+@@ -102,23 +102,23 @@ std::unique_ptr<ProcResult> ExecuteBinary(const std::vector<std::string>& argv)
        abort();
      default: // parent
        free(argv0);
@@ -66,9 +66,13 @@ index f1ab1493012..d7a2f5a8920 100644
 +      close(fdout[1]);
 +      close(fderr[1]);
        int status;
-       wait(&status);
+       waitpid(pid, &status, 0);
        if (!WIFEXITED(status)) {
-@@ -110,12 +110,12 @@ std::unique_ptr<ProcResult> ExecuteBinary(const std::vector<std::string>& argv)
+-          close(stdout[0]);
+-          close(stderr[0]);
++          close(fdout[0]);
++          close(fderr[0]);
+           return nullptr;
        }
        std::unique_ptr<ProcResult> result(new ProcResult());
        result->status = status;
@@ -88,7 +92,7 @@ index f1ab1493012..d7a2f5a8920 100644
    }
  }
 diff --git a/libs/androidfw/include/androidfw/PosixUtils.h b/libs/androidfw/include/androidfw/PosixUtils.h
-index 8fc3ee2733c..c6bb3fb4275 100644
+index 8fc3ee2733c7..c6bb3fb42757 100644
 --- a/libs/androidfw/include/androidfw/PosixUtils.h
 +++ b/libs/androidfw/include/androidfw/PosixUtils.h
 @@ -23,8 +23,8 @@ namespace util {
@@ -103,7 +107,7 @@ index 8fc3ee2733c..c6bb3fb4275 100644
  
  // Fork, exec and wait for an external process. Return nullptr if the process could not be launched,
 diff --git a/libs/androidfw/tests/PosixUtils_test.cpp b/libs/androidfw/tests/PosixUtils_test.cpp
-index cf97f87a416..44816b279c1 100644
+index cf97f87a4163..44816b279c1a 100644
 --- a/libs/androidfw/tests/PosixUtils_test.cpp
 +++ b/libs/androidfw/tests/PosixUtils_test.cpp
 @@ -30,14 +30,14 @@ TEST(PosixUtilsTest, AbsolutePathToBinary) {

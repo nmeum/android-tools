@@ -1,4 +1,4 @@
-From 9e3e43f8654c3d962a03037fdba0473dc56db813 Mon Sep 17 00:00:00 2001
+From 08d06683b56fb77e021be5ccfa245a5efc9f7afa Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 19 Jun 2018 09:44:06 +0200
 Subject: [PATCH] adb.cpp: fix warning regarding execl(3) invocation
@@ -12,10 +12,10 @@ warning: missing sentinel in function call [-Wformat=]
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/adb.cpp b/adb.cpp
-index 08986b77..8fcb4c62 100644
+index d0602ecf..24ac3a24 100644
 --- a/adb.cpp
 +++ b/adb.cpp
-@@ -924,7 +924,7 @@ int launch_server(const std::string& socket_spec) {
+@@ -979,7 +979,7 @@ int launch_server(const std::string& socket_spec) {
          snprintf(reply_fd, sizeof(reply_fd), "%d", pipe_write.get());
          // child process
          int result = execl(path.c_str(), "adb", "-L", socket_spec.c_str(), "fork-server", "server",

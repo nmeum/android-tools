@@ -1,4 +1,4 @@
-From 105d81777289abc390e425fe7afbaa2123a85edb Mon Sep 17 00:00:00 2001
+From a9011e05e3817dd9384d374b9c552a08b29b696f Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Fri, 28 May 2021 07:08:35 +0200
 Subject: [PATCH] adb_mdns: Don't use _Nonnull

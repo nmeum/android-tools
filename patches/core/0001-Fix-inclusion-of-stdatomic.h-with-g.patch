@@ -1,4 +1,4 @@
-From d8915a02a80b1e7719b71d9af8d4909fbab2bea9 Mon Sep 17 00:00:00 2001
+From 448fa2a3c470ff3a58135458fb34d33732600f67 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 16:30:30 +0100
 Subject: [PATCH] Fix inclusion of stdatomic.h with g++
@@ -28,7 +28,7 @@ index 0c88bfedd..84606e307 100644
  #ifndef ANDROID_ATOMIC_INLINE
  #define ANDROID_ATOMIC_INLINE static inline
 diff --git a/libcutils/include/cutils/trace.h b/libcutils/include/cutils/trace.h
-index 793e2ce8a..b469e40e7 100644
+index ef426ff7b..f7d7ccc3c 100644
 --- a/libcutils/include/cutils/trace.h
 +++ b/libcutils/include/cutils/trace.h
 @@ -18,7 +18,12 @@

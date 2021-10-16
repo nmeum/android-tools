@@ -62,6 +62,7 @@ add_library(libext2fs STATIC
 	e2fsprogs/lib/ext2fs/io_manager.c
 	e2fsprogs/lib/ext2fs/ismounted.c
 	e2fsprogs/lib/ext2fs/link.c
+	e2fsprogs/lib/ext2fs/dirhash.c
 	e2fsprogs/lib/ext2fs/llseek.c
 	e2fsprogs/lib/ext2fs/lookup.c
 	e2fsprogs/lib/ext2fs/mkdir.c

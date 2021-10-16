@@ -1,4 +1,4 @@
-From 9c4b6d7b8bc5cd512dd9329f8e7e51d321d494fa Mon Sep 17 00:00:00 2001
+From 2617c39ef3be43e477bea2d47d95e2540e000029 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Fri, 28 May 2021 11:26:01 +0200
 Subject: [PATCH] Don't use the internal glibc header sys/cdefs.h

@@ -1,4 +1,4 @@
-From 0fcd97eb7f46cacdf77a699c00d346e59d4dfc02 Mon Sep 17 00:00:00 2001
+From 0eddc30a5913401262df2830b28e8dadaf1d0c26 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 17:48:49 +0100
 Subject: [PATCH] Define clang-only nullability specifiers when __clang__ is
@@ -9,10 +9,10 @@ Subject: [PATCH] Define clang-only nullability specifiers when __clang__ is
  1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/sysdeps.h b/sysdeps.h
-index 7326ab13..35de4e59 100644
+index 5ba85b4d..2115a32b 100644
 --- a/sysdeps.h
 +++ b/sysdeps.h
-@@ -48,11 +48,13 @@ static inline void* mempcpy(void* dst, const void* src, size_t n) {
+@@ -49,11 +49,13 @@ static inline void* mempcpy(void* dst, const void* src, size_t n) {
  }
  #endif
  
