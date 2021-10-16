@@ -64,6 +64,13 @@ jobs:
 
     container:
       image: ${{ matrix.os }}
+      # New versions of glibc use the new clone3() syscall which has not
+      # yet been whitelisted in GitHub's secomp profile. To prevent jobs
+      # using these distros from failing (e.g. OpenSUSE) change the
+      # secomp policy.
+      #
+      # See https://github.com/nmeum/android-tools/pull/48#issuecomment-944893176
+      options: --security-opt seccomp=unconfined
 
     steps:
       - name: prep opensuse
