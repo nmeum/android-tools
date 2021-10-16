@@ -1,4 +1,4 @@
-From c110ef12a7037279862ab7cfa3b211094d3cbe8f Mon Sep 17 00:00:00 2001
+From 5849a4b0533969a31311c6d00216145ad955af15 Mon Sep 17 00:00:00 2001
 From: Minecrell <minecrell@minecrell.net>
 Date: Thu, 27 Feb 2020 14:06:16 +0100
 Subject: [PATCH] adb: disable fastdeploy support
@@ -15,7 +15,7 @@ If someone wants to make it work, feel free to :)
  2 files changed, 14 insertions(+)
 
 diff --git a/client/adb_install.cpp b/client/adb_install.cpp
-index ea50f591..27f44880 100644
+index 97debae1..35278e2f 100644
 --- a/client/adb_install.cpp
 +++ b/client/adb_install.cpp
 @@ -185,6 +185,7 @@ static int install_app_streamed(int argc, const char** argv, bool use_fastdeploy

@@ -1,4 +1,4 @@
-From 8027ec77633890c20b2cec0d35e732ac83a48365 Mon Sep 17 00:00:00 2001
+From 481ad29f9ac31c352d78d3bbab805921823f4fde Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?=C4=90o=C3=A0n=20Tr=E1=BA=A7n=20C=C3=B4ng=20Danh?=
  <congdanhqx@gmail.com>
 Date: Sun, 1 Nov 2020 15:51:35 +0700
@@ -11,10 +11,10 @@ Subject: [PATCH] adb: disable mDNS
  3 files changed, 1 insertion(+), 41 deletions(-)
 
 diff --git a/adb.cpp b/adb.cpp
-index e829908a..23360304 100644
+index c1bb8f42..cbabfe8f 100644
 --- a/adb.cpp
 +++ b/adb.cpp
-@@ -1102,21 +1102,6 @@ void adb_set_reject_kill_server(bool value) {
+@@ -1131,21 +1131,6 @@ void adb_set_reject_kill_server(bool value) {
  }
  
  static bool handle_mdns_request(std::string_view service, int reply_fd) {
@@ -37,7 +37,7 @@ index e829908a..23360304 100644
  }
  
 diff --git a/client/main.cpp b/client/main.cpp
-index c74a5cc5..b402f834 100644
+index c14b3463..552042e1 100644
 --- a/client/main.cpp
 +++ b/client/main.cpp
 @@ -68,11 +68,9 @@ void adb_server_cleanup() {
@@ -53,7 +53,7 @@ index c74a5cc5..b402f834 100644
  
  static void intentionally_leak() {
 diff --git a/socket_spec.cpp b/socket_spec.cpp
-index 91ebb360..3cf24e17 100644
+index c93b0230..4d3aa28d 100644
 --- a/socket_spec.cpp
 +++ b/socket_spec.cpp
 @@ -195,30 +195,7 @@ bool socket_spec_connect(unique_fd* fd, std::string_view address, int* port, std

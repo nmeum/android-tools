@@ -1,4 +1,4 @@
-From 5fe87e9e222ee960aab4c6d56b70b0da5352aa19 Mon Sep 17 00:00:00 2001
+From 24a926ea3caf56d72158c5d577d0c7c059567f33 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Sat, 7 Mar 2020 13:48:50 +0100
 Subject: [PATCH] types.h: Fix ambiguous reference to weak_ptr
@@ -13,7 +13,7 @@ As there also seems to be a definition of weak_ptr in the std namespace.
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/types.h b/types.h
-index e263651e..6e4eabb8 100644
+index be9fb1f6..a5747d05 100644
 --- a/types.h
 +++ b/types.h
 @@ -347,13 +347,13 @@ struct enable_weak_from_this {
@@ -24,7 +24,7 @@ index e263651e..6e4eabb8 100644
 +    ::weak_ptr<T> weak() { return ::weak_ptr<T>(static_cast<T*>(this)); }
  
      void schedule_deletion() {
-         fdevent_run_on_main_thread([this]() { delete this; });
+         fdevent_run_on_main_thread([this]() { delete static_cast<T*>(this); });
      }
  
    private:

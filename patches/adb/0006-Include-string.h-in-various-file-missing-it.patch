@@ -1,4 +1,4 @@
-From 3a46c04cdd8eaeeb7401c96e558e89f2a6c58dc3 Mon Sep 17 00:00:00 2001
+From 27e41fc05d0a4cd86833fd23962a4c8a7dd32e2b Mon Sep 17 00:00:00 2001
 From: Anatol Pomozov <anatol.pomozov@gmail.com>
 Date: Fri, 25 Aug 2017 23:30:34 +0000
 Subject: [PATCH] Include string.h in various file missing it

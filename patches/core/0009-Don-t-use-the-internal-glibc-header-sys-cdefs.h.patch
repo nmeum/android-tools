@@ -1,4 +1,4 @@
-From bc72891f83ba8784bf7a1f86f982e6c194d9549a Mon Sep 17 00:00:00 2001
+From 49a3dad208220b35ca7d81b7ea7f053801ada9dd Mon Sep 17 00:00:00 2001
 From: John Zimmermann <me@johnnynator.dev>
 Date: Thu, 18 Mar 2021 12:22:51 +0100
 Subject: [PATCH] Don't use the internal glibc header sys/cdefs.h
@@ -91,17 +91,17 @@ index bc08327a1..862a3bddd 100644
 +}
 +#endif
 diff --git a/debuggerd/util.h b/debuggerd/util.h
-index 07e7e992c..02b7eefdb 100644
+index ec2862a2a..7e0bd0b7b 100644
 --- a/debuggerd/util.h
 +++ b/debuggerd/util.h
-@@ -18,7 +18,6 @@
- 
+@@ -19,7 +19,6 @@
  #include <string>
+ #include <vector>
  
 -#include <sys/cdefs.h>
  #include <sys/types.h>
  
- std::string get_process_name(pid_t pid);
+ std::vector<std::string> get_command_line(pid_t pid);
 diff --git a/fs_mgr/fs_mgr_priv_boot_config.h b/fs_mgr/fs_mgr_priv_boot_config.h
 index 6a3840131..c081c3da2 100644
 --- a/fs_mgr/fs_mgr_priv_boot_config.h
@@ -127,7 +127,7 @@ index adec38329..40e852489 100644
  #include <sys/ioctl.h>
  #include <sys/types.h>
 diff --git a/init/reboot.cpp b/init/reboot.cpp
-index d9acee57f..464746d46 100644
+index 0e788e495..99c467b76 100644
 --- a/init/reboot.cpp
 +++ b/init/reboot.cpp
 @@ -23,7 +23,6 @@

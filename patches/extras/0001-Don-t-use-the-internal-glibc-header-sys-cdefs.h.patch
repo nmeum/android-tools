@@ -1,6 +1,6 @@
-From f147fa6d8e787d0ab450c00bdeb2ccd09fbaf679 Mon Sep 17 00:00:00 2001
+From 9a9820a2a80277bfb49721c149202285fcb3500d Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
-Date: Fri, 28 May 2021 01:50:23 +0200
+Date: Sat, 16 Oct 2021 01:14:17 +0200
 Subject: [PATCH] Don't use the internal glibc header sys/cdefs.h
 
 for file in $(ag -l __BEGIN_DECLS); do
@@ -17,16 +17,20 @@ https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-
  2 files changed, 12 insertions(+), 5 deletions(-)
 
 diff --git a/module_ndk_libs/libnativehelper/include/android/file_descriptor_jni.h b/module_ndk_libs/libnativehelper/include/android/file_descriptor_jni.h
-index 793f7bcf..775734ed 100644
+index 26529b99..083999d5 100644
 --- a/module_ndk_libs/libnativehelper/include/android/file_descriptor_jni.h
 +++ b/module_ndk_libs/libnativehelper/include/android/file_descriptor_jni.h
-@@ -25,11 +25,12 @@
+@@ -25,7 +25,6 @@
  
  #pragma once
  
 -#include <sys/cdefs.h>
  
  #include <jni.h>
+ 
+@@ -33,7 +32,9 @@
+ #define __INTRODUCED_IN(x)
+ #endif
  
 -__BEGIN_DECLS
 +#ifdef __cplusplus
@@ -35,9 +39,9 @@ index 793f7bcf..775734ed 100644
  
  /**
   * Returns a new java.io.FileDescriptor.
-@@ -79,6 +80,8 @@ int AFileDescriptor_getFD(JNIEnv* env, jobject fileDescriptor) __INTRODUCED_IN(3
+@@ -83,6 +84,8 @@ int AFileDescriptor_getFd(JNIEnv* env, jobject fileDescriptor) __INTRODUCED_IN(3
   */
- void AFileDescriptor_setFD(JNIEnv* env, jobject fileDescriptor, int fd) __INTRODUCED_IN(31);
+ void AFileDescriptor_setFd(JNIEnv* env, jobject fileDescriptor, int fd) __INTRODUCED_IN(31);
  
 -__END_DECLS
 +#ifdef __cplusplus

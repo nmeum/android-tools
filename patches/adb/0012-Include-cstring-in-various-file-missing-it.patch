@@ -1,4 +1,4 @@
-From f57234b135e29fc69ec44823e17e19941e3be0cd Mon Sep 17 00:00:00 2001
+From 13b7cc32ccb389204592512280767374c0bdab49 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Sun, 1 Sep 2019 14:22:06 +0000
 Subject: [PATCH] Include cstring in various file missing it
@@ -21,7 +21,7 @@ index 43b81530..8a0cf607 100644
  
  #include <android-base/logging.h>
 diff --git a/types.h b/types.h
-index 620aa8eb..e263651e 100644
+index cd08ed8b..be9fb1f6 100644
 --- a/types.h
 +++ b/types.h
 @@ -22,6 +22,7 @@

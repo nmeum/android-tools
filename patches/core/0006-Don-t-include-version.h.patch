@@ -1,4 +1,4 @@
-From 629cd0404b0de0469aff1ea636b91002e5bfaa5d Mon Sep 17 00:00:00 2001
+From 71d30b6c85cfb6dc9bf5ed2e8eda989b5ccd4045 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Sun, 1 Sep 2019 13:40:05 +0000
 Subject: [PATCH] Don't include version.h
@@ -9,7 +9,7 @@ Version is set using a CPPFLAG.
  1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/fastboot/fastboot.cpp b/fastboot/fastboot.cpp
-index f7edf8e61..679aec8b1 100644
+index c87ce606f..0062e7eed 100644
 --- a/fastboot/fastboot.cpp
 +++ b/fastboot/fastboot.cpp
 @@ -59,10 +59,8 @@
@@ -23,7 +23,7 @@ index f7edf8e61..679aec8b1 100644
  #include <sparse/sparse.h>
  #include <ziparchive/zip_archive.h>
  
-@@ -1870,7 +1868,7 @@ int FastBootTool::Main(int argc, char* argv[]) {
+@@ -1938,7 +1936,7 @@ int FastBootTool::Main(int argc, char* argv[]) {
                  setvbuf(stdout, nullptr, _IONBF, 0);
                  setvbuf(stderr, nullptr, _IONBF, 0);
              } else if (name == "version") {
@@ -31,4 +31,4 @@ index f7edf8e61..679aec8b1 100644
 +                fprintf(stdout, "fastboot version %s-%s\n", PLATFORM_TOOLS_VERSION, PLATFORM_TOOLS_VENDOR);
                  fprintf(stdout, "Installed as %s\n", android::base::GetExecutablePath().c_str());
                  return 0;
- #if !defined(_WIN32)
+             } else {

@@ -1,4 +1,4 @@
-From b8ad6b752a39874b62c4cbc60da565a9a7ac4f8a Mon Sep 17 00:00:00 2001
+From 65f707c9346930130df073551aecf0eefe73a9ea Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?=C4=90o=C3=A0n=20Tr=E1=BA=A7n=20C=C3=B4ng=20Danh?=
  <congdanhqx@gmail.com>
 Date: Sat, 31 Oct 2020 21:59:34 +0700
@@ -11,10 +11,10 @@ constexpr.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/sysdeps.h b/sysdeps.h
-index 35de4e59..298c06a8 100644
+index 2115a32b..316afe71 100644
 --- a/sysdeps.h
 +++ b/sysdeps.h
-@@ -681,7 +681,7 @@ static inline int cast_handle_to_int(int fd) {
+@@ -753,7 +753,7 @@ static inline int cast_handle_to_int(int fd) {
  class Process {
    public:
      constexpr explicit Process(pid_t pid) : pid_(pid) {}

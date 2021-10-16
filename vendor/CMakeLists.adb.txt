@@ -23,7 +23,6 @@ add_library(libadb STATIC
 	adb/client/line_printer.cpp
 	adb/client/main.cpp
 	adb/client/pairing/pairing_client.cpp
-	adb/client/usb_dispatch.cpp
 	adb/client/usb_libusb.cpp
 	adb/client/usb_linux.cpp
 	adb/pairing_auth/aes_128_gcm.cpp

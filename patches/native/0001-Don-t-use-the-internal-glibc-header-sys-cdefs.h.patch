@@ -1,17 +1,18 @@
-From 83e3d0145c7b8c97a4c9901614ae899f38816e5c Mon Sep 17 00:00:00 2001
+From a1fdf4143c97c562944071d0626baf5234d0c24c Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
-Date: Fri, 28 May 2021 11:35:29 +0200
+Date: Sat, 16 Oct 2021 03:09:54 +0200
 Subject: [PATCH] Don't use the internal glibc header sys/cdefs.h
 
-	for file in $(ag -l '__BEGIN_DECLS|sys/cdefs.h'); do
-		sed -i "${file}" \
-			-e 's/__BEGIN_DECLS/#ifdef __cplusplus\nextern "C" {\n#endif/g' \
-			-e 's/__END_DECLS/#ifdef __cplusplus\n}\n#endif/g' \
-			-e '/#include <sys\/cdefs.h>/d'
-	done
+for file in $(ag -l '__BEGIN_DECLS|sys/cdefs.h'); do
+	sed -i "${file}" \
+		-e 's/__BEGIN_DECLS/#ifdef __cplusplus\nextern "C" {\n#endif/g' \
+		-e 's/__END_DECLS/#ifdef __cplusplus\n}\n#endif/g' \
+		-e '/#include <sys\/cdefs.h>/d'
+done
 
 https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-get-error-messages-about-%3Ccode%3Esys/cdefs.h%3C/code%3E
 ---
+ docs/Doxyfile                                            | 8 ++++++--
  include/android/asset_manager.h                          | 1 -
  include/android/choreographer.h                          | 9 ++++++---
  include/android/configuration.h                          | 1 -
@@ -72,10 +73,29 @@ https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-
  libs/vr/libdvr/include/dvr/dvr_tracking_types.h          | 9 ++++++---
  libs/vr/libdvr/include/dvr/dvr_vsync.h                   | 9 ++++++---
  vulkan/include/hardware/hwvulkan.h                       | 8 ++++++--
- 60 files changed, 276 insertions(+), 137 deletions(-)
+ 61 files changed, 282 insertions(+), 139 deletions(-)
 
+diff --git a/docs/Doxyfile b/docs/Doxyfile
+index a1bd960c5a..60728c27f3 100644
+--- a/docs/Doxyfile
++++ b/docs/Doxyfile
+@@ -1623,8 +1623,12 @@ INCLUDE_FILE_PATTERNS  =
+ 
+ PREDEFINED             = \
+     "__ANDROID_API__=10000" \
+-    "__BEGIN_DECLS=" \
+-    "__END_DECLS=" \
++    "#ifdef __cplusplus
++extern "C" {
++#endif=" \
++    "#ifdef __cplusplus
++}
++#endif=" \
+     "__INTRODUCED_IN(x)=" \
+     "__INTRODUCED_IN_32(x)=" \
+     "__INTRODUCED_IN_64(x)=" \
 diff --git a/include/android/asset_manager.h b/include/android/asset_manager.h
-index 2ac7d4d35..8a7517e4a 100644
+index 2ac7d4d350..8a7517e4a0 100644
 --- a/include/android/asset_manager.h
 +++ b/include/android/asset_manager.h
 @@ -26,7 +26,6 @@
@@ -87,7 +107,7 @@ index 2ac7d4d35..8a7517e4a 100644
  
  #ifdef __cplusplus
 diff --git a/include/android/choreographer.h b/include/android/choreographer.h
-index 8039bb0d7..3e15dfb99 100644
+index 8039bb0d79..3e15dfb99c 100644
 --- a/include/android/choreographer.h
 +++ b/include/android/choreographer.h
 @@ -27,9 +27,10 @@
@@ -115,7 +135,7 @@ index 8039bb0d7..3e15dfb99 100644
  #endif // ANDROID_CHOREOGRAPHER_H
  
 diff --git a/include/android/configuration.h b/include/android/configuration.h
-index 88019ae05..dd28fa8b0 100644
+index 88019ae054..dd28fa8b01 100644
 --- a/include/android/configuration.h
 +++ b/include/android/configuration.h
 @@ -26,7 +26,6 @@
@@ -127,7 +147,7 @@ index 88019ae05..dd28fa8b0 100644
  #include <android/asset_manager.h>
  
 diff --git a/include/android/font.h b/include/android/font.h
-index a17261882..47fe58a88 100644
+index a172618829..47fe58a887 100644
 --- a/include/android/font.h
 +++ b/include/android/font.h
 @@ -31,7 +31,6 @@
@@ -161,7 +181,7 @@ index a17261882..47fe58a88 100644
  #endif // ANDROID_FONT_H
  
 diff --git a/include/android/font_matcher.h b/include/android/font_matcher.h
-index 49e478c2f..dbba01f51 100644
+index 49e478c2f3..dbba01f514 100644
 --- a/include/android/font_matcher.h
 +++ b/include/android/font_matcher.h
 @@ -75,7 +75,6 @@
@@ -195,7 +215,7 @@ index 49e478c2f..dbba01f51 100644
  #endif // ANDROID_FONT_MATCHER_H
  
 diff --git a/include/android/hardware_buffer_jni.h b/include/android/hardware_buffer_jni.h
-index ae208a6e7..7975fd454 100644
+index ae208a6e75..7975fd4545 100644
 --- a/include/android/hardware_buffer_jni.h
 +++ b/include/android/hardware_buffer_jni.h
 @@ -27,13 +27,14 @@
@@ -227,7 +247,7 @@ index ae208a6e7..7975fd454 100644
  #endif // ANDROID_HARDWARE_BUFFER_JNI_H
  
 diff --git a/include/android/input.h b/include/android/input.h
-index dbfd61eb0..150bf0614 100644
+index dbfd61eb05..150bf06146 100644
 --- a/include/android/input.h
 +++ b/include/android/input.h
 @@ -26,7 +26,6 @@
@@ -239,7 +259,7 @@ index dbfd61eb0..150bf0614 100644
  /******************************************************************
   *
 diff --git a/include/android/multinetwork.h b/include/android/multinetwork.h
-index 424299d66..42d89184d 100644
+index 509ee0e49b..6c8d8fc71a 100644
 --- a/include/android/multinetwork.h
 +++ b/include/android/multinetwork.h
 @@ -28,9 +28,10 @@
@@ -255,7 +275,7 @@ index 424299d66..42d89184d 100644
  
  /**
   * The corresponding C type for android.net.Network#getNetworkHandle() return
-@@ -181,7 +182,9 @@ int android_res_nresult(int fd,
+@@ -216,7 +217,9 @@ int android_res_nresult(int fd,
   */
  void android_res_cancel(int nsend_fd) __INTRODUCED_IN(29);
  
@@ -267,7 +287,7 @@ index 424299d66..42d89184d 100644
  #endif  // ANDROID_MULTINETWORK_H
  
 diff --git a/include/android/native_window_jni.h b/include/android/native_window_jni.h
-index 071ec798b..38e5cc6f9 100644
+index 071ec798b4..38e5cc6f97 100644
 --- a/include/android/native_window_jni.h
 +++ b/include/android/native_window_jni.h
 @@ -26,7 +26,6 @@
@@ -279,7 +299,7 @@ index 071ec798b..38e5cc6f9 100644
  #include <android/native_window.h>
  
 diff --git a/include/android/sharedmem.h b/include/android/sharedmem.h
-index 7994aa991..253f2f734 100644
+index 7994aa9914..253f2f7349 100644
 --- a/include/android/sharedmem.h
 +++ b/include/android/sharedmem.h
 @@ -28,7 +28,6 @@
@@ -291,7 +311,7 @@ index 7994aa991..253f2f734 100644
  /******************************************************************
   *
 diff --git a/include/android/sharedmem_jni.h b/include/android/sharedmem_jni.h
-index bbac785a3..5abc24508 100644
+index bbac785a33..5abc245083 100644
 --- a/include/android/sharedmem_jni.h
 +++ b/include/android/sharedmem_jni.h
 @@ -30,7 +30,6 @@
@@ -303,7 +323,7 @@ index bbac785a3..5abc24508 100644
  /******************************************************************
   *
 diff --git a/include/android/surface_control.h b/include/android/surface_control.h
-index 27b880d2e..fe448c432 100644
+index 27b880d2e1..fe448c432d 100644
 --- a/include/android/surface_control.h
 +++ b/include/android/surface_control.h
 @@ -26,14 +26,15 @@
@@ -335,7 +355,7 @@ index 27b880d2e..fe448c432 100644
  
  #endif // ANDROID_SURFACE_CONTROL_H
 diff --git a/include/android/surface_texture.h b/include/android/surface_texture.h
-index b227b324f..470ca3fa2 100644
+index b227b324f8..470ca3fa29 100644
 --- a/include/android/surface_texture.h
 +++ b/include/android/surface_texture.h
 @@ -43,11 +43,12 @@
@@ -364,7 +384,7 @@ index b227b324f..470ca3fa2 100644
  
  #endif /* ANDROID_NATIVE_SURFACE_TEXTURE_H */
 diff --git a/include/android/surface_texture_jni.h b/include/android/surface_texture_jni.h
-index e40686d96..0ceaaac36 100644
+index e40686d96c..0ceaaac36f 100644
 --- a/include/android/surface_texture_jni.h
 +++ b/include/android/surface_texture_jni.h
 @@ -30,7 +30,9 @@
@@ -389,7 +409,7 @@ index e40686d96..0ceaaac36 100644
  
  #endif /* ANDROID_NATIVE_SURFACE_TEXTURE_JNI_H */
 diff --git a/include/android/system_fonts.h b/include/android/system_fonts.h
-index b0bbb954a..2b43ff408 100644
+index b0bbb954a9..2b43ff4083 100644
 --- a/include/android/system_fonts.h
 +++ b/include/android/system_fonts.h
 @@ -65,7 +65,6 @@
@@ -423,7 +443,7 @@ index b0bbb954a..2b43ff408 100644
  #endif // ANDROID_SYSTEM_FONTS_H
  
 diff --git a/include/android/thermal.h b/include/android/thermal.h
-index 6ec68d99f..279fc719e 100644
+index 6ec68d99fc..279fc719ef 100644
 --- a/include/android/thermal.h
 +++ b/include/android/thermal.h
 @@ -26,7 +26,6 @@
@@ -435,7 +455,7 @@ index 6ec68d99f..279fc719e 100644
  /******************************************************************
   *
 diff --git a/include/android/trace.h b/include/android/trace.h
-index dcefffb20..d69106dcd 100644
+index dcefffb20d..d69106dcd4 100644
 --- a/include/android/trace.h
 +++ b/include/android/trace.h
 @@ -34,7 +34,6 @@
@@ -447,7 +467,7 @@ index dcefffb20..d69106dcd 100644
  #ifdef __cplusplus
  extern "C" {
 diff --git a/include/diskusage/dirsize.h b/include/diskusage/dirsize.h
-index 34236c0e6..8500bd1a8 100644
+index 34236c0e6f..8500bd1a81 100644
 --- a/include/diskusage/dirsize.h
 +++ b/include/diskusage/dirsize.h
 @@ -20,11 +20,15 @@
@@ -469,7 +489,7 @@ index 34236c0e6..8500bd1a8 100644
  
  #endif /* __LIBDISKUSAGE_DIRSIZE_H */
 diff --git a/libs/adbd_auth/include/adbd_auth.h b/libs/adbd_auth/include/adbd_auth.h
-index 1dcf540cf..f5221c2fa 100644
+index 1dcf540cf3..f5221c2fa7 100644
 --- a/libs/adbd_auth/include/adbd_auth.h
 +++ b/libs/adbd_auth/include/adbd_auth.h
 @@ -18,14 +18,15 @@
@@ -499,7 +519,7 @@ index 1dcf540cf..f5221c2fa 100644
 +}
 +#endif
 diff --git a/libs/binder/ndk/include_ndk/android/binder_ibinder.h b/libs/binder/ndk/include_ndk/android/binder_ibinder.h
-index 8941e4996..a1f5a499b 100644
+index 78f2d3af14..4d72cd37f0 100644
 --- a/libs/binder/ndk/include_ndk/android/binder_ibinder.h
 +++ b/libs/binder/ndk/include_ndk/android/binder_ibinder.h
 @@ -28,13 +28,14 @@
@@ -517,11 +537,11 @@ index 8941e4996..a1f5a499b 100644
 +extern "C" {
 +#endif
  
- typedef uint32_t binder_flags_t;
- enum {
-@@ -713,6 +714,8 @@ AIBinder_Weak* AIBinder_Weak_clone(const AIBinder_Weak* weak);
+ /**
+  * Flags for AIBinder_transact.
+@@ -729,6 +730,8 @@ AIBinder_Weak* AIBinder_Weak_clone(const AIBinder_Weak* weak) __INTRODUCED_IN(31
   */
- bool AIBinder_Weak_lt(const AIBinder_Weak* lhs, const AIBinder_Weak* rhs);
+ bool AIBinder_Weak_lt(const AIBinder_Weak* lhs, const AIBinder_Weak* rhs) __INTRODUCED_IN(31);
  
 -__END_DECLS
 +#ifdef __cplusplus
@@ -530,7 +550,7 @@ index 8941e4996..a1f5a499b 100644
  
  /** @} */
 diff --git a/libs/binder/ndk/include_ndk/android/binder_ibinder_jni.h b/libs/binder/ndk/include_ndk/android/binder_ibinder_jni.h
-index 6880d86e1..1e3508264 100644
+index 6880d86e1a..1e35082649 100644
 --- a/libs/binder/ndk/include_ndk/android/binder_ibinder_jni.h
 +++ b/libs/binder/ndk/include_ndk/android/binder_ibinder_jni.h
 @@ -30,7 +30,9 @@
@@ -555,7 +575,7 @@ index 6880d86e1..1e3508264 100644
  
  /** @} */
 diff --git a/libs/binder/ndk/include_ndk/android/binder_parcel.h b/libs/binder/ndk/include_ndk/android/binder_parcel.h
-index 527b15145..a32eeca9e 100644
+index 527b151457..a32eeca9ee 100644
 --- a/libs/binder/ndk/include_ndk/android/binder_parcel.h
 +++ b/libs/binder/ndk/include_ndk/android/binder_parcel.h
 @@ -28,14 +28,15 @@
@@ -587,7 +607,7 @@ index 527b15145..a32eeca9e 100644
  
  /** @} */
 diff --git a/libs/binder/ndk/include_ndk/android/binder_parcel_jni.h b/libs/binder/ndk/include_ndk/android/binder_parcel_jni.h
-index 384d4f777..e4d22d1d8 100644
+index 384d4f7772..e4d22d1d81 100644
 --- a/libs/binder/ndk/include_ndk/android/binder_parcel_jni.h
 +++ b/libs/binder/ndk/include_ndk/android/binder_parcel_jni.h
 @@ -30,7 +30,9 @@
@@ -612,7 +632,7 @@ index 384d4f777..e4d22d1d8 100644
  
  /** @} */
 diff --git a/libs/binder/ndk/include_ndk/android/binder_status.h b/libs/binder/ndk/include_ndk/android/binder_status.h
-index b4dc08a49..67d79a0fc 100644
+index 6f1fdfcd20..959d6be7e4 100644
 --- a/libs/binder/ndk/include_ndk/android/binder_status.h
 +++ b/libs/binder/ndk/include_ndk/android/binder_status.h
 @@ -28,9 +28,10 @@
@@ -639,7 +659,7 @@ index b4dc08a49..67d79a0fc 100644
  
  /** @} */
 diff --git a/libs/binder/ndk/include_platform/android/binder_ibinder_platform.h b/libs/binder/ndk/include_platform/android/binder_ibinder_platform.h
-index e315c798e..1546d74fe 100644
+index e315c798ee..1546d74fe7 100644
 --- a/libs/binder/ndk/include_platform/android/binder_ibinder_platform.h
 +++ b/libs/binder/ndk/include_platform/android/binder_ibinder_platform.h
 @@ -18,7 +18,9 @@
@@ -662,7 +682,7 @@ index e315c798e..1546d74fe 100644
 +}
 +#endif
 diff --git a/libs/binder/ndk/include_platform/android/binder_manager.h b/libs/binder/ndk/include_platform/android/binder_manager.h
-index 066847224..af51c50d0 100644
+index 2a66941cef..fac80c0185 100644
 --- a/libs/binder/ndk/include_platform/android/binder_manager.h
 +++ b/libs/binder/ndk/include_platform/android/binder_manager.h
 @@ -18,9 +18,10 @@
@@ -678,7 +698,7 @@ index 066847224..af51c50d0 100644
  
  /**
   * This registers the service with the default service manager under this instance name. This does
-@@ -171,4 +172,6 @@ bool AServiceManager_tryUnregister() __INTRODUCED_IN(31);
+@@ -186,4 +187,6 @@ bool AServiceManager_tryUnregister() __INTRODUCED_IN(31);
   */
  void AServiceManager_reRegister() __INTRODUCED_IN(31);
  
@@ -687,7 +707,7 @@ index 066847224..af51c50d0 100644
 +}
 +#endif
 diff --git a/libs/binder/ndk/include_platform/android/binder_parcel_platform.h b/libs/binder/ndk/include_platform/android/binder_parcel_platform.h
-index 637244971..487731508 100644
+index b24094ef16..cb6b7d88d9 100644
 --- a/libs/binder/ndk/include_platform/android/binder_parcel_platform.h
 +++ b/libs/binder/ndk/include_platform/android/binder_parcel_platform.h
 @@ -18,7 +18,9 @@
@@ -701,16 +721,16 @@ index 637244971..487731508 100644
  
  #if !defined(__ANDROID_APEX__) && !defined(__ANDROID_VNDK__)
  
-@@ -46,4 +48,6 @@ bool AParcel_getAllowFds(const AParcel*);
+@@ -44,4 +46,6 @@ bool AParcel_getAllowFds(const AParcel*);
+  */
  void AParcel_markSensitive(const AParcel* parcel);
- #endif
  
 -__END_DECLS
 +#ifdef __cplusplus
 +}
 +#endif
 diff --git a/libs/binder/ndk/include_platform/android/binder_process.h b/libs/binder/ndk/include_platform/android/binder_process.h
-index f408fadee..985afca78 100644
+index f408fadee0..985afca785 100644
 --- a/libs/binder/ndk/include_platform/android/binder_process.h
 +++ b/libs/binder/ndk/include_platform/android/binder_process.h
 @@ -17,11 +17,12 @@
@@ -737,7 +757,7 @@ index f408fadee..985afca78 100644
 +}
 +#endif
 diff --git a/libs/binder/ndk/include_platform/android/binder_shell.h b/libs/binder/ndk/include_platform/android/binder_shell.h
-index 07d89e67f..5da5a7f1c 100644
+index 07d89e67fc..5da5a7f1cd 100644
 --- a/libs/binder/ndk/include_platform/android/binder_shell.h
 +++ b/libs/binder/ndk/include_platform/android/binder_shell.h
 @@ -18,7 +18,9 @@
@@ -760,7 +780,7 @@ index 07d89e67f..5da5a7f1c 100644
 +}
 +#endif
 diff --git a/libs/binder/ndk/include_platform/android/binder_stability.h b/libs/binder/ndk/include_platform/android/binder_stability.h
-index f5e8bf60e..2c87fd4f1 100644
+index f113ba8f21..1203bd7d4d 100644
 --- a/libs/binder/ndk/include_platform/android/binder_stability.h
 +++ b/libs/binder/ndk/include_platform/android/binder_stability.h
 @@ -18,7 +18,9 @@
@@ -774,7 +794,7 @@ index f5e8bf60e..2c87fd4f1 100644
  
  /**
   * Private addition to binder_flag_t.
-@@ -69,4 +71,6 @@ static inline void AIBinder_markCompilationUnitStability(AIBinder* binder) {
+@@ -99,4 +101,6 @@ static inline void AIBinder_forceDowngradeToLocalStability(AIBinder* binder) {
   */
  void AIBinder_markVintfStability(AIBinder* binder);
  
@@ -783,7 +803,7 @@ index f5e8bf60e..2c87fd4f1 100644
 +}
 +#endif
 diff --git a/libs/binder/ndk/parcel_internal.h b/libs/binder/ndk/parcel_internal.h
-index 6b7295e4b..8cef45a16 100644
+index b4f6358841..98d3c8f590 100644
 --- a/libs/binder/ndk/parcel_internal.h
 +++ b/libs/binder/ndk/parcel_internal.h
 @@ -18,7 +18,6 @@
@@ -795,7 +815,7 @@ index 6b7295e4b..8cef45a16 100644
  #include <binder/Parcel.h>
  #include "ibinder_internal.h"
 diff --git a/libs/nativebase/include/nativebase/nativebase.h b/libs/nativebase/include/nativebase/nativebase.h
-index 7ecdfbd74..3979b1bb9 100644
+index 7ecdfbd745..3979b1bb9f 100644
 --- a/libs/nativebase/include/nativebase/nativebase.h
 +++ b/libs/nativebase/include/nativebase/nativebase.h
 @@ -19,11 +19,12 @@
@@ -822,7 +842,7 @@ index 7ecdfbd74..3979b1bb9 100644
 +}
 +#endif
 diff --git a/libs/nativedisplay/include/apex/choreographer.h b/libs/nativedisplay/include/apex/choreographer.h
-index 683abc414..cee605921 100644
+index 683abc4142..cee6059214 100644
 --- a/libs/nativedisplay/include/apex/choreographer.h
 +++ b/libs/nativedisplay/include/apex/choreographer.h
 @@ -19,7 +19,9 @@
@@ -845,7 +865,7 @@ index 683abc414..cee605921 100644
 +}
 +#endif
 diff --git a/libs/nativedisplay/include/apex/display.h b/libs/nativedisplay/include/apex/display.h
-index a7eaf87b9..4f1a0ad9e 100644
+index a7eaf87b9e..4f1a0ad9e3 100644
 --- a/libs/nativedisplay/include/apex/display.h
 +++ b/libs/nativedisplay/include/apex/display.h
 @@ -23,7 +23,9 @@
@@ -868,7 +888,7 @@ index a7eaf87b9..4f1a0ad9e 100644
 +}
 +#endif
 diff --git a/libs/nativedisplay/include/surfacetexture/ImageConsumer.h b/libs/nativedisplay/include/surfacetexture/ImageConsumer.h
-index 35ae3d214..5023c4dcc 100644
+index 35ae3d2144..5023c4dccd 100644
 --- a/libs/nativedisplay/include/surfacetexture/ImageConsumer.h
 +++ b/libs/nativedisplay/include/surfacetexture/ImageConsumer.h
 @@ -21,7 +21,6 @@
@@ -880,7 +900,7 @@ index 35ae3d214..5023c4dcc 100644
  
  namespace android {
 diff --git a/libs/nativedisplay/include/surfacetexture/SurfaceTexture.h b/libs/nativedisplay/include/surfacetexture/SurfaceTexture.h
-index 6eaa84e22..9a5a976f0 100644
+index 6eaa84e225..9a5a976f0c 100644
 --- a/libs/nativedisplay/include/surfacetexture/SurfaceTexture.h
 +++ b/libs/nativedisplay/include/surfacetexture/SurfaceTexture.h
 @@ -20,7 +20,6 @@
@@ -892,7 +912,7 @@ index 6eaa84e22..9a5a976f0 100644
  #include <ui/FenceTime.h>
  #include <ui/GraphicBuffer.h>
 diff --git a/libs/nativewindow/include/android/data_space.h b/libs/nativewindow/include/android/data_space.h
-index e759513a6..a15dc9c37 100644
+index e759513a63..a15dc9c37d 100644
 --- a/libs/nativewindow/include/android/data_space.h
 +++ b/libs/nativewindow/include/android/data_space.h
 @@ -23,9 +23,10 @@
@@ -919,7 +939,7 @@ index e759513a6..a15dc9c37 100644
  
  #endif // ANDROID_DATA_SPACE_H
 diff --git a/libs/nativewindow/include/android/hardware_buffer.h b/libs/nativewindow/include/android/hardware_buffer.h
-index dcb05b553..f3ba02ac6 100644
+index dcb05b5536..f3ba02ac69 100644
 --- a/libs/nativewindow/include/android/hardware_buffer.h
 +++ b/libs/nativewindow/include/android/hardware_buffer.h
 @@ -47,11 +47,12 @@
@@ -949,7 +969,7 @@ index dcb05b553..f3ba02ac6 100644
  #endif // ANDROID_HARDWARE_BUFFER_H
  
 diff --git a/libs/nativewindow/include/android/hdr_metadata.h b/libs/nativewindow/include/android/hdr_metadata.h
-index 88772a92f..07b48e958 100644
+index 88772a92fc..07b48e9588 100644
 --- a/libs/nativewindow/include/android/hdr_metadata.h
 +++ b/libs/nativewindow/include/android/hdr_metadata.h
 @@ -23,9 +23,10 @@
@@ -976,7 +996,7 @@ index 88772a92f..07b48e958 100644
  
  #endif // ANDROID_HDR_METADATA_H
 diff --git a/libs/nativewindow/include/android/native_window.h b/libs/nativewindow/include/android/native_window.h
-index a3a45e370..834a68f3f 100644
+index a3a45e3705..834a68f3fa 100644
 --- a/libs/nativewindow/include/android/native_window.h
 +++ b/libs/nativewindow/include/android/native_window.h
 @@ -34,7 +34,6 @@
@@ -988,7 +1008,7 @@ index a3a45e370..834a68f3f 100644
  #include <android/data_space.h>
  #include <android/hardware_buffer.h>
 diff --git a/libs/nativewindow/include/apex/window.h b/libs/nativewindow/include/apex/window.h
-index 2d1354cdf..1b2f68940 100644
+index 2d1354cdf1..1b2f689406 100644
 --- a/libs/nativewindow/include/apex/window.h
 +++ b/libs/nativewindow/include/apex/window.h
 @@ -22,7 +22,9 @@
@@ -1011,7 +1031,7 @@ index 2d1354cdf..1b2f68940 100644
 +}
 +#endif
 diff --git a/libs/nativewindow/include/system/window.h b/libs/nativewindow/include/system/window.h
-index b78fc5dbb..0bf41f561 100644
+index 73b46b202e..8fdb9db16f 100644
 --- a/libs/nativewindow/include/system/window.h
 +++ b/libs/nativewindow/include/system/window.h
 @@ -37,7 +37,6 @@
@@ -1033,7 +1053,7 @@ index b78fc5dbb..0bf41f561 100644
  
  /*****************************************************************************/
  
-@@ -1097,4 +1098,6 @@ static inline int ANativeWindow_setQueryInterceptor(ANativeWindow* window,
+@@ -1123,4 +1124,6 @@ static inline int ANativeWindow_setQueryInterceptor(ANativeWindow* window,
      return window->perform(window, NATIVE_WINDOW_SET_QUERY_INTERCEPTOR, interceptor, data);
  }
  
@@ -1042,7 +1062,7 @@ index b78fc5dbb..0bf41f561 100644
 +}
 +#endif
 diff --git a/libs/nativewindow/include/vndk/hardware_buffer.h b/libs/nativewindow/include/vndk/hardware_buffer.h
-index 3392d7f09..cdf1b2ce8 100644
+index 12f8691684..d595b384ec 100644
 --- a/libs/nativewindow/include/vndk/hardware_buffer.h
 +++ b/libs/nativewindow/include/vndk/hardware_buffer.h
 @@ -22,7 +22,9 @@
@@ -1056,8 +1076,8 @@ index 3392d7f09..cdf1b2ce8 100644
  
  const native_handle_t* AHardwareBuffer_getNativeHandle(const AHardwareBuffer* buffer);
  
-@@ -81,6 +83,8 @@ enum {
-     AHARDWAREBUFFER_FORMAT_YCbCr_422_I              = 0x14,
+@@ -95,6 +97,8 @@ enum {
+     AHARDWAREBUFFER_USAGE_CAMERA_MASK               = 6UL << 16,
  };
  
 -__END_DECLS
@@ -1067,7 +1087,7 @@ index 3392d7f09..cdf1b2ce8 100644
  
  #endif /* ANDROID_VNDK_NATIVEWINDOW_AHARDWAREBUFFER_H */
 diff --git a/libs/nativewindow/include/vndk/window.h b/libs/nativewindow/include/vndk/window.h
-index 500052c93..db1fdd157 100644
+index 500052c936..db1fdd1571 100644
 --- a/libs/nativewindow/include/vndk/window.h
 +++ b/libs/nativewindow/include/vndk/window.h
 @@ -23,7 +23,9 @@
@@ -1092,7 +1112,7 @@ index 500052c93..db1fdd157 100644
  
  #endif /* ANDROID_VNDK_NATIVEWINDOW_ANATIVEWINDOW_H */
 diff --git a/libs/vr/libdvr/dvr_buffer_queue_internal.h b/libs/vr/libdvr/dvr_buffer_queue_internal.h
-index e53a6868f..844526bed 100644
+index e53a6868ff..844526bed0 100644
 --- a/libs/vr/libdvr/dvr_buffer_queue_internal.h
 +++ b/libs/vr/libdvr/dvr_buffer_queue_internal.h
 @@ -3,7 +3,6 @@
@@ -1104,7 +1124,7 @@ index e53a6868f..844526bed 100644
  #include <array>
  #include <memory>
 diff --git a/libs/vr/libdvr/dvr_internal.h b/libs/vr/libdvr/dvr_internal.h
-index f845cd896..489743d10 100644
+index f845cd896d..489743d10a 100644
 --- a/libs/vr/libdvr/dvr_internal.h
 +++ b/libs/vr/libdvr/dvr_internal.h
 @@ -1,7 +1,6 @@
@@ -1116,7 +1136,7 @@ index f845cd896..489743d10 100644
  #include <memory>
  
 diff --git a/libs/vr/libdvr/include/dvr/dvr_buffer.h b/libs/vr/libdvr/include/dvr/dvr_buffer.h
-index 4234844c0..8a3482299 100644
+index 4234844c0f..8a34822998 100644
 --- a/libs/vr/libdvr/include/dvr/dvr_buffer.h
 +++ b/libs/vr/libdvr/include/dvr/dvr_buffer.h
 @@ -3,10 +3,11 @@
@@ -1144,7 +1164,7 @@ index 4234844c0..8a3482299 100644
  
  #endif  // ANDROID_DVR_BUFFER_H_
 diff --git a/libs/vr/libdvr/include/dvr/dvr_buffer_queue.h b/libs/vr/libdvr/include/dvr/dvr_buffer_queue.h
-index ac789daf3..9acf66e4c 100644
+index ac789daf3d..9acf66e4cd 100644
 --- a/libs/vr/libdvr/include/dvr/dvr_buffer_queue.h
 +++ b/libs/vr/libdvr/include/dvr/dvr_buffer_queue.h
 @@ -1,11 +1,12 @@
@@ -1173,7 +1193,7 @@ index ac789daf3..9acf66e4c 100644
  
  #endif  // ANDROID_DVR_BUFFER_QUEUE_H_
 diff --git a/libs/vr/libdvr/include/dvr/dvr_config.h b/libs/vr/libdvr/include/dvr/dvr_config.h
-index 3d2c0668d..3b94f1b8f 100644
+index 3d2c0668da..3b94f1b8f8 100644
 --- a/libs/vr/libdvr/include/dvr/dvr_config.h
 +++ b/libs/vr/libdvr/include/dvr/dvr_config.h
 @@ -4,9 +4,10 @@
@@ -1200,7 +1220,7 @@ index 3d2c0668d..3b94f1b8f 100644
  
  #endif  // ANDROID_DVR_CONFIG_H
 diff --git a/libs/vr/libdvr/include/dvr/dvr_configuration_data.h b/libs/vr/libdvr/include/dvr/dvr_configuration_data.h
-index 22a509f6e..efd148e24 100644
+index 22a509f6eb..efd148e243 100644
 --- a/libs/vr/libdvr/include/dvr/dvr_configuration_data.h
 +++ b/libs/vr/libdvr/include/dvr/dvr_configuration_data.h
 @@ -4,12 +4,13 @@
@@ -1230,7 +1250,7 @@ index 22a509f6e..efd148e24 100644
  
  #endif  // DVR_CONFIGURATION_DATA_H_
 diff --git a/libs/vr/libdvr/include/dvr/dvr_deleter.h b/libs/vr/libdvr/include/dvr/dvr_deleter.h
-index fe59d1ffb..5a9d93cf2 100644
+index fe59d1ffba..5a9d93cf2d 100644
 --- a/libs/vr/libdvr/include/dvr/dvr_deleter.h
 +++ b/libs/vr/libdvr/include/dvr/dvr_deleter.h
 @@ -1,13 +1,14 @@
@@ -1262,7 +1282,7 @@ index fe59d1ffb..5a9d93cf2 100644
  // Avoid errors if this header is included in C code.
  #if defined(__cplusplus)
 diff --git a/libs/vr/libdvr/include/dvr/dvr_display_manager.h b/libs/vr/libdvr/include/dvr/dvr_display_manager.h
-index f910d610f..29ba986d2 100644
+index f910d610f5..29ba986d26 100644
 --- a/libs/vr/libdvr/include/dvr/dvr_display_manager.h
 +++ b/libs/vr/libdvr/include/dvr/dvr_display_manager.h
 @@ -4,12 +4,13 @@
@@ -1292,7 +1312,7 @@ index f910d610f..29ba986d2 100644
  
  #endif  // ANDROID_DVR_DISPLAY_MANAGER_H_
 diff --git a/libs/vr/libdvr/include/dvr/dvr_display_types.h b/libs/vr/libdvr/include/dvr/dvr_display_types.h
-index fd6984329..6e98383c3 100644
+index fd69843292..6e98383c38 100644
 --- a/libs/vr/libdvr/include/dvr/dvr_display_types.h
 +++ b/libs/vr/libdvr/include/dvr/dvr_display_types.h
 @@ -1,9 +1,10 @@
@@ -1319,7 +1339,7 @@ index fd6984329..6e98383c3 100644
  
  #endif  // ANDROID_DVR_DISPLAY_TYPES_H_
 diff --git a/libs/vr/libdvr/include/dvr/dvr_performance.h b/libs/vr/libdvr/include/dvr/dvr_performance.h
-index 5df35ad9d..540f00574 100644
+index 5df35ad9d9..540f00574e 100644
 --- a/libs/vr/libdvr/include/dvr/dvr_performance.h
 +++ b/libs/vr/libdvr/include/dvr/dvr_performance.h
 @@ -4,7 +4,9 @@
@@ -1345,7 +1365,7 @@ index 5df35ad9d..540f00574 100644
  #endif  // ANDROID_DVR_PERFORMANCE_H_
  
 diff --git a/libs/vr/libdvr/include/dvr/dvr_pose.h b/libs/vr/libdvr/include/dvr/dvr_pose.h
-index 87527515b..51311709b 100644
+index 87527515b4..51311709b1 100644
 --- a/libs/vr/libdvr/include/dvr/dvr_pose.h
 +++ b/libs/vr/libdvr/include/dvr/dvr_pose.h
 @@ -2,9 +2,10 @@
@@ -1372,7 +1392,7 @@ index 87527515b..51311709b 100644
  
  #endif  // ANDROID_DVR_PUBLIC_POSE_H_
 diff --git a/libs/vr/libdvr/include/dvr/dvr_surface.h b/libs/vr/libdvr/include/dvr/dvr_surface.h
-index 74a68a16e..0e615d2fe 100644
+index 74a68a16ee..0e615d2fe2 100644
 --- a/libs/vr/libdvr/include/dvr/dvr_surface.h
 +++ b/libs/vr/libdvr/include/dvr/dvr_surface.h
 @@ -4,14 +4,15 @@
@@ -1404,7 +1424,7 @@ index 74a68a16e..0e615d2fe 100644
  
  #endif  // ANDROID_DVR_SURFACE_H_
 diff --git a/libs/vr/libdvr/include/dvr/dvr_tracking.h b/libs/vr/libdvr/include/dvr/dvr_tracking.h
-index 5e388f391..bb4be60da 100644
+index 5e388f391a..bb4be60da3 100644
 --- a/libs/vr/libdvr/include/dvr/dvr_tracking.h
 +++ b/libs/vr/libdvr/include/dvr/dvr_tracking.h
 @@ -2,11 +2,12 @@
@@ -1433,7 +1453,7 @@ index 5e388f391..bb4be60da 100644
  
  #endif  // ANDROID_DVR_TRACKING_H_
 diff --git a/libs/vr/libdvr/include/dvr/dvr_tracking_types.h b/libs/vr/libdvr/include/dvr/dvr_tracking_types.h
-index 81310d230..8ee27bdf6 100644
+index 81310d2303..8ee27bdf68 100644
 --- a/libs/vr/libdvr/include/dvr/dvr_tracking_types.h
 +++ b/libs/vr/libdvr/include/dvr/dvr_tracking_types.h
 @@ -2,9 +2,10 @@
@@ -1460,7 +1480,7 @@ index 81310d230..8ee27bdf6 100644
  
  #endif  // ANDROID_DVR_TRACKING_TYPES_H_
 diff --git a/libs/vr/libdvr/include/dvr/dvr_vsync.h b/libs/vr/libdvr/include/dvr/dvr_vsync.h
-index 498bb5cc6..cd1a3f959 100644
+index 498bb5cc6e..cd1a3f959c 100644
 --- a/libs/vr/libdvr/include/dvr/dvr_vsync.h
 +++ b/libs/vr/libdvr/include/dvr/dvr_vsync.h
 @@ -2,9 +2,10 @@
@@ -1487,7 +1507,7 @@ index 498bb5cc6..cd1a3f959 100644
  
  #endif  // ANDROID_DVR_VSYNC_H_
 diff --git a/vulkan/include/hardware/hwvulkan.h b/vulkan/include/hardware/hwvulkan.h
-index 9e9a14d48..8c1eb5a51 100644
+index 9e9a14d489..8c1eb5a515 100644
 --- a/vulkan/include/hardware/hwvulkan.h
 +++ b/vulkan/include/hardware/hwvulkan.h
 @@ -20,7 +20,9 @@
