@@ -1,0 +1,42 @@
+From 62b71648e97201bfdaebec0c51586001c4bc99be Mon Sep 17 00:00:00 2001
+From: Nikola Pavlica <pavlica.nikola@gmail.com>
+Date: Tue, 2 Nov 2021 10:19:45 +0100
+Subject: [PATCH] Correct for XDG-base directory on Linux
+
+Since everything that ADB does store is just ADB keys and a session
+ID, those wouldn't be classified as configs and therefore would go
+to the XDG_DATA directory which is usually at ~/.local/share.
+
+The motivation for this patch is to simply attempt to clear up the
+mess that's caused by creating additional .dot directories. And besides
+that it would help the program comply with XDG-base standards set by
+freedesktop.org.
+
+Look up here for more info:
+https://wiki.archlinux.org/title/XDG_Base_Directory
+---
+ adb_utils.cpp | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/adb_utils.cpp b/adb_utils.cpp
+index 593448a..cd23214 100644
+--- a/adb_utils.cpp
++++ b/adb_utils.cpp
+@@ -309,7 +309,16 @@ std::string adb_get_homedir_path() {
+ 
+ std::string adb_get_android_dir_path() {
+     std::string user_dir = adb_get_homedir_path();
+-    std::string android_dir = user_dir + OS_PATH_SEPARATOR + ".android";
++    std::string android_dir;
++#ifdef __linux__
++    std::string xdg_data_dir = getenv("XDG_DATA_HOME");
++    if(xdg_data_dir.length() > 0) {
++        android_dir = xdg_data_dir + OS_PATH_SEPARATOR + "android";
++    } else
++#endif
++    {
++        android_dir = user_dir + OS_PATH_SEPARATOR + ".android";
++    }
+     struct stat buf;
+     if (stat(android_dir.c_str(), &buf) == -1) {
+         if (adb_mkdir(android_dir, 0750) == -1) {
