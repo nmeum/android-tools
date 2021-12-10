@@ -46,6 +46,7 @@ include(CMakeLists.adb.txt)
 include(CMakeLists.sparse.txt)
 include(CMakeLists.fastboot.txt)
 include(CMakeLists.mke2fs.txt)
+include(CMakeLists.partition.txt)
 
 # Various C++20 features are used across the codebase, e.g.
 # std::string_view.starts_with. Additionally, GNU extension
@@ -65,8 +66,19 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_FILE_OFFSET_BITS=64")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_FILE_OFFSET_BITS=64")
 
 # Targets which should be installed by `make install`.
-install(TARGETS adb fastboot "${ANDROID_MKE2FS_NAME}"
-	simg2img img2simg append2simg DESTINATION bin)
+install(TARGETS
+	"${ANDROID_MKE2FS_NAME}"
+	adb
+	append2simg
+	fastboot
+	img2simg
+	lpadd
+	lpdump
+	lpflash
+	lpmake
+	lpunpack
+	simg2img
+	DESTINATION bin)
 
 # Install common completion files.
 install(FILES adb/adb.bash RENAME adb DESTINATION "${COMPLETION_COMMON_DIR}")
