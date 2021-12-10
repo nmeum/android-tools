@@ -16,4 +16,5 @@ add_library(libbase STATIC
 	libbase/threads.cpp)
 
 target_include_directories(libbase PUBLIC
-	libbase/include core/include logging/liblog/include)
+	libbase/include core/include)
+target_link_libraries(libbase PUBLIC fmt::fmt liblog)
