@@ -47,6 +47,7 @@ include(CMakeLists.sparse.txt)
 include(CMakeLists.fastboot.txt)
 include(CMakeLists.mke2fs.txt)
 include(CMakeLists.partition.txt)
+include(CMakeLists.mkbootimg.txt)
 
 # Various C++20 features are used across the codebase, e.g.
 # std::string_view.starts_with. Additionally, GNU extension
