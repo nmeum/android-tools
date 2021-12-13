@@ -1,0 +1,3 @@
+install(PROGRAMS mkbootimg/mkbootimg.py DESTINATION bin RENAME mkbootimg)
+install(PROGRAMS mkbootimg/unpack_bootimg.py DESTINATION bin RENAME unpack_bootimg)
+install(PROGRAMS mkbootimg/repack_bootimg.py DESTINATION bin RENAME repack_bootimg)
