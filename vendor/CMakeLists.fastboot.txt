@@ -135,4 +135,4 @@ target_compile_definitions(fastboot PRIVATE
 target_link_libraries(fastboot
 	libsparse libzip libcutils liblog libfsmgr libutil
 	libbase libext4 libselinux libsepol libdiagnoseusb crypto
-	z pcre2-8 pthread dl)
+	z pcre2-8 Threads::Threads dl)

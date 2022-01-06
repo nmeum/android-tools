@@ -191,7 +191,7 @@ target_link_libraries(adb
 	brotlidec
 	brotlienc
 	lz4
-	pthread
+	Threads::Threads
 	usb-1.0
 	z
 	zstd)
