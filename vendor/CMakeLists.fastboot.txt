@@ -109,6 +109,9 @@ add_library(libsepol
 target_include_directories(libsepol PUBLIC
 	selinux/libsepol/include)
 
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
 add_executable(fastboot
 	core/fastboot/bootimg_utils.cpp
 	core/fastboot/fastboot.cpp
@@ -135,4 +138,4 @@ target_compile_definitions(fastboot PRIVATE
 target_link_libraries(fastboot
 	libsparse libzip libcutils liblog libfsmgr libutil
 	libbase libext4 libselinux libsepol libdiagnoseusb crypto
-	z pcre2-8 pthread dl)
+	z pcre2-8 Threads::Threads dl)

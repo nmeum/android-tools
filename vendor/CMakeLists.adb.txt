@@ -147,6 +147,9 @@ add_library(libcrypto STATIC
 target_include_directories(libcrypto PUBLIC
 	core/libcrypto_utils/include boringssl/include)
 
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
 add_executable(adb
 	  adb/adb.cpp
 	  adb/adb_io.cpp
@@ -191,7 +194,7 @@ target_link_libraries(adb
 	brotlidec
 	brotlienc
 	lz4
-	pthread
+	Threads::Threads
 	usb-1.0
 	z
 	zstd)
