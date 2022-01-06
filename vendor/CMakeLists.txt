@@ -37,6 +37,8 @@ endif()
 add_subdirectory(boringssl EXCLUDE_FROM_ALL)
 add_subdirectory(fmtlib EXCLUDE_FROM_ALL)
 find_package(Protobuf REQUIRED)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
 include_directories(${PROTOBUF_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 

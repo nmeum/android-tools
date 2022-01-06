@@ -109,9 +109,6 @@ add_library(libsepol
 target_include_directories(libsepol PUBLIC
 	selinux/libsepol/include)
 
-set(THREADS_PREFER_PTHREAD_FLAG ON)
-find_package(Threads REQUIRED)
-
 add_executable(fastboot
 	core/fastboot/bootimg_utils.cpp
 	core/fastboot/fastboot.cpp
