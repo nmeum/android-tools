@@ -1,0 +1,51 @@
+add_library(libext2_uuid STATIC
+	e2fsprogs/lib/uuid/clear.c
+	e2fsprogs/lib/uuid/compare.c
+	e2fsprogs/lib/uuid/copy.c
+	e2fsprogs/lib/uuid/gen_uuid.c
+	e2fsprogs/lib/uuid/isnull.c
+	e2fsprogs/lib/uuid/pack.c
+	e2fsprogs/lib/uuid/parse.c
+	e2fsprogs/lib/uuid/unpack.c
+	e2fsprogs/lib/uuid/unparse.c
+	e2fsprogs/lib/uuid/uuid_time.c)
+
+target_include_directories(libext2_uuid PRIVATE
+	e2fsprogs/lib e2fsprogs/lib/uuid)
+
+add_library(libf2fs_fmt_host STATIC
+	f2fs-tools/lib/libf2fs.c
+	f2fs-tools/mkfs/f2fs_format.c
+	f2fs-tools/mkfs/f2fs_format_utils.c
+	f2fs-tools/lib/libf2fs_zoned.c
+	f2fs-tools/lib/nls_utf8.c)
+
+target_compile_definitions(libf2fs_fmt_host PUBLIC
+	-DF2FS_MAJOR_VERSION=1
+	-DF2FS_MINOR_VERSION=14
+	-DF2FS_TOOLS_VERSION="1.14.0"
+	-DF2FS_TOOLS_DATE="2020-08-24"
+	-DWITH_ANDROID)
+
+target_include_directories(libf2fs_fmt_host PRIVATE
+	f2fs-tools/include
+	f2fs-tools/mkfs
+	f2fs-tools/fsck
+	e2fsprogs/lib
+	e2fsprogs/lib/uuid
+	core/libsparse/include)
+
+add_executable(make_f2fs
+	f2fs-tools/lib/libf2fs_io.c
+	f2fs-tools/mkfs/f2fs_format_main.c)
+
+target_link_libraries(make_f2fs
+	libf2fs_fmt_host libext2_uuid libsparse libbase z)
+
+target_include_directories(make_f2fs PRIVATE
+	f2fs-tools/include
+	f2fs-tools/mkfs
+	f2fs-tools/fsck
+	e2fsprogs/lib
+	e2fsprogs/lib/uuid
+	core/libsparse/include)
