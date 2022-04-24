@@ -50,6 +50,7 @@ include(CMakeLists.adb.txt)
 include(CMakeLists.sparse.txt)
 include(CMakeLists.fastboot.txt)
 include(CMakeLists.mke2fs.txt)
+include(CMakeLists.make_f2fs.txt)
 include(CMakeLists.partition.txt)
 include(CMakeLists.mkbootimg.txt)
 
@@ -73,6 +74,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_FILE_OFFSET_BITS=64")
 # Targets which should be installed by `make install`.
 install(TARGETS
 	"${ANDROID_MKE2FS_NAME}"
+	make_f2fs
 	adb
 	append2simg
 	fastboot

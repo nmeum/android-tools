@@ -25,7 +25,7 @@ Currently the following tools are supported:
 
 * adb
 * fastboot
-* mke2fs.android (required by fastboot)
+* mke2fs.android, make_f2fs (required by fastboot)
 * simg2img, img2simg, append2simg
 * lpdump, lpmake, lpadd, lpflash, lpunpack
 * mkbootimg, unpack_bootimg, repack_bootimg
