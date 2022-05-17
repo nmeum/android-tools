@@ -1,0 +1,59 @@
+From 0797bc2697e8ae9d2e3527bf0521274b6ff94473 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>
+Date: Mon, 3 May 2021 17:11:09 +0200
+Subject: [PATCH] libselinux: store_stem(): do not free possible non-heap
+ object
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+GCC 11 complains:
+
+In file included from label_file.c:24:
+In function ‘store_stem’,
+    inlined from ‘load_mmap’ at label_file.c:277:12,
+    inlined from ‘process_file’ at label_file.c:551:5:
+label_file.h:289:25: error: ‘free’ called on pointer ‘*mmap_area.next_addr’ with nonzero offset 4 [-Werror=free-nonheap-object]
+  289 |                         free(buf);
+      |                         ^~~~~~~~~
+
+Free the pointer on failure at the caller instead of inside `store_stem()`.
+
+Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
+---
+ libselinux/src/label_file.h | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/libselinux/src/label_file.h b/libselinux/src/label_file.h
+index baed3341..9f633701 100644
+--- a/libselinux/src/label_file.h
++++ b/libselinux/src/label_file.h
+@@ -286,7 +286,6 @@ static inline int store_stem(struct saved_data *data, char *buf, int stem_len)
+ 		tmp_arr = realloc(data->stem_arr,
+ 				  sizeof(*tmp_arr) * alloc_stems);
+ 		if (!tmp_arr) {
+-			free(buf);
+ 			return -1;
+ 		}
+ 		data->alloc_stems = alloc_stems;
+@@ -308,6 +307,7 @@ static inline int find_stem_from_spec(struct saved_data *data, const char *buf)
+ 	int stem_len = get_stem_from_spec(buf);
+ 	int stemid;
+ 	char *stem;
++	int r;
+ 
+ 	if (!stem_len)
+ 		return -1;
+@@ -321,7 +321,11 @@ static inline int find_stem_from_spec(struct saved_data *data, const char *buf)
+ 	if (!stem)
+ 		return -1;
+ 
+-	return store_stem(data, stem, stem_len);
++	r = store_stem(data, stem, stem_len);
++	if (r < 0)
++		free(stem);
++
++	return r;
+ }
+ 
+ /* This will always check for buffer over-runs and either read the next entry

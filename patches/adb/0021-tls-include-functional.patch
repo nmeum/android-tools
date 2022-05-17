@@ -1,0 +1,22 @@
+From 9d0394f52324e7ccc62c67ce34cfe6ef9e85f043 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
+Date: Wed, 18 May 2022 01:02:57 +0200
+Subject: [PATCH] tls: include <functional>
+
+Fixes compilation with GCC 12.1.
+---
+ tls/include/adb/tls/tls_connection.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tls/include/adb/tls/tls_connection.h b/tls/include/adb/tls/tls_connection.h
+index bc5b98ab..a112756c 100644
+--- a/tls/include/adb/tls/tls_connection.h
++++ b/tls/include/adb/tls/tls_connection.h
+@@ -19,6 +19,7 @@
+ #include <stddef.h>
+ #include <stdint.h>
+ 
++#include <functional>
+ #include <string_view>
+ #include <vector>
+ 
