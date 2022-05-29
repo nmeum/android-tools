@@ -11,15 +11,16 @@ T must be non-const-volatile
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/libs/androidfw/include/androidfw/LoadedArsc.h b/libs/androidfw/include/androidfw/LoadedArsc.h
-index 89ff9f52125..6031116624a 100644
+index b3d6a4dcb955..76e3e7f842ec 100644
 --- a/libs/androidfw/include/androidfw/LoadedArsc.h
 +++ b/libs/androidfw/include/androidfw/LoadedArsc.h
-@@ -284,7 +284,7 @@ class LoadedPackage {
-   ByteBucketArray<TypeSpecPtr> type_specs_;
+@@ -295,7 +295,7 @@ class LoadedPackage {
+   std::unordered_map<uint8_t, TypeSpec> type_specs_;
    ByteBucketArray<uint32_t> resource_ids_;
    std::vector<DynamicPackageEntry> dynamic_package_map_;
 -  std::vector<const std::pair<OverlayableInfo, std::unordered_set<uint32_t>>> overlayable_infos_;
 +  std::vector<std::pair<OverlayableInfo, std::unordered_set<uint32_t>>> overlayable_infos_;
+   std::map<uint32_t, uint32_t> alias_id_map_;
  
    // A map of overlayable name to actor
-   std::unordered_map<std::string, std::string> overlayable_map_;
+

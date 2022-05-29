@@ -14,31 +14,35 @@ Reviewed-by: Adam Langley <agl@google.com>
  2 files changed, 4 insertions(+)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f58e853cd..26ee8c129 100644
+index a34d4450a..1fd56a21f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -498,6 +498,8 @@ elseif(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "mips")
+@@ -489,9 +489,8 @@ elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "mips")
    set(ARCH "generic")
- elseif(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "ppc64le")
+ elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "ppc64le")
    set(ARCH "ppc64le")
-+elseif (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "riscv64")
+-elseif(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "riscv64")
+-  # Just to avoid the “unknown processor” error.
+-  set(ARCH "generic")
++elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "riscv64")
 +  set(ARCH "riscv64")
  else()
    message(FATAL_ERROR "Unknown processor:" ${CMAKE_SYSTEM_PROCESSOR})
  endif()
 diff --git a/include/openssl/base.h b/include/openssl/base.h
-index 90924e629..04d04e1c6 100644
+index 983eadc5d..d97e483e3 100644
 --- a/include/openssl/base.h
 +++ b/include/openssl/base.h
-@@ -114,6 +114,8 @@ extern "C" {
+@@ -105,7 +105,7 @@ extern "C" {
+ #elif defined(__MIPSEL__) && defined(__LP64__)
+ #define OPENSSL_64_BIT
+ #define OPENSSL_MIPS64
+-#elif defined(__riscv) && __SIZEOF_POINTER__ == 8
++#elif defined(__riscv) && (__SIZEOF_POINTER__ == 8 || __riscv_xlen == 64)
+ #define OPENSSL_64_BIT
+ #elif defined(__riscv) && __SIZEOF_POINTER__ == 4
  #define OPENSSL_32_BIT
- #elif defined(__myriad2__)
- #define OPENSSL_32_BIT
-+#elif defined(__riscv) && __riscv_xlen == 64
-+#define OPENSSL_64_BIT
- #else
- // Note BoringSSL only supports standard 32-bit and 64-bit two's-complement,
- // little-endian architectures. Functions will not produce the correct answer
+
 -- 
 2.37.0
 
