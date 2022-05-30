@@ -13,12 +13,12 @@ musl's std{out,err} are macros.
  3 files changed, 24 insertions(+), 24 deletions(-)
 
 diff --git a/libs/androidfw/PosixUtils.cpp b/libs/androidfw/PosixUtils.cpp
-index 4ec525a01da5..c01bfcd29eb8 100644
+index 026912883a73..c01bfcd29eb8 100644
 --- a/libs/androidfw/PosixUtils.cpp
 +++ b/libs/androidfw/PosixUtils.cpp
 @@ -50,17 +50,17 @@ namespace android {
  namespace util {
- 
+
  std::unique_ptr<ProcResult> ExecuteBinary(const std::vector<std::string>& argv) {
 -  int stdout[2];  // stdout[0] read, stdout[1] write
 -  if (pipe(stdout) != 0) {
@@ -27,7 +27,7 @@ index 4ec525a01da5..c01bfcd29eb8 100644
      PLOG(ERROR) << "pipe";
      return nullptr;
    }
- 
+
 -  int stderr[2];  // stdout[0] read, stdout[1] write
 -  if (pipe(stderr) != 0) {
 +  int fderr[2];  // fderr[0] read, fderr[1] write
@@ -39,7 +39,7 @@ index 4ec525a01da5..c01bfcd29eb8 100644
 +    close(fdout[1]);
      return nullptr;
    }
- 
+
 @@ -89,12 +89,12 @@ std::unique_ptr<ProcResult> ExecuteBinary(const std::vector<std::string>& argv)
          exit(1);
        }
@@ -77,10 +77,10 @@ index 4ec525a01da5..c01bfcd29eb8 100644
        std::unique_ptr<ProcResult> result(new ProcResult());
        result->status = status;
 -      const auto out = ReadFile(stdout[0]);
--      result->stdout = out ? *out : "";
+-      result->stdout_str = out ? *out : "";
 -      close(stdout[0]);
 -      const auto err = ReadFile(stderr[0]);
--      result->stderr = err ? *err : "";
+-      result->stderr_str = err ? *err : "";
 -      close(stderr[0]);
 +      const auto out = ReadFile(fdout[0]);
 +      result->stdout_ = out ? *out : "";
@@ -92,29 +92,29 @@ index 4ec525a01da5..c01bfcd29eb8 100644
    }
  }
 diff --git a/libs/androidfw/include/androidfw/PosixUtils.h b/libs/androidfw/include/androidfw/PosixUtils.h
-index 8fc3ee2733c7..c6bb3fb42757 100644
+index bb2084740a44..c6bb3fb42757 100644
 --- a/libs/androidfw/include/androidfw/PosixUtils.h
 +++ b/libs/androidfw/include/androidfw/PosixUtils.h
 @@ -23,8 +23,8 @@ namespace util {
  
  struct ProcResult {
    int status;
--  std::string stdout;
--  std::string stderr;
+-  std::string stdout_str;
+-  std::string stderr_str;
 +  std::string stdout_;
 +  std::string stderr_;
  };
  
  // Fork, exec and wait for an external process. Return nullptr if the process could not be launched,
 diff --git a/libs/androidfw/tests/PosixUtils_test.cpp b/libs/androidfw/tests/PosixUtils_test.cpp
-index cf97f87a4163..44816b279c1a 100644
+index c7b3eba1451f..44816b279c1a 100644
 --- a/libs/androidfw/tests/PosixUtils_test.cpp
 +++ b/libs/androidfw/tests/PosixUtils_test.cpp
 @@ -30,14 +30,14 @@ TEST(PosixUtilsTest, AbsolutePathToBinary) {
    const auto result = ExecuteBinary({"/bin/date", "--help"});
    ASSERT_THAT(result, NotNull());
    ASSERT_EQ(result->status, 0);
--  ASSERT_EQ(result->stdout.find("usage: date "), 0);
+-  ASSERT_EQ(result->stdout_str.find("usage: date "), 0);
 +  ASSERT_EQ(result->stdout_.find("usage: date "), 0);
  }
  
@@ -122,7 +122,7 @@ index cf97f87a4163..44816b279c1a 100644
    const auto result = ExecuteBinary({"date", "--help"});
    ASSERT_THAT(result, NotNull());
    ASSERT_EQ(result->status, 0);
--  ASSERT_EQ(result->stdout.find("usage: date "), 0);
+-  ASSERT_EQ(result->stdout_str.find("usage: date "), 0);
 +  ASSERT_EQ(result->stdout_.find("usage: date "), 0);
  }
  

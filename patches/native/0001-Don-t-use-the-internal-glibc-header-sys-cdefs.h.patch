@@ -76,7 +76,7 @@ https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-
  61 files changed, 282 insertions(+), 139 deletions(-)
 
 diff --git a/docs/Doxyfile b/docs/Doxyfile
-index a1bd960c5a..60728c27f3 100644
+index ea22337f3f..d1e7d31d2b 100644
 --- a/docs/Doxyfile
 +++ b/docs/Doxyfile
 @@ -1623,8 +1623,12 @@ INCLUDE_FILE_PATTERNS  =
@@ -106,34 +106,6 @@ index 2ac7d4d350..8a7517e4a0 100644
  #include <sys/types.h>
  
  #ifdef __cplusplus
-diff --git a/include/android/choreographer.h b/include/android/choreographer.h
-index 8039bb0d79..3e15dfb99c 100644
---- a/include/android/choreographer.h
-+++ b/include/android/choreographer.h
-@@ -27,9 +27,10 @@
- #define ANDROID_CHOREOGRAPHER_H
- 
- #include <stdint.h>
--#include <sys/cdefs.h>
- 
--__BEGIN_DECLS
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
- 
- struct AChoreographer;
- typedef struct AChoreographer AChoreographer;
-@@ -151,7 +152,9 @@ void AChoreographer_unregisterRefreshRateCallback(AChoreographer* choreographer,
-                                                   AChoreographer_refreshRateCallback, void* data)
-         __INTRODUCED_IN(30);
- 
--__END_DECLS
-+#ifdef __cplusplus
-+}
-+#endif
- 
- #endif // ANDROID_CHOREOGRAPHER_H
- 
 diff --git a/include/android/configuration.h b/include/android/configuration.h
 index 88019ae054..dd28fa8b01 100644
 --- a/include/android/configuration.h
@@ -147,17 +119,17 @@ index 88019ae054..dd28fa8b01 100644
  #include <android/asset_manager.h>
  
 diff --git a/include/android/font.h b/include/android/font.h
-index a172618829..47fe58a887 100644
+index 8a3a474f25..cda58a4a45 100644
 --- a/include/android/font.h
 +++ b/include/android/font.h
-@@ -31,7 +31,6 @@
+@@ -30,7 +30,6 @@
+ #define ANDROID_FONT_H
  
  #include <stdbool.h>
- #include <stddef.h>
--#include <sys/cdefs.h>
+-#include <stddef.h>
+ #include <sys/cdefs.h>
  
  /******************************************************************
-  *
 @@ -49,7 +48,9 @@
   *   - DO NOT CHANGE THE LAYOUT OR SIZE OF STRUCTURES
   */
@@ -180,8 +152,9 @@ index a172618829..47fe58a887 100644
  
  #endif // ANDROID_FONT_H
  
+
 diff --git a/include/android/font_matcher.h b/include/android/font_matcher.h
-index 49e478c2f3..dbba01f514 100644
+index 4417422687..bbb285e224 100644
 --- a/include/android/font_matcher.h
 +++ b/include/android/font_matcher.h
 @@ -75,7 +75,6 @@
@@ -213,7 +186,7 @@ index 49e478c2f3..dbba01f514 100644
 +#endif
  
  #endif // ANDROID_FONT_MATCHER_H
- 
+
 diff --git a/include/android/hardware_buffer_jni.h b/include/android/hardware_buffer_jni.h
 index ae208a6e75..7975fd4545 100644
 --- a/include/android/hardware_buffer_jni.h
@@ -247,7 +220,7 @@ index ae208a6e75..7975fd4545 100644
  #endif // ANDROID_HARDWARE_BUFFER_JNI_H
  
 diff --git a/include/android/input.h b/include/android/input.h
-index dbfd61eb05..150bf06146 100644
+index 76422154f1..450731f65c 100644
 --- a/include/android/input.h
 +++ b/include/android/input.h
 @@ -26,7 +26,6 @@
@@ -259,7 +232,7 @@ index dbfd61eb05..150bf06146 100644
  /******************************************************************
   *
 diff --git a/include/android/multinetwork.h b/include/android/multinetwork.h
-index 509ee0e49b..6c8d8fc71a 100644
+index 4c83a14728..823c7b48e0 100644
 --- a/include/android/multinetwork.h
 +++ b/include/android/multinetwork.h
 @@ -28,9 +28,10 @@
@@ -275,9 +248,9 @@ index 509ee0e49b..6c8d8fc71a 100644
  
  /**
   * The corresponding C type for android.net.Network#getNetworkHandle() return
-@@ -216,7 +217,9 @@ int android_res_nresult(int fd,
+@@ -271,7 +272,9 @@ int android_tag_socket(int sockfd, int tag) __INTRODUCED_IN(33);
   */
- void android_res_cancel(int nsend_fd) __INTRODUCED_IN(29);
+ int android_untag_socket(int sockfd) __INTRODUCED_IN(33);
  
 -__END_DECLS
 +#ifdef __cplusplus
@@ -299,7 +272,7 @@ index 071ec798b4..38e5cc6f97 100644
  #include <android/native_window.h>
  
 diff --git a/include/android/sharedmem.h b/include/android/sharedmem.h
-index 7994aa9914..253f2f7349 100644
+index e0a8045d41..4813279e80 100644
 --- a/include/android/sharedmem.h
 +++ b/include/android/sharedmem.h
 @@ -28,7 +28,6 @@
@@ -323,7 +296,7 @@ index bbac785a33..5abc245083 100644
  /******************************************************************
   *
 diff --git a/include/android/surface_control.h b/include/android/surface_control.h
-index 27b880d2e1..fe448c432d 100644
+index 059bc41f9a..d4629955bf 100644
 --- a/include/android/surface_control.h
 +++ b/include/android/surface_control.h
 @@ -26,14 +26,15 @@
@@ -344,9 +317,9 @@ index 27b880d2e1..fe448c432d 100644
  
  struct ASurfaceControl;
  
-@@ -429,6 +430,8 @@ void ASurfaceTransaction_setFrameRate(ASurfaceTransaction* transaction,
-                                       ASurfaceControl* surface_control, float frameRate,
-                                       int8_t compatibility) __INTRODUCED_IN(30);
+@@ -595,7 +596,9 @@ void ASurfaceTransaction_setEnableBackPressure(ASurfaceTransaction* transaction,
+                                                bool enableBackPressure)
+                                                __INTRODUCED_IN(31);
  
 -__END_DECLS
 +#ifdef __cplusplus
@@ -354,8 +327,9 @@ index 27b880d2e1..fe448c432d 100644
 +#endif
  
  #endif // ANDROID_SURFACE_CONTROL_H
+ 
 diff --git a/include/android/surface_texture.h b/include/android/surface_texture.h
-index b227b324f8..470ca3fa29 100644
+index 9ae211ea14..da4ce54942 100644
 --- a/include/android/surface_texture.h
 +++ b/include/android/surface_texture.h
 @@ -43,11 +43,12 @@
@@ -373,7 +347,7 @@ index b227b324f8..470ca3fa29 100644
  
  struct ASurfaceTexture;
  
-@@ -173,6 +174,8 @@ void ASurfaceTexture_getTransformMatrix(ASurfaceTexture* st, float mtx[16]) __IN
+@@ -173,7 +174,9 @@ void ASurfaceTexture_getTransformMatrix(ASurfaceTexture* st, float mtx[16]) __IN
   */
  int64_t ASurfaceTexture_getTimestamp(ASurfaceTexture* st) __INTRODUCED_IN(28);
  
@@ -383,8 +357,9 @@ index b227b324f8..470ca3fa29 100644
 +#endif
  
  #endif /* ANDROID_NATIVE_SURFACE_TEXTURE_H */
+ 
 diff --git a/include/android/surface_texture_jni.h b/include/android/surface_texture_jni.h
-index e40686d96c..0ceaaac36f 100644
+index 8448d8cafa..f1a75424c3 100644
 --- a/include/android/surface_texture_jni.h
 +++ b/include/android/surface_texture_jni.h
 @@ -30,7 +30,9 @@
@@ -398,7 +373,7 @@ index e40686d96c..0ceaaac36f 100644
  
  /**
   * Get a reference to the native ASurfaceTexture from the corresponding java object.
-@@ -50,6 +52,8 @@ __BEGIN_DECLS
+@@ -50,7 +52,9 @@ __BEGIN_DECLS
   */
  ASurfaceTexture* ASurfaceTexture_fromSurfaceTexture(JNIEnv* env, jobject surfacetexture) __INTRODUCED_IN(28);
  
@@ -408,6 +383,7 @@ index e40686d96c..0ceaaac36f 100644
 +#endif
  
  #endif /* ANDROID_NATIVE_SURFACE_TEXTURE_JNI_H */
+ 
 diff --git a/include/android/system_fonts.h b/include/android/system_fonts.h
 index b0bbb954a9..2b43ff4083 100644
 --- a/include/android/system_fonts.h
@@ -443,7 +419,7 @@ index b0bbb954a9..2b43ff4083 100644
  #endif // ANDROID_SYSTEM_FONTS_H
  
 diff --git a/include/android/thermal.h b/include/android/thermal.h
-index 6ec68d99fc..279fc719ef 100644
+index 32580badc0..d7acbf09a6 100644
 --- a/include/android/thermal.h
 +++ b/include/android/thermal.h
 @@ -26,7 +26,6 @@
@@ -455,7 +431,7 @@ index 6ec68d99fc..279fc719ef 100644
  /******************************************************************
   *
 diff --git a/include/android/trace.h b/include/android/trace.h
-index dcefffb20d..d69106dcd4 100644
+index d11158bb74..d0d002d3dd 100644
 --- a/include/android/trace.h
 +++ b/include/android/trace.h
 @@ -34,7 +34,6 @@
@@ -519,7 +495,7 @@ index 1dcf540cf3..f5221c2fa7 100644
 +}
 +#endif
 diff --git a/libs/binder/ndk/include_ndk/android/binder_ibinder.h b/libs/binder/ndk/include_ndk/android/binder_ibinder.h
-index 78f2d3af14..4d72cd37f0 100644
+index 565542ba55..063e6f4c56 100644
 --- a/libs/binder/ndk/include_ndk/android/binder_ibinder.h
 +++ b/libs/binder/ndk/include_ndk/android/binder_ibinder.h
 @@ -28,13 +28,14 @@
@@ -539,7 +515,7 @@ index 78f2d3af14..4d72cd37f0 100644
  
  /**
   * Flags for AIBinder_transact.
-@@ -729,6 +730,8 @@ AIBinder_Weak* AIBinder_Weak_clone(const AIBinder_Weak* weak) __INTRODUCED_IN(31
+@@ -810,6 +811,8 @@ AIBinder_Weak* AIBinder_Weak_clone(const AIBinder_Weak* weak) __INTRODUCED_IN(31
   */
  bool AIBinder_Weak_lt(const AIBinder_Weak* lhs, const AIBinder_Weak* rhs) __INTRODUCED_IN(31);
  
@@ -575,7 +551,7 @@ index 6880d86e1a..1e35082649 100644
  
  /** @} */
 diff --git a/libs/binder/ndk/include_ndk/android/binder_parcel.h b/libs/binder/ndk/include_ndk/android/binder_parcel.h
-index 527b151457..a32eeca9ee 100644
+index 84575811f0..018672f4a0 100644
 --- a/libs/binder/ndk/include_ndk/android/binder_parcel.h
 +++ b/libs/binder/ndk/include_ndk/android/binder_parcel.h
 @@ -28,14 +28,15 @@
@@ -596,10 +572,10 @@ index 527b151457..a32eeca9ee 100644
  
  /**
   * This object represents a package of data that can be sent between processes. When transacting, an
-@@ -1163,6 +1164,8 @@ binder_status_t AParcel_appendFrom(const AParcel* from, AParcel* to, int32_t sta
-  * \return A parcel which is not related to any IBinder objects.
-  */
- AParcel* AParcel_create() __INTRODUCED_IN(31);
+@@ -1202,6 +1203,8 @@ binder_status_t AParcel_marshal(const AParcel* parcel, uint8_t* buffer, size_t s
+ binder_status_t AParcel_unmarshal(AParcel* parcel, const uint8_t* buffer, size_t len)
+         __INTRODUCED_IN(33);
+ 
 -__END_DECLS
 +#ifdef __cplusplus
 +}
@@ -632,7 +608,7 @@ index 384d4f7772..e4d22d1d81 100644
  
  /** @} */
 diff --git a/libs/binder/ndk/include_ndk/android/binder_status.h b/libs/binder/ndk/include_ndk/android/binder_status.h
-index 6f1fdfcd20..959d6be7e4 100644
+index 76c7aacb7c..98c73aae07 100644
 --- a/libs/binder/ndk/include_ndk/android/binder_status.h
 +++ b/libs/binder/ndk/include_ndk/android/binder_status.h
 @@ -28,9 +28,10 @@
@@ -646,9 +622,9 @@ index 6f1fdfcd20..959d6be7e4 100644
 +extern "C" {
 +#endif
  
- #ifndef __ANDROID_API__
- #error Android builds must be compiled against a specific API. If this is an \
-@@ -289,6 +290,8 @@ void AStatus_deleteDescription(const char* description) __INTRODUCED_IN(30);
+ #ifndef __BIONIC__
+ 
+@@ -304,6 +305,8 @@ void AStatus_deleteDescription(const char* description) __INTRODUCED_IN(30);
   */
  void AStatus_delete(AStatus* status) __INTRODUCED_IN(29);
  
@@ -659,7 +635,7 @@ index 6f1fdfcd20..959d6be7e4 100644
  
  /** @} */
 diff --git a/libs/binder/ndk/include_platform/android/binder_ibinder_platform.h b/libs/binder/ndk/include_platform/android/binder_ibinder_platform.h
-index e315c798ee..1546d74fe7 100644
+index 89f21dda21..3cd8dcbd94 100644
 --- a/libs/binder/ndk/include_platform/android/binder_ibinder_platform.h
 +++ b/libs/binder/ndk/include_platform/android/binder_ibinder_platform.h
 @@ -18,7 +18,9 @@
@@ -673,9 +649,9 @@ index e315c798ee..1546d74fe7 100644
  
  // platform values for binder_flags_t
  enum {
-@@ -55,4 +57,6 @@ __attribute__((weak)) void AIBinder_setRequestingSid(AIBinder* binder, bool requ
+@@ -80,4 +82,6 @@ void AIBinder_setMinSchedulerPolicy(AIBinder* binder, int policy, int priority)
   */
- __attribute__((weak, warn_unused_result)) const char* AIBinder_getCallingSid() __INTRODUCED_IN(31);
+ void AIBinder_setInheritRt(AIBinder* binder, bool inheritRt) __INTRODUCED_IN(33);
  
 -__END_DECLS
 +#ifdef __cplusplus
@@ -815,10 +791,10 @@ index b4f6358841..98d3c8f590 100644
  #include <binder/Parcel.h>
  #include "ibinder_internal.h"
 diff --git a/libs/nativebase/include/nativebase/nativebase.h b/libs/nativebase/include/nativebase/nativebase.h
-index 7ecdfbd745..3979b1bb9f 100644
+index 7ecdfbd745..c8856856c8 100644
 --- a/libs/nativebase/include/nativebase/nativebase.h
 +++ b/libs/nativebase/include/nativebase/nativebase.h
-@@ -19,11 +19,12 @@
+@@ -19,11 +19,13 @@
  #include <stdint.h>
  #include <stdbool.h>
  #include <string.h>
@@ -830,10 +806,11 @@ index 7ecdfbd745..3979b1bb9f 100644
 +#ifdef __cplusplus
 +extern "C" {
 +#endif
++
  
  #ifdef __cplusplus
  #define ANDROID_NATIVE_UNSIGNED_CAST(x) static_cast<unsigned int>(x)
-@@ -107,4 +108,6 @@ typedef struct ANativeWindowBuffer ANativeWindowBuffer;
+@@ -107,4 +109,6 @@ typedef struct ANativeWindowBuffer ANativeWindowBuffer;
  // Old typedef for backwards compatibility.
  typedef ANativeWindowBuffer_t android_native_buffer_t;
  
@@ -865,7 +842,7 @@ index 683abc4142..cee6059214 100644
 +}
 +#endif
 diff --git a/libs/nativedisplay/include/apex/display.h b/libs/nativedisplay/include/apex/display.h
-index a7eaf87b9e..4f1a0ad9e3 100644
+index bd94b5523e..52b7ff915b 100644
 --- a/libs/nativedisplay/include/apex/display.h
 +++ b/libs/nativedisplay/include/apex/display.h
 @@ -23,7 +23,9 @@
@@ -879,7 +856,7 @@ index a7eaf87b9e..4f1a0ad9e3 100644
  
  namespace android {
  
-@@ -136,4 +138,6 @@ int64_t ADisplayConfig_getCompositorOffsetNanos(ADisplayConfig* config);
+@@ -141,4 +143,6 @@ int64_t ADisplayConfig_getCompositorOffsetNanos(ADisplayConfig* config);
  int64_t ADisplayConfig_getAppVsyncOffsetNanos(ADisplayConfig* config);
  
  } // namespace android
@@ -939,27 +916,25 @@ index e759513a63..a15dc9c37d 100644
  
  #endif // ANDROID_DATA_SPACE_H
 diff --git a/libs/nativewindow/include/android/hardware_buffer.h b/libs/nativewindow/include/android/hardware_buffer.h
-index dcb05b5536..f3ba02ac69 100644
+index 78c56d9ed5..aca4eacff6 100644
 --- a/libs/nativewindow/include/android/hardware_buffer.h
 +++ b/libs/nativewindow/include/android/hardware_buffer.h
-@@ -47,11 +47,12 @@
- 
- #include <inttypes.h>
- 
--#include <sys/cdefs.h>
+@@ -47,9 +47,10 @@
  
  #include <android/rect.h>
+ #include <inttypes.h>
+-#include <sys/cdefs.h>
  
 -__BEGIN_DECLS
 +#ifdef __cplusplus
 +extern "C" {
 +#endif
  
- /**
-  * Buffer pixel formats.
-@@ -535,7 +536,9 @@ int AHardwareBuffer_lockAndGetInfo(AHardwareBuffer* buffer, uint64_t usage,
-         int32_t fence, const ARect* rect, void** outVirtualAddress,
-         int32_t* outBytesPerPixel, int32_t* outBytesPerStride) __INTRODUCED_IN(29);
+ // clang-format off
+ 
+@@ -575,7 +576,9 @@ int AHardwareBuffer_lockAndGetInfo(AHardwareBuffer* _Nonnull buffer, uint64_t us
+ int AHardwareBuffer_getId(const AHardwareBuffer* _Nonnull buffer, uint64_t* _Nonnull outId)
+         __INTRODUCED_IN(31);
  
 -__END_DECLS
 +#ifdef __cplusplus
@@ -996,19 +971,19 @@ index 88772a92fc..07b48e9588 100644
  
  #endif // ANDROID_HDR_METADATA_H
 diff --git a/libs/nativewindow/include/android/native_window.h b/libs/nativewindow/include/android/native_window.h
-index a3a45e3705..834a68f3fa 100644
+index f0e1c4d749..5ab7fb35c4 100644
 --- a/libs/nativewindow/include/android/native_window.h
 +++ b/libs/nativewindow/include/android/native_window.h
-@@ -34,7 +34,6 @@
- #define ANDROID_NATIVE_WINDOW_H
+@@ -35,7 +35,6 @@
  
  #include <stdint.h>
+ #include <stdbool.h>
 -#include <sys/cdefs.h>
  
  #include <android/data_space.h>
  #include <android/hardware_buffer.h>
 diff --git a/libs/nativewindow/include/apex/window.h b/libs/nativewindow/include/apex/window.h
-index 2d1354cdf1..1b2f689406 100644
+index 0923438eec..e4e51e912f 100644
 --- a/libs/nativewindow/include/apex/window.h
 +++ b/libs/nativewindow/include/apex/window.h
 @@ -22,7 +22,9 @@
@@ -1022,7 +997,7 @@ index 2d1354cdf1..1b2f689406 100644
  
  /*
   * perform bits that can be used with ANativeWindow_perform()
-@@ -207,4 +209,6 @@ int64_t ANativeWindow_getLastDequeueStartTime(ANativeWindow* window);
+@@ -220,4 +222,6 @@ int64_t ANativeWindow_getLastDequeueStartTime(ANativeWindow* window);
   */
  int ANativeWindow_setDequeueTimeout(ANativeWindow* window, int64_t timeout);
  
@@ -1031,7 +1006,7 @@ index 2d1354cdf1..1b2f689406 100644
 +}
 +#endif
 diff --git a/libs/nativewindow/include/system/window.h b/libs/nativewindow/include/system/window.h
-index 73b46b202e..8fdb9db16f 100644
+index 7f0113500d..75f97451ce 100644
 --- a/libs/nativewindow/include/system/window.h
 +++ b/libs/nativewindow/include/system/window.h
 @@ -37,7 +37,6 @@
@@ -1053,7 +1028,7 @@ index 73b46b202e..8fdb9db16f 100644
  
  /*****************************************************************************/
  
-@@ -1123,4 +1124,6 @@ static inline int ANativeWindow_setQueryInterceptor(ANativeWindow* window,
+@@ -1131,4 +1132,6 @@ static inline int ANativeWindow_setQueryInterceptor(ANativeWindow* window,
      return window->perform(window, NATIVE_WINDOW_SET_QUERY_INTERCEPTOR, interceptor, data);
  }
  
@@ -1062,10 +1037,10 @@ index 73b46b202e..8fdb9db16f 100644
 +}
 +#endif
 diff --git a/libs/nativewindow/include/vndk/hardware_buffer.h b/libs/nativewindow/include/vndk/hardware_buffer.h
-index 12f8691684..d595b384ec 100644
+index 21931bb553..feda802ac3 100644
 --- a/libs/nativewindow/include/vndk/hardware_buffer.h
 +++ b/libs/nativewindow/include/vndk/hardware_buffer.h
-@@ -22,7 +22,9 @@
+@@ -22,7 +22,10 @@
  
  #include <cutils/native_handle.h>
  
@@ -1073,10 +1048,11 @@ index 12f8691684..d595b384ec 100644
 +#ifdef __cplusplus
 +extern "C" {
 +#endif
++
  
- const native_handle_t* AHardwareBuffer_getNativeHandle(const AHardwareBuffer* buffer);
- 
-@@ -95,6 +97,8 @@ enum {
+ /**
+  * Get the native handle from an AHardwareBuffer.
+@@ -105,6 +108,8 @@ enum {
      AHARDWAREBUFFER_USAGE_CAMERA_MASK               = 6UL << 16,
  };
  
@@ -1087,10 +1063,10 @@ index 12f8691684..d595b384ec 100644
  
  #endif /* ANDROID_VNDK_NATIVEWINDOW_AHARDWAREBUFFER_H */
 diff --git a/libs/nativewindow/include/vndk/window.h b/libs/nativewindow/include/vndk/window.h
-index 500052c936..db1fdd1571 100644
+index 500052c936..ebbb238367 100644
 --- a/libs/nativewindow/include/vndk/window.h
 +++ b/libs/nativewindow/include/vndk/window.h
-@@ -23,7 +23,9 @@
+@@ -23,7 +23,10 @@
  #include <android/native_window.h>
  
  
@@ -1098,10 +1074,11 @@ index 500052c936..db1fdd1571 100644
 +#ifdef __cplusplus
 +extern "C" {
 +#endif
++
  
  /*
   * Convert this ANativeWindowBuffer into a AHardwareBuffer
-@@ -328,6 +330,8 @@ int ANativeWindow_setAutoPrerotation(ANativeWindow* window, bool autoPrerotation
+@@ -328,6 +331,8 @@ int ANativeWindow_setAutoPrerotation(ANativeWindow* window, bool autoPrerotation
  
  /*****************************************************************************/
  
@@ -1281,7 +1258,7 @@ index fe59d1ffba..5a9d93cf2d 100644
  
  // Avoid errors if this header is included in C code.
  #if defined(__cplusplus)
-diff --git a/libs/vr/libdvr/include/dvr/dvr_display_manager.h b/libs/vr/libdvr/include/dvr/dvr_display_manager.h
+ddiff --git a/libs/vr/libdvr/include/dvr/dvr_display_manager.h b/libs/vr/libdvr/include/dvr/dvr_display_manager.h
 index f910d610f5..29ba986d26 100644
 --- a/libs/vr/libdvr/include/dvr/dvr_display_manager.h
 +++ b/libs/vr/libdvr/include/dvr/dvr_display_manager.h
@@ -1507,7 +1484,7 @@ index 498bb5cc6e..cd1a3f959c 100644
  
  #endif  // ANDROID_DVR_VSYNC_H_
 diff --git a/vulkan/include/hardware/hwvulkan.h b/vulkan/include/hardware/hwvulkan.h
-index 9e9a14d489..8c1eb5a515 100644
+index 98bc8e3c46..0d5c4cf901 100644
 --- a/vulkan/include/hardware/hwvulkan.h
 +++ b/vulkan/include/hardware/hwvulkan.h
 @@ -20,7 +20,9 @@
@@ -1521,7 +1498,7 @@ index 9e9a14d489..8c1eb5a515 100644
  
  #define HWVULKAN_HARDWARE_MODULE_ID "vulkan"
  
-@@ -66,6 +68,8 @@ typedef struct hwvulkan_device_t {
+@@ -67,6 +69,8 @@ typedef struct hwvulkan_device_t {
      PFN_vkGetInstanceProcAddr GetInstanceProcAddr;
  } hwvulkan_device_t;
  

@@ -1,35 +1,35 @@
-From 1ae83fc2b022854e9c2ef3097fb63e2b7667d193 Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?=C4=90o=C3=A0n=20Tr=E1=BA=A7n=20C=C3=B4ng=20Danh?=
- <congdanhqx@gmail.com>
-Date: Sat, 31 Oct 2020 19:37:27 +0700
+From 412a557f67209e17d680fae14287acef91a1aaab Mon Sep 17 00:00:00 2001
+From: jershell <jershell@mail.ru>
+Date: Mon, 30 May 2022 15:19:59 +0300
 Subject: [PATCH] remove glibc internal headers cdefs.h
 
 ---
- include/android-base/endian.h     | 1 -
+ include/android-base/endian.h     | 2 +-
  include/android-base/properties.h | 1 -
- 2 files changed, 2 deletions(-)
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/include/android-base/endian.h b/include/android-base/endian.h
-index 8fa6365..1e5cceb 100644
+index b47494b..c29845e 100644
 --- a/include/android-base/endian.h
 +++ b/include/android-base/endian.h
-@@ -19,7 +19,6 @@
+@@ -19,7 +19,7 @@
  /* A cross-platform equivalent of bionic's <sys/endian.h>. */
- 
+
  /* For __BIONIC__ and __GLIBC__ */
 -#include <sys/cdefs.h>
- 
++#include <cfloat>
+
  #if defined(__BIONIC__)
- 
+
 diff --git a/include/android-base/properties.h b/include/android-base/properties.h
-index 8b34573..bfd25e1 100644
+index 021f466..53b8ea1 100644
 --- a/include/android-base/properties.h
 +++ b/include/android-base/properties.h
 @@ -16,7 +16,6 @@
- 
+
  #pragma once
- 
+
 -#include <sys/cdefs.h>
- 
+
  #include <chrono>
  #include <limits>

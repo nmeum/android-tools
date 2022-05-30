@@ -1,0 +1,23 @@
+From ba0e94954de36cc401e78c3233913f038a032728 Mon Sep 17 00:00:00 2001
+From: jershell <jershell@mail.ru>
+Date: Mon, 30 May 2022 14:17:42 +0300
+Subject: [PATCH] fix implicit instantiation of undefined template
+
+---
+ libutils/String8.cpp | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/libutils/String8.cpp b/libutils/String8.cpp
+index 419b2deed9..33f719d8c7 100644
+--- a/libutils/String8.cpp
++++ b/libutils/String8.cpp
+@@ -24,7 +24,8 @@
+ #include <utils/String16.h>
+ 
+ #include <ctype.h>
+-
++#include <vector>
++#include <limits>
+ #include <string>
+ 
+ #include "SharedBuffer.h"
