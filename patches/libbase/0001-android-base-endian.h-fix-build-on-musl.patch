@@ -1,0 +1,22 @@
+From c57c764c290e09eac3b177848a87bf6356f76d18 Mon Sep 17 00:00:00 2001
+From: jershell <jershell@mail.ru>
+Date: Tue, 7 Jun 2022 00:29:25 +0300
+Subject: [PATCH] android-base/endian.h: fix build on musl
+
+---
+ include/android-base/endian.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/android-base/endian.h b/include/android-base/endian.h
+index b47494b..ddfe36f 100644
+--- a/include/android-base/endian.h
++++ b/include/android-base/endian.h
+@@ -25,7 +25,7 @@
+ 
+ #include <sys/endian.h>
+ 
+-#elif defined(__GLIBC__) || defined(ANDROID_HOST_MUSL)
++#elif defined(__GLIBC__) || defined(ANDROID_HOST_MUSL) || defined(__linux__)
+ 
+ /* glibc and musl's <endian.h> are like bionic's <sys/endian.h>. */
+ #include <endian.h>
