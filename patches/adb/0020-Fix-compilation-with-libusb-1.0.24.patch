@@ -1,14 +1,14 @@
-From a18f12ae3d10a3402a9141ac1ac9a42a47488e2c Mon Sep 17 00:00:00 2001
+From 3e2a37b3886200951a7c3bebe149219c67198df6 Mon Sep 17 00:00:00 2001
 From: jershell <jershell@mail.ru>
-Date: Mon, 6 Jun 2022 12:49:48 +0300
-Subject: [PATCH] Fix compilation with libusb < 1.0.24
+Date: Mon, 6 Jun 2022 16:29:40 +0300
+Subject: [PATCH] fix for Fix-compilation-with-libusb
 
 ---
  client/usb_libusb.cpp | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/client/usb_libusb.cpp b/client/usb_libusb.cpp
-index e0b0104a..a3fb2a5d 100644
+index e0b0104a..a66474b3 100644
 --- a/client/usb_libusb.cpp
 +++ b/client/usb_libusb.cpp
 @@ -295,7 +295,7 @@ struct LibusbConnection : public Connection {
@@ -25,7 +25,7 @@ index e0b0104a..a3fb2a5d 100644
              writes_[write->id] = std::move(write);
          } else {
 -            LOG(ERROR) << "libusb_submit_transfer failed: " << libusb_strerror(rc);
-+            LOG_ERR(error, "failed to open device: %s", libusb_strerror(static_cast<libusb_error>(rc)));
++            LOG(ERROR) << "libusb_submit_transfer failed: " << libusb_strerror(static_cast<libusb_error>(rc));
              libusb_free_transfer(write->transfer);
          }
      }
