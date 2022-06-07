@@ -1,0 +1,22 @@
+From 96cb610eb65b7784a2f700a2f79e4e1138536743 Mon Sep 17 00:00:00 2001
+From: jershell <jershell@mail.ru>
+Date: Tue, 7 Jun 2022 13:17:33 +0300
+Subject: [PATCH] fix build on gcc
+
+---
+ tls/include/adb/tls/tls_connection.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tls/include/adb/tls/tls_connection.h b/tls/include/adb/tls/tls_connection.h
+index bc5b98ab..ced5356f 100644
+--- a/tls/include/adb/tls/tls_connection.h
++++ b/tls/include/adb/tls/tls_connection.h
+@@ -21,7 +21,7 @@
+ 
+ #include <string_view>
+ #include <vector>
+-
++#include <functional>
+ #include <android-base/unique_fd.h>
+ #include <openssl/ssl.h>
+ #include <openssl/x509.h>
