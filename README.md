@@ -52,6 +52,10 @@ The following libraries are required by android-tools:
 6. [zstd][zstd]
 7. [lz4][lz4]
 
+Python 3 is optionally needed as a run-time dependency in order to use
+the `mkbootimg`, `unpack_bootimg`, and `repack_bootimg` scripts which
+are all written in Python.
+
 Additionally the following software is required at compile-time:
 
 1. A C and C++ compiler (either [GCC][gcc] >= 10.X or [clang][clang])
