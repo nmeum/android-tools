@@ -88,7 +88,7 @@ install(TARGETS
 	lpunpack
 	simg2img
 	e2fsdroid
-	ext2simg 
+	ext2simg
 	DESTINATION bin)
 
 # Install common completion files.
