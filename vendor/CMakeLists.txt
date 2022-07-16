@@ -1,5 +1,15 @@
 enable_language(C CXX)
 
+# Use C11 with GNU extensions.
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_EXTENSIONS ON)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+
+# Use C++20 with GNU extensions.
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_EXTENSIONS ON)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 set(android-vendored
 	avb
 	adb
@@ -52,12 +62,6 @@ include(CMakeLists.fastboot.txt)
 include(CMakeLists.mke2fs.txt)
 include(CMakeLists.partition.txt)
 include(CMakeLists.mkbootimg.txt)
-
-# Various C++20 features are used across the codebase, e.g.
-# std::string_view.starts_with. Additionally, GNU extension
-# (such as typeof) are used occasionally.
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu11")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++2a")
 
 # Android seems to use various attributes supported by clang but not by
 # GCC which causes it to emit lots of warnings. Since these attributes
