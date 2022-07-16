@@ -1,5 +1,4 @@
-# TODO: https://cmake.org/cmake/help/v3.0/module/ExternalProject.html
-# To patch the submodule
+enable_language(C CXX)
 
 set(android-vendored
 	avb
@@ -18,6 +17,7 @@ set(android-vendored
 	fmtlib
 	boringssl)
 
+# XXX: Consider using https://cmake.org/cmake/help/v3.0/module/ExternalProject.html
 if(EXISTS "${ANDROID_PATCH_DIR}/")
 	execute_process(COMMAND git submodule --quiet update)
 	foreach(v ${android-vendored})
