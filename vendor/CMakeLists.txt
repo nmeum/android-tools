@@ -10,6 +10,15 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Android seems to use various attributes supported by clang but not by
+# GCC which causes it to emit lots of warnings. Since these attributes
+# don't seem to effect runtime behaviour simply disable the warnings.
+add_compile_options(-Wno-attributes)
+
+# libfsmgr (required by fastboot) requires a 64-bit off_t for lseek. On
+# 32-bit glibc platforms this is not the case by default.
+add_compile_definitions(_FILE_OFFSET_BITS=64)
+
 set(android-vendored
 	avb
 	adb
@@ -62,17 +71,6 @@ include(CMakeLists.fastboot.txt)
 include(CMakeLists.mke2fs.txt)
 include(CMakeLists.partition.txt)
 include(CMakeLists.mkbootimg.txt)
-
-# Android seems to use various attributes supported by clang but not by
-# GCC which causes it to emit lots of warnings. Since these attributes
-# don't seem to effect runtime behaviour simply disable the warnings.
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-attributes")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-attributes")
-
-# libfsmgr (required by fastboot) requires a 64-bit off_t for lseek. On
-# 32-bit glibc platforms this is not the case by default.
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_FILE_OFFSET_BITS=64")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_FILE_OFFSET_BITS=64")
 
 # Targets which should be installed by `make install`.
 install(TARGETS
