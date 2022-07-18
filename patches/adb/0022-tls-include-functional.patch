@@ -1,22 +1,27 @@
-From 716ef60d1208429c39c88708d89100738247f518 Mon Sep 17 00:00:00 2001
+From 8d748f87b6d6c60e4e23b46382b56d529563dc83 Mon Sep 17 00:00:00 2001
 From: jershell <jershell@mail.ru>
 Date: Tue, 7 Jun 2022 13:17:33 +0300
-Subject: [PATCH] fix build on gcc
+Subject: [PATCH] Fixes compilation with GCC 12.1.
 
 ---
  tls/include/adb/tls/tls_connection.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tls/include/adb/tls/tls_connection.h b/tls/include/adb/tls/tls_connection.h
-index bc5b98ab..ced5356f 100644
+index ced5356f..4aac6b66 100644
 --- a/tls/include/adb/tls/tls_connection.h
 +++ b/tls/include/adb/tls/tls_connection.h
-@@ -21,7 +21,7 @@
+@@ -18,10 +18,10 @@
  
- #include <string_view>
- #include <vector>
+ #include <stddef.h>
+ #include <stdint.h>
 -
 +#include <functional>
+ #include <string_view>
+ #include <vector>
+-#include <functional>
++
  #include <android-base/unique_fd.h>
  #include <openssl/ssl.h>
  #include <openssl/x509.h>
+
