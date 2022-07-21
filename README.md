@@ -29,6 +29,7 @@ Currently the following tools are supported:
 * simg2img, img2simg, append2simg
 * lpdump, lpmake, lpadd, lpflash, lpunpack
 * mkbootimg, unpack_bootimg, repack_bootimg
+* mkdtboimg
 
 The build system itself works quite well and is already being used for
 the Alpine Linux [android-tools package][alpine-linux] which I maintain.
