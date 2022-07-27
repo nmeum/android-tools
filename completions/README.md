@@ -1,4 +1,4 @@
-The ASOP android tools codebase provides generic completion files which
+The AOSP android tools codebase provides generic completion files which
 can be used by both bash and zsh but require a `check_type` function to
 be provided. We install these generic files to a common directory
 (`COMPLETION_COMMON_DIR`) and source them from specific files created
