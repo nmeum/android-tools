@@ -1,0 +1,74 @@
+From 43fe09b8ca54e9a38dbd1451796299cc9299635f Mon Sep 17 00:00:00 2001
+From: Anatol Pomozov <anatol.pomozov@gmail.com>
+Date: Thu, 22 Sep 2022 10:13:05 -0700
+Subject: [PATCH] Move Theme::Entry type definition up, before it is used
+
+This helps to fix clang compile error caused by forward declaration
+type usage. It tested with Clang 14 at Arch Linux.
+
+What is interesting is GCC 12 does not need this patch. It looks like it
+can figure out the forward declaration by itself.
+
+ome/anatol/sources/android-tools/vendor/base/libs/androidfw/AssetManager2.cpp
+In file included from /home/anatol/sources/android-tools/vendor/base/libs/androidfw/AssetManager2.cpp:19:
+In file included from /home/anatol/sources/android-tools/vendor/base/libs/androidfw/include/androidfw/AssetManager2.h:27:
+In file included from /home/anatol/sources/android-tools/vendor/base/libs/androidfw/include/androidfw/ApkAssets.h:26:
+In file included from /home/anatol/sources/android-tools/vendor/base/libs/androidfw/include/androidfw/Asset.h:30:
+In file included from /home/anatol/sources/android-tools/vendor/incremental_delivery/incfs/util/include/util/map_ptr.h:19:
+In file included from /home/anatol/sources/android-tools/vendor/libbase/include/android-base/logging.h:65:
+In file included from /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/12.2.0/../../../../include/c++/12.2.0/functional:62:
+In file included from /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/12.2.0/../../../../include/c++/12.2.0/vector:64:
+/usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/12.2.0/../../../../include/c++/12.2.0/bits/stl_vector.h:1917:54: error: invalid application of 'sizeof' to an incomplete type 'android::Theme::Entry'
+          = __gnu_cxx::__numeric_traits<ptrdiff_t>::__max / sizeof(_Tp);
+                                                            ^~~~~~~~~~~
+/usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/12.2.0/../../../../include/c++/12.2.0/bits/stl_vector.h:994:16: note: in instantiation of member function 'std::vector<android::Theme::Entry>::_S_max_size' requested here
+      { return _S_max_size(_M_get_Tp_allocator()); }
+               ^
+/usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/12.2.0/../../../../include/c++/12.2.0/bits/vector.tcc:70:23: note: in instantiation of member function 'std::vector<android::Theme::Entry>::max_size' requested here
+      if (__n > this->max_size())
+                      ^
+/home/anatol/sources/android-tools/vendor/base/libs/androidfw/AssetManager2.cpp:1350:19: note: in instantiation of member function 'std::vector<android::Theme::Entry>::reserve' requested here
+  theme->entries_.reserve(kInitialReserveSize);
+                  ^
+/home/anatol/sources/android-tools/vendor/base/libs/androidfw/include/androidfw/AssetManager2.h:554:10: note: forward declaration of 'android::Theme::Entry'
+  struct Entry;
+         ^
+---
+ libs/androidfw/AssetManager2.cpp | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/libs/androidfw/AssetManager2.cpp b/libs/androidfw/AssetManager2.cpp
+index 8896a03e3a29..65e50d028b63 100644
+--- a/libs/androidfw/AssetManager2.cpp
++++ b/libs/androidfw/AssetManager2.cpp
+@@ -1344,6 +1344,13 @@ uint8_t AssetManager2::GetAssignedPackageId(const LoadedPackage* package) const
+   return 0;
+ }
+ 
++struct Theme::Entry {
++  uint32_t attr_res_id;
++  ApkAssetsCookie cookie;
++  uint32_t type_spec_flags;
++  Res_value value;
++};
++
+ std::unique_ptr<Theme> AssetManager2::NewTheme() {
+   constexpr size_t kInitialReserveSize = 32;
+   auto theme = std::unique_ptr<Theme>(new Theme(this));
+@@ -1356,13 +1363,6 @@ Theme::Theme(AssetManager2* asset_manager) : asset_manager_(asset_manager) {
+ 
+ Theme::~Theme() = default;
+ 
+-struct Theme::Entry {
+-  uint32_t attr_res_id;
+-  ApkAssetsCookie cookie;
+-  uint32_t type_spec_flags;
+-  Res_value value;
+-};
+-
+ namespace {
+ struct ThemeEntryKeyComparer {
+   bool operator() (const Theme::Entry& entry, uint32_t attr_res_id) const noexcept {
+-- 
+2.37.3
+
