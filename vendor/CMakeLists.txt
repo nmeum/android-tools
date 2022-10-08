@@ -72,6 +72,7 @@ include(CMakeLists.mke2fs.txt)
 include(CMakeLists.partition.txt)
 include(CMakeLists.mkbootimg.txt)
 include(CMakeLists.libufdt.txt)
+include(CMakeLists.avb.txt)
 
 # Targets which should be installed by `make install`.
 install(TARGETS
