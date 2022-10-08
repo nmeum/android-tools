@@ -28,7 +28,7 @@ Currently the following tools are supported:
 * mke2fs.android (required by fastboot)
 * simg2img, img2simg, append2simg
 * lpdump, lpmake, lpadd, lpflash, lpunpack
-* mkbootimg, unpack_bootimg, repack_bootimg
+* mkbootimg, unpack_bootimg, repack_bootimg, avbtool
 * mkdtboimg
 
 The build system itself works quite well and is already being used for
