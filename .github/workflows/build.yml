@@ -111,7 +111,7 @@ jobs:
       - name: prep fedora
         if: startsWith(matrix.os, 'fedora')
         run: |
-          dnf install -y ${{ matrix.pkgs }} cmake ninja-build perl golang \
+          dnf install -y ${{ matrix.pkgs }} cmake ninja-build perl git golang \
           brotli-devel gtest-devel lz4-devel pcre2-devel protobuf-devel \
           libusbx-devel libzstd-devel
 
