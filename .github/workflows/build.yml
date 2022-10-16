@@ -39,8 +39,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: "opensuse/leap:15.3"
-            pkgs: "clang gcc10 gcc10-c++"
+          - os: "opensuse/leap:15.4"
+            pkgs: "clang gcc11-c++"
             env1: "CC=clang CXX=clang++"
           - os: "opensuse/tumbleweed"
             pkgs: "gcc gcc-c++"
