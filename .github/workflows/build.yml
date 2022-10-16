@@ -61,6 +61,10 @@ jobs:
           - os: "alpine"
             pkgs: "gcc"
             env1: "CC=gcc CXX=g++"
+          - os: "fedora:latest"
+            pkgs: "gcc gcc-g++"
+          - os: "fedora:rawhide"
+            pkgs: "gcc gcc-g++"
 
     container:
       image: ${{ matrix.os }}
@@ -103,6 +107,13 @@ jobs:
         run: |
           apk add build-base pcre2-dev linux-headers libusb-dev gtest-dev samurai \
           go git perl cmake protobuf-dev brotli-dev zstd-dev lz4-dev
+
+      - name: prep fedora
+        if: startsWith(matrix.os, 'fedora')
+        run: |
+          dnf install -y ${{ matrix.pkgs }} cmake ninja-build perl golang \
+          brotli-devel gtest-devel lz4-devel pcre2-devel protobuf-devel \
+          libusbx-devel libzstd-devel
 
       # required for patches
       - name: git config
