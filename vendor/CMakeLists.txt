@@ -37,7 +37,7 @@ set(android-vendored
 	boringssl)
 
 # XXX: Consider using https://cmake.org/cmake/help/v3.0/module/ExternalProject.html
-if(EXISTS "${ANDROID_PATCH_DIR}/")
+if(ANDROID_TOOLS_PATCH_VENDOR AND EXISTS "${ANDROID_PATCH_DIR}/")
 	execute_process(COMMAND git submodule --quiet update)
 	foreach(v ${android-vendored})
 		file(GLOB patches ${ANDROID_PATCH_DIR}/${v}/*.patch)
