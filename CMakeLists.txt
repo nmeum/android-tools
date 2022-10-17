@@ -5,6 +5,11 @@ cmake_minimum_required(VERSION 3.12.0)
 # See: https://cmake.org/cmake/help/latest/module/GNUInstallDirs.html
 include(GNUInstallDirs)
 
+# Option to enable or disable patching vendor projects using patches directory.
+# This helps to build vendor projects with or without any patching. Also if any
+# files are changed in vendor projects those can be retained with this option.
+option(ANDROID_TOOLS_PATCH_VENDOR "Patch vendor projects using patches directory" ON)
+
 # Install bash/zsh completion files.
 set(COMPLETION_COMMON_DIR "${CMAKE_INSTALL_FULL_DATADIR}/android-tools/completions")
 add_subdirectory(completions)
