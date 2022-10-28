@@ -26,8 +26,10 @@ set(android-vendored
 	core
 	extras
 	libbase
+	libufdt
 	libziparchive
 	logging
+	mkbootimg
 	native
 	selinux
 	f2fs-tools
