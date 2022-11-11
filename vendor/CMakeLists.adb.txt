@@ -8,7 +8,7 @@ protobuf_generate_cpp(ADB_PAIRING_PROTO_SRCS ADB_PAIRING_PROTO_HDRS
 	adb/proto/pairing.proto)
 
 # No fastdeploy because it requires deployagent.inc
-add_library(libadb STATIC
+set(libadb_SOURCES
 	adb/client/adb_client.cpp
 	adb/client/adb_install.cpp
 	adb/client/adb_wifi.cpp
@@ -24,7 +24,6 @@ add_library(libadb STATIC
 	adb/client/main.cpp
 	adb/client/pairing/pairing_client.cpp
 	adb/client/usb_libusb.cpp
-	adb/client/usb_linux.cpp
 	adb/pairing_auth/aes_128_gcm.cpp
 	adb/pairing_auth/pairing_auth.cpp
 	adb/pairing_connection/pairing_connection.cpp
@@ -38,6 +37,15 @@ add_library(libadb STATIC
 	${ADB_KEY_TYPE_PROTO_SRCS} ${ADB_KEY_TYPE_PROTO_HDRS}
 	${ADB_PAIRING_PROTO_SRCS} ${ADB_PAIRING_PROTO_HDRS})
 
+if(APPLE)
+	list(APPEND libadb_SOURCES
+		adb/client/usb_osx.cpp)
+else()
+	list(APPEND libadb_SOURCES
+		adb/client/usb_linux.cpp)
+endif()
+
+add_library(libadb STATIC ${libadb_SOURCES})
 target_compile_definitions(libadb PRIVATE -D_GNU_SOURCE)
 target_compile_definitions(libadb PUBLIC -DADB_HOST=1)
 target_include_directories(libadb PUBLIC
@@ -187,11 +195,17 @@ target_link_libraries(adb
 	crypto
 	ssl
 	${PROTOBUF_LIBRARIES}
-	brotlicommon
-	brotlidec
-	brotlienc
-	lz4
+	PkgConfig::libbrotlicommon
+	PkgConfig::libbrotlidec
+	PkgConfig::libbrotlienc
+	PkgConfig::liblz4
 	Threads::Threads
-	usb-1.0
+	PkgConfig::libusb-1.0
 	z
-	zstd)
+	PkgConfig::libzstd)
+
+if(APPLE)
+	target_link_libraries(adb
+		"-framework CoreFoundation"
+		"-framework IOKit")
+endif()
