@@ -32,9 +32,9 @@ jobs:
         with:
           name: package_source
           path: ${{ github.workspace }}/build/android-tools-*.tar.xz
-  build:
-    runs-on: ubuntu-latest
 
+  linux:
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -130,6 +130,34 @@ jobs:
         run: |
           test -n "${{ matrix.env1 }}" && export ${{ matrix.env1 }}
           test -n "${{ matrix.env2 }}" && export ${{ matrix.env2 }}
+          mkdir build && cd build
+          cmake -DCMAKE_C_FLAGS="$CFLAGS" -DCMAKE_CXX_FLAGS="$CXXFLAGS" -DCMAKE_BUILD_TYPE=Release -GNinja ..
+          ninja --verbose
+          echo -e "\n### make install ###\n"
+          ninja install
+          echo -e "\n### all done ###\n"
+
+  macos:
+    runs-on: macos-latest
+    steps:
+      - name: prep macos
+        run: |
+          brew install brotli cmake googletest libusb lz4 \
+          ninja pcre2 protobuf zstd
+
+      # required for patches
+      - name: git config
+        run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: build & install
+        run: |
           mkdir build && cd build
           cmake -DCMAKE_C_FLAGS="$CFLAGS" -DCMAKE_CXX_FLAGS="$CXXFLAGS" -DCMAKE_BUILD_TYPE=Release -GNinja ..
           ninja --verbose

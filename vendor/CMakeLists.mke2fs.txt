@@ -117,6 +117,7 @@ target_link_libraries("${ANDROID_MKE2FS_NAME}"
 target_include_directories("${ANDROID_MKE2FS_NAME}" PRIVATE
 	e2fsprogs/lib)
 
+if(NOT APPLE)
 add_executable(e2fsdroid
 	e2fsprogs/contrib/android/e2fsdroid.c
 	e2fsprogs/contrib/android/basefs_allocator.c
@@ -137,6 +138,7 @@ target_link_libraries(e2fsdroid
 	libext2fs libsparse libzip libcutils liblog libutil libbase libselinux libsepol z pcre2-8 pthread)
 target_include_directories(e2fsdroid PRIVATE
 	e2fsprogs/lib e2fsprogs/lib/ext2fs selinux/libselinux/include core/libcutils/include e2fsprogs/misc)
+endif(NOT APPLE)
 
 add_executable(ext2simg
 	e2fsprogs/contrib/android/ext2simg.c)

@@ -10,6 +10,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+if(APPLE)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_DARWIN_C_SOURCE -D__DARWIN_C_LEVEL=__DARWIN_C_FULL")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_DARWIN_C_SOURCE -D__DARWIN_C_LEVEL=__DARWIN_C_FULL")
+endif()
+
 # Android seems to use various attributes supported by clang but not by
 # GCC which causes it to emit lots of warnings. Since these attributes
 # don't seem to effect runtime behaviour simply disable the warnings.
@@ -58,6 +63,15 @@ endif()
 add_subdirectory(boringssl EXCLUDE_FROM_ALL)
 add_subdirectory(fmtlib EXCLUDE_FROM_ALL)
 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(libbrotlicommon REQUIRED IMPORTED_TARGET libbrotlicommon)
+pkg_check_modules(libbrotlidec REQUIRED IMPORTED_TARGET libbrotlidec)
+pkg_check_modules(libbrotlienc REQUIRED IMPORTED_TARGET libbrotlienc)
+pkg_check_modules(liblz4 REQUIRED IMPORTED_TARGET liblz4)
+pkg_check_modules(libpcre2-8 REQUIRED IMPORTED_TARGET libpcre2-8)
+pkg_check_modules(libusb-1.0 REQUIRED IMPORTED_TARGET libusb-1.0)
+pkg_check_modules(libzstd REQUIRED IMPORTED_TARGET libzstd)
+
 find_package(Protobuf REQUIRED)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
@@ -89,9 +103,14 @@ install(TARGETS
 	lpmake
 	lpunpack
 	simg2img
-	e2fsdroid
 	ext2simg
 	DESTINATION bin)
+
+if(NOT APPLE)
+	install(TARGETS
+		e2fsdroid
+		DESTINATION bin)
+endif()
 
 # Install common completion files.
 install(FILES adb/adb.bash RENAME adb DESTINATION "${COMPLETION_COMMON_DIR}")

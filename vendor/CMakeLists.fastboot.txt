@@ -33,8 +33,13 @@ add_library(libext4 STATIC
 	extras/ext4_utils/ext4_sb.cpp)
 
 target_include_directories(libext4 PUBLIC
-	core/libsparse/include core/include selinux/libselinux/include
+	core/libsparse/include core/include
 	extras/ext4_utils/include libbase/include)
+
+if(NOT APPLE)
+target_include_directories(libext4 PUBLIC
+	selinux/libselinux/include)
+endif(NOT APPLE)
 
 add_library(libfsmgr STATIC
 	core/fs_mgr/liblp/images.cpp
@@ -48,6 +53,7 @@ target_include_directories(libfsmgr PRIVATE
 	boringssl/include)
 target_link_libraries(libfsmgr PUBLIC fmt::fmt)
 
+if(NOT APPLE)
 add_library(libselinux STATIC
 	selinux/libselinux/src/booleans.c
 	selinux/libselinux/src/callbacks.c
@@ -109,8 +115,9 @@ add_library(libsepol
 
 target_include_directories(libsepol PUBLIC
 	selinux/libsepol/include)
+endif(NOT APPLE)
 
-add_executable(fastboot
+set(fastboot_SOURCES
 	core/fastboot/bootimg_utils.cpp
 	core/fastboot/fastboot.cpp
 	core/fastboot/fastboot_driver.cpp
@@ -119,10 +126,18 @@ add_executable(fastboot
 	core/fastboot/socket.cpp
 	core/fastboot/tcp.cpp
 	core/fastboot/udp.cpp
-	core/fastboot/usb_linux.cpp
 	core/fastboot/vendor_boot_img_utils.cpp
 	core/fastboot/util.cpp)
 
+if(APPLE)
+	list(APPEND fastboot_SOURCES
+		core/fastboot/usb_osx.cpp)
+else()
+	list(APPEND fastboot_SOURCES
+		core/fastboot/usb_linux.cpp)
+endif()
+
+add_executable(fastboot ${fastboot_SOURCES})
 target_include_directories(fastboot PRIVATE
 	libbase/include core/include core/adb core/libsparse/include
 	extras/ext4_utils/include extras/f2fs_utils
@@ -135,5 +150,14 @@ target_compile_definitions(fastboot PRIVATE
 	-DANDROID_MKE2FS_NAME="${ANDROID_MKE2FS_NAME}")
 target_link_libraries(fastboot
 	libsparse libzip libcutils liblog libfsmgr libutil
-	libbase libext4 libselinux libsepol libdiagnoseusb crypto
-	z pcre2-8 Threads::Threads dl)
+	libbase libext4 libdiagnoseusb crypto
+	z PkgConfig::libpcre2-8 Threads::Threads dl)
+
+if(APPLE)
+	target_link_libraries(fastboot
+		"-framework CoreFoundation"
+		"-framework IOKit")
+else()
+	target_link_libraries(fastboot
+		libselinux libsepol)
+endif()
