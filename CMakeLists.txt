@@ -30,6 +30,9 @@ set(BORINGSSL_VERSION 1530333b25589ee4d4d52b10e78ee55dd82f6dcd)
 # Vendor string used in version outputs.
 set(ANDROID_VENDOR android-tools)
 
+configure_file(version.h.in vendor/build/version.h @ONLY)
+configure_file(platform_tools_version.h.in vendor/platform_tools_version.h @ONLY)
+
 # The CMakeLists.txt in the vendor subdirectory is responsible for
 # patching, building and installing the software.
 set(ANDROID_PATCH_DIR ${CMAKE_CURRENT_SOURCE_DIR}/patches)

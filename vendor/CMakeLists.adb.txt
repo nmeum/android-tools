@@ -175,9 +175,6 @@ add_executable(adb
 	  adb/types.cpp
 	  ${ADB_KEY_TYPE_PROTO_HDRS})
 
-target_compile_definitions(adb PRIVATE
-	-DPLATFORM_TOOLS_VERSION="${ANDROID_VERSION}"
-	-DPLATFORM_TOOLS_VENDOR="${ANDROID_VENDOR}")
 target_include_directories(adb PRIVATE
 	core/include libbase/include adb
 	core/libcrypto_utils/include boringssl/include)

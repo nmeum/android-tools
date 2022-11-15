@@ -137,6 +137,11 @@ jobs:
           ninja install
           echo -e "\n### all done ###\n"
 
+      - name: check
+        run: |
+          /usr/local/bin/adb --version
+          /usr/local/bin/fastboot --version
+
   macos:
     runs-on: macos-latest
     steps:
@@ -164,3 +169,8 @@ jobs:
           echo -e "\n### make install ###\n"
           ninja install
           echo -e "\n### all done ###\n"
+
+      - name: check
+        run: |
+          /usr/local/bin/adb --version
+          /usr/local/bin/fastboot --version
