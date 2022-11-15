@@ -144,8 +144,6 @@ target_include_directories(fastboot PRIVATE
 	core/libziparchive/include mkbootimg/include/bootimg
 	core/fs_mgr/liblp/include core/fs_mgr/libstorage_literals avb)
 target_compile_definitions(fastboot PRIVATE
-	-DPLATFORM_TOOLS_VERSION="${ANDROID_VERSION}"
-	-DPLATFORM_TOOLS_VENDOR="${ANDROID_VENDOR}"
 	-D_GNU_SOURCE -D_XOPEN_SOURCE=700 -DUSE_F2FS
 	-DANDROID_MKE2FS_NAME="${ANDROID_MKE2FS_NAME}")
 target_link_libraries(fastboot
