@@ -33,13 +33,8 @@ add_library(libext4 STATIC
 	extras/ext4_utils/ext4_sb.cpp)
 
 target_include_directories(libext4 PUBLIC
-	core/libsparse/include core/include
+	core/libsparse/include core/include selinux/libselinux/include
 	extras/ext4_utils/include libbase/include)
-
-if(NOT APPLE)
-target_include_directories(libext4 PUBLIC
-	selinux/libselinux/include)
-endif(NOT APPLE)
 
 add_library(libfsmgr STATIC
 	core/fs_mgr/liblp/images.cpp
@@ -53,35 +48,23 @@ target_include_directories(libfsmgr PRIVATE
 	boringssl/include)
 target_link_libraries(libfsmgr PUBLIC fmt::fmt)
 
-if(NOT APPLE)
+# Only add common sources from libselinux_defaults and libselinux
+# See the file list in selinux/libselinux/Android.bp
 add_library(libselinux STATIC
 	selinux/libselinux/src/booleans.c
 	selinux/libselinux/src/callbacks.c
-	selinux/libselinux/src/canonicalize_context.c
-	selinux/libselinux/src/check_context.c
-	selinux/libselinux/src/disable.c
-	selinux/libselinux/src/enabled.c
 	selinux/libselinux/src/freecon.c
-	selinux/libselinux/src/getenforce.c
-	selinux/libselinux/src/init.c
 	selinux/libselinux/src/label_backends_android.c
 	selinux/libselinux/src/label.c
-	selinux/libselinux/src/label_file.c
 	selinux/libselinux/src/label_support.c
-	selinux/libselinux/src/lgetfilecon.c
-	selinux/libselinux/src/load_policy.c
-	selinux/libselinux/src/lsetfilecon.c
 	selinux/libselinux/src/matchpathcon.c
-	selinux/libselinux/src/policyvers.c
-	selinux/libselinux/src/regex.c
-	selinux/libselinux/src/selinux_config.c
-	selinux/libselinux/src/setenforce.c
 	selinux/libselinux/src/setrans_client.c
-	selinux/libselinux/src/seusers.c
-	selinux/libselinux/src/sha1.c)
+	selinux/libselinux/src/sha1.c
+	selinux/libselinux/src/label_file.c
+	selinux/libselinux/src/regex.c)
 
 target_compile_definitions(libselinux PRIVATE
-	-DAUDITD_LOG_TAG=1003 -D_GNU_SOURCE -DHOST -DUSE_PCRE2
+	-DAUDITD_LOG_TAG=1003 -D_GNU_SOURCE -DBUILD_HOST -DUSE_PCRE2
 	-DNO_PERSISTENTLY_STORED_PATTERNS -DDISABLE_SETRANS
 	-DDISABLE_BOOL -DNO_MEDIA_BACKEND -DNO_X_BACKEND -DNO_DB_BACKEND
 	-DPCRE2_CODE_UNIT_WIDTH=8)
@@ -115,7 +98,6 @@ add_library(libsepol
 
 target_include_directories(libsepol PUBLIC
 	selinux/libsepol/include)
-endif(NOT APPLE)
 
 set(fastboot_SOURCES
 	core/fastboot/bootimg_utils.cpp
@@ -148,14 +130,11 @@ target_compile_definitions(fastboot PRIVATE
 	-DANDROID_MKE2FS_NAME="${ANDROID_MKE2FS_NAME}")
 target_link_libraries(fastboot
 	libsparse libzip libcutils liblog libfsmgr libutil
-	libbase libext4 libdiagnoseusb crypto
+	libbase libext4 libselinux libsepol libdiagnoseusb crypto
 	z PkgConfig::libpcre2-8 Threads::Threads dl)
 
 if(APPLE)
 	target_link_libraries(fastboot
 		"-framework CoreFoundation"
 		"-framework IOKit")
-else()
-	target_link_libraries(fastboot
-		libselinux libsepol)
 endif()
