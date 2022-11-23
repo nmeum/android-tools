@@ -35,6 +35,7 @@ jobs:
 
   linux:
     runs-on: ubuntu-latest
+    needs: [upload-src]
     strategy:
       fail-fast: false
       matrix:
@@ -84,7 +85,7 @@ jobs:
           zypper -n in ${{ matrix.pkgs }} cmake git go gtest pcre2-devel pkgconfig \
             'pkgconfig(libbrotlicommon)' 'pkgconfig(liblz4)' \
             'pkgconfig(libunwind-generic)' 'pkgconfig(libusb-1.0)' \
-            'pkgconfig(libzstd)' 'pkgconfig(protobuf)' ninja
+            'pkgconfig(libzstd)' 'pkgconfig(protobuf)' ninja tar xz
 
       - name: prep archlinux
         if: startsWith(matrix.os, 'archlinux')
@@ -113,21 +114,17 @@ jobs:
         run: |
           dnf install -y ${{ matrix.pkgs }} cmake ninja-build perl git golang \
           brotli-devel gtest-devel lz4-devel pcre2-devel protobuf-devel \
-          libusbx-devel libzstd-devel
+          libusbx-devel libzstd-devel tar xz
 
-      # required for patches
-      - name: git config
-        run: |
-          git config --global user.email "you@example.com"
-          git config --global user.name "Your Name"
-
-      - name: checkout
-        uses: actions/checkout@v3
+      - name: download source
+        uses: actions/download-artifact@v3
         with:
-          submodules: true
+          name: package_source
 
       - name: build & install
         run: |
+          tar -xf android-tools-*.tar.xz
+          cd android-tools-*/
           test -n "${{ matrix.env1 }}" && export ${{ matrix.env1 }}
           test -n "${{ matrix.env2 }}" && export ${{ matrix.env2 }}
           mkdir build && cd build
@@ -144,25 +141,22 @@ jobs:
 
   macos:
     runs-on: macos-latest
+    needs: [upload-src]
     steps:
       - name: prep macos
         run: |
           brew install brotli cmake googletest libusb lz4 \
           ninja pcre2 protobuf zstd
 
-      # required for patches
-      - name: git config
-        run: |
-          git config --global user.email "you@example.com"
-          git config --global user.name "Your Name"
-
-      - name: checkout
-        uses: actions/checkout@v3
+      - name: download source
+        uses: actions/download-artifact@v3
         with:
-          submodules: true
+          name: package_source
 
       - name: build & install
         run: |
+          tar -xf android-tools-*.tar.xz
+          cd android-tools-*/
           mkdir build && cd build
           cmake -DCMAKE_C_FLAGS="$CFLAGS" -DCMAKE_CXX_FLAGS="$CXXFLAGS" -DCMAKE_BUILD_TYPE=Release -GNinja ..
           ninja --verbose
