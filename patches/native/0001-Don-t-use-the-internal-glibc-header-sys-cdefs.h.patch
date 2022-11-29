@@ -22,6 +22,7 @@ https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-
  include/android/input.h                                  | 1 -
  include/android/multinetwork.h                           | 9 ++++++---
  include/android/native_window_jni.h                      | 1 -
+ include/android/permission_manager.h                     | 9 ++++++---
  include/android/sharedmem.h                              | 1 -
  include/android/sharedmem_jni.h                          | 1 -
  include/android/surface_control.h                        | 9 ++++++---
@@ -31,6 +32,8 @@ https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-
  include/android/thermal.h                                | 1 -
  include/android/trace.h                                  | 1 -
  include/diskusage/dirsize.h                              | 8 ++++++--
+ include/private/performance_hint_private.h               | 8 ++++++--
+ include/private/surface_control_private.h                | 8 ++++++--
  libs/adbd_auth/include/adbd_auth.h                       | 9 ++++++---
  libs/binder/ndk/include_ndk/android/binder_ibinder.h     | 9 ++++++---
  libs/binder/ndk/include_ndk/android/binder_ibinder_jni.h | 8 ++++++--
@@ -73,7 +76,7 @@ https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-
  libs/vr/libdvr/include/dvr/dvr_tracking_types.h          | 9 ++++++---
  libs/vr/libdvr/include/dvr/dvr_vsync.h                   | 9 ++++++---
  vulkan/include/hardware/hwvulkan.h                       | 8 ++++++--
- 61 files changed, 282 insertions(+), 139 deletions(-)
+ 64 files changed, 300 insertions(+), 146 deletions(-)
 
 diff --git a/docs/Doxyfile b/docs/Doxyfile
 index ea22337f3f..d1e7d31d2b 100644
@@ -106,6 +109,34 @@ index 2ac7d4d350..8a7517e4a0 100644
  #include <sys/types.h>
  
  #ifdef __cplusplus
+diff --git a/include/android/choreographer.h b/include/android/choreographer.h
+index b743f49..b52ab94 100644
+--- a/include/android/choreographer.h
++++ b/include/android/choreographer.h
+@@ -27,9 +27,10 @@
+ #define ANDROID_CHOREOGRAPHER_H
+ 
+ #include <stdint.h>
+-#include <sys/cdefs.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ struct AChoreographer;
+ /**
+@@ -160,7 +161,9 @@ void AChoreographer_unregisterRefreshRateCallback(AChoreographer* choreographer,
+                                                   AChoreographer_refreshRateCallback, void* data)
+         __INTRODUCED_IN(30);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif // ANDROID_CHOREOGRAPHER_H
+ 
 diff --git a/include/android/configuration.h b/include/android/configuration.h
 index 88019ae054..dd28fa8b01 100644
 --- a/include/android/configuration.h
@@ -122,14 +153,14 @@ diff --git a/include/android/font.h b/include/android/font.h
 index 8a3a474f25..cda58a4a45 100644
 --- a/include/android/font.h
 +++ b/include/android/font.h
-@@ -30,7 +30,6 @@
- #define ANDROID_FONT_H
+@@ -31,7 +31,6 @@
  
  #include <stdbool.h>
--#include <stddef.h>
- #include <sys/cdefs.h>
+ #include <stddef.h>
+-#include <sys/cdefs.h>
  
  /******************************************************************
+  *
 @@ -49,7 +48,9 @@
   *   - DO NOT CHANGE THE LAYOUT OR SIZE OF STRUCTURES
   */
@@ -152,7 +183,6 @@ index 8a3a474f25..cda58a4a45 100644
  
  #endif // ANDROID_FONT_H
  
-
 diff --git a/include/android/font_matcher.h b/include/android/font_matcher.h
 index 4417422687..bbb285e224 100644
 --- a/include/android/font_matcher.h
@@ -186,7 +216,7 @@ index 4417422687..bbb285e224 100644
 +#endif
  
  #endif // ANDROID_FONT_MATCHER_H
-
+ 
 diff --git a/include/android/hardware_buffer_jni.h b/include/android/hardware_buffer_jni.h
 index ae208a6e75..7975fd4545 100644
 --- a/include/android/hardware_buffer_jni.h
@@ -248,7 +278,7 @@ index 4c83a14728..823c7b48e0 100644
  
  /**
   * The corresponding C type for android.net.Network#getNetworkHandle() return
-@@ -271,7 +272,9 @@ int android_tag_socket(int sockfd, int tag) __INTRODUCED_IN(33);
+@@ -289,7 +290,9 @@ int android_tag_socket(int sockfd, uint32_t tag) __INTRODUCED_IN(33);
   */
  int android_untag_socket(int sockfd) __INTRODUCED_IN(33);
  
@@ -270,6 +300,35 @@ index 071ec798b4..38e5cc6f97 100644
 -#include <sys/cdefs.h>
  
  #include <android/native_window.h>
+ 
+diff --git a/include/android/permission_manager.h b/include/android/permission_manager.h
+index 753b6d1..f815657 100644
+--- a/include/android/permission_manager.h
++++ b/include/android/permission_manager.h
+@@ -28,10 +28,11 @@
+ #ifndef ANDROID_PERMISSION_MANAGER_H
+ #define ANDROID_PERMISSION_MANAGER_H
+ 
+-#include <sys/cdefs.h>
+ #include <sys/types.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ /**
+  * Permission check results.
+@@ -93,7 +94,9 @@ int32_t APermissionManager_checkPermission(const char* permission,
+                                            uid_t uid,
+                                            int32_t* outResult) __INTRODUCED_IN(31);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif  // ANDROID_PERMISSION_MANAGER_H
  
 diff --git a/include/android/sharedmem.h b/include/android/sharedmem.h
 index e0a8045d41..4813279e80 100644
@@ -464,6 +523,56 @@ index 34236c0e6f..8500bd1a81 100644
 +#endif
  
  #endif /* __LIBDISKUSAGE_DIRSIZE_H */
+diff --git a/include/private/performance_hint_private.h b/include/private/performance_hint_private.h
+index 5832bf4..117b30b 100644
+--- a/include/private/performance_hint_private.h
++++ b/include/private/performance_hint_private.h
+@@ -19,7 +19,9 @@
+ 
+ #include <stdint.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ struct APerformanceHintManager;
+ struct APerformanceHintSession;
+@@ -140,6 +142,8 @@ void APerformanceHint_closeSession(APerformanceHintSession* session);
+  */
+ void APerformanceHint_setIHintManagerForTesting(void* iManager);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif // ANDROID_PRIVATE_NATIVE_PERFORMANCE_HINT_PRIVATE_H
+diff --git a/include/private/surface_control_private.h b/include/private/surface_control_private.h
+index 37a476e..542fd23 100644
+--- a/include/private/surface_control_private.h
++++ b/include/private/surface_control_private.h
+@@ -19,7 +19,9 @@
+ 
+ #include <stdint.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ struct ASurfaceControl;
+ struct ASurfaceControlStats;
+@@ -66,6 +68,8 @@ int64_t ASurfaceControlStats_getAcquireTime(ASurfaceControlStats* stats);
+  */
+ uint64_t ASurfaceControlStats_getFrameNumber(ASurfaceControlStats* stats);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif //ANDROID_PRIVATE_NATIVE_SURFACE_CONTROL_H
 diff --git a/libs/adbd_auth/include/adbd_auth.h b/libs/adbd_auth/include/adbd_auth.h
 index 1dcf540cf3..f5221c2fa7 100644
 --- a/libs/adbd_auth/include/adbd_auth.h
@@ -540,7 +649,7 @@ index 6880d86e1a..1e35082649 100644
  
  /**
   * Converts an android.os.IBinder object into an AIBinder* object.
-@@ -66,6 +68,8 @@ __attribute__((warn_unused_result)) AIBinder* AIBinder_fromJavaBinder(JNIEnv* en
+@@ -72,6 +74,8 @@ __attribute__((warn_unused_result)) AIBinder* AIBinder_fromJavaBinder(JNIEnv* en
  __attribute__((warn_unused_result)) jobject AIBinder_toJavaBinder(JNIEnv* env, AIBinder* binder)
          __INTRODUCED_IN(29);
  
@@ -572,7 +681,7 @@ index 84575811f0..018672f4a0 100644
  
  /**
   * This object represents a package of data that can be sent between processes. When transacting, an
-@@ -1202,6 +1203,8 @@ binder_status_t AParcel_marshal(const AParcel* parcel, uint8_t* buffer, size_t s
+@@ -1207,6 +1208,8 @@ binder_status_t AParcel_marshal(const AParcel* parcel, uint8_t* buffer, size_t s
  binder_status_t AParcel_unmarshal(AParcel* parcel, const uint8_t* buffer, size_t len)
          __INTRODUCED_IN(33);
  
@@ -674,7 +783,7 @@ index 2a66941cef..fac80c0185 100644
  
  /**
   * This registers the service with the default service manager under this instance name. This does
-@@ -186,4 +187,6 @@ bool AServiceManager_tryUnregister() __INTRODUCED_IN(31);
+@@ -194,4 +195,6 @@ bool AServiceManager_tryUnregister() __INTRODUCED_IN(31);
   */
  void AServiceManager_reRegister() __INTRODUCED_IN(31);
  
@@ -770,8 +879,8 @@ index f113ba8f21..1203bd7d4d 100644
  
  /**
   * Private addition to binder_flag_t.
-@@ -99,4 +101,6 @@ static inline void AIBinder_forceDowngradeToLocalStability(AIBinder* binder) {
-  */
+@@ -103,4 +105,6 @@ __attribute__((weak))
+ #endif  // defined(__ANDROID_MIN_SDK_VERSION__) && __ANDROID_MIN_SDK_VERSION__ < 30
  void AIBinder_markVintfStability(AIBinder* binder);
  
 -__END_DECLS
@@ -794,7 +903,7 @@ diff --git a/libs/nativebase/include/nativebase/nativebase.h b/libs/nativebase/i
 index 7ecdfbd745..c8856856c8 100644
 --- a/libs/nativebase/include/nativebase/nativebase.h
 +++ b/libs/nativebase/include/nativebase/nativebase.h
-@@ -19,11 +19,13 @@
+@@ -19,11 +19,12 @@
  #include <stdint.h>
  #include <stdbool.h>
  #include <string.h>
@@ -806,11 +915,10 @@ index 7ecdfbd745..c8856856c8 100644
 +#ifdef __cplusplus
 +extern "C" {
 +#endif
-+
  
  #ifdef __cplusplus
  #define ANDROID_NATIVE_UNSIGNED_CAST(x) static_cast<unsigned int>(x)
-@@ -107,4 +109,6 @@ typedef struct ANativeWindowBuffer ANativeWindowBuffer;
+@@ -107,4 +108,6 @@ typedef struct ANativeWindowBuffer ANativeWindowBuffer;
  // Old typedef for backwards compatibility.
  typedef ANativeWindowBuffer_t android_native_buffer_t;
  
@@ -1040,7 +1148,7 @@ diff --git a/libs/nativewindow/include/vndk/hardware_buffer.h b/libs/nativewindo
 index 21931bb553..feda802ac3 100644
 --- a/libs/nativewindow/include/vndk/hardware_buffer.h
 +++ b/libs/nativewindow/include/vndk/hardware_buffer.h
-@@ -22,7 +22,10 @@
+@@ -22,7 +22,9 @@
  
  #include <cutils/native_handle.h>
  
@@ -1048,11 +1156,10 @@ index 21931bb553..feda802ac3 100644
 +#ifdef __cplusplus
 +extern "C" {
 +#endif
-+
  
  /**
   * Get the native handle from an AHardwareBuffer.
-@@ -105,6 +108,8 @@ enum {
+@@ -105,6 +107,8 @@ enum {
      AHARDWAREBUFFER_USAGE_CAMERA_MASK               = 6UL << 16,
  };
  
@@ -1066,7 +1173,7 @@ diff --git a/libs/nativewindow/include/vndk/window.h b/libs/nativewindow/include
 index 500052c936..ebbb238367 100644
 --- a/libs/nativewindow/include/vndk/window.h
 +++ b/libs/nativewindow/include/vndk/window.h
-@@ -23,7 +23,10 @@
+@@ -23,7 +23,9 @@
  #include <android/native_window.h>
  
  
@@ -1074,11 +1181,10 @@ index 500052c936..ebbb238367 100644
 +#ifdef __cplusplus
 +extern "C" {
 +#endif
-+
  
  /*
   * Convert this ANativeWindowBuffer into a AHardwareBuffer
-@@ -328,6 +331,8 @@ int ANativeWindow_setAutoPrerotation(ANativeWindow* window, bool autoPrerotation
+@@ -328,6 +330,8 @@ int ANativeWindow_setAutoPrerotation(ANativeWindow* window, bool autoPrerotation
  
  /*****************************************************************************/
  

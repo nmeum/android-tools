@@ -1,0 +1,35 @@
+From 890f0649902767e93eeac2c7fbad6bacde21ece1 Mon Sep 17 00:00:00 2001
+From: Biswapriyo Nath <nathbappai@gmail.com>
+Date: Fri, 25 Nov 2022 12:15:47 +0530
+Subject: [PATCH 2/2] libutils: Fix missing definition of shared_ptr and
+ unique_ptr
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+This includes memory header for shared_ptr and unique_ptr templates.
+Fixes the following errors:
+
+RefBase.h:803:1: error: ‘shared_ptr’ does not name a type
+RefBase.h:810:1: error: ‘unique_ptr’ does not name a type
+
+Change-Id: I6a7a67333c9ef05250c5a3c6199d7fac288f946b
+---
+ libutils/include/utils/RefBase.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/libutils/include/utils/RefBase.h b/libutils/include/utils/RefBase.h
+index f3acd6f..5e3fa7d 100644
+--- a/libutils/include/utils/RefBase.h
++++ b/libutils/include/utils/RefBase.h
+@@ -210,6 +210,7 @@
+ 
+ #include <atomic>
+ #include <functional>
++#include <memory>
+ #include <type_traits>  // for common_type.
+ 
+ #include <stdint.h>
+-- 
+2.38.1
+
