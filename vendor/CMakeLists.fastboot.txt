@@ -98,6 +98,10 @@ add_library(libsepol
 
 target_include_directories(libsepol PUBLIC
 	selinux/libsepol/include)
+if(NOT APPLE)
+	target_compile_definitions(libsepol PRIVATE
+		-DHAVE_REALLOCARRAY)
+endif()
 
 set(fastboot_SOURCES
 	core/fastboot/bootimg_utils.cpp

@@ -131,7 +131,7 @@ jobs:
           cmake -DCMAKE_C_FLAGS="$CFLAGS" -DCMAKE_CXX_FLAGS="$CXXFLAGS" -DCMAKE_BUILD_TYPE=Release -GNinja ..
           ninja --verbose
           echo -e "\n### make install ###\n"
-          ninja install
+          cmake --install . --prefix /usr/local
           echo -e "\n### all done ###\n"
 
       - name: check
@@ -161,7 +161,7 @@ jobs:
           cmake -DCMAKE_C_FLAGS="$CFLAGS" -DCMAKE_CXX_FLAGS="$CXXFLAGS" -DCMAKE_BUILD_TYPE=Release -GNinja ..
           ninja --verbose
           echo -e "\n### make install ###\n"
-          ninja install
+          cmake --install . --prefix /usr/local
           echo -e "\n### all done ###\n"
 
       - name: check
