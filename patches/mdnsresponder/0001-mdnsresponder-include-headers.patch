@@ -1,0 +1,34 @@
+From 7b90124c4e3b2a499126d21de2dafa86f53964bf Mon Sep 17 00:00:00 2001
+From: Biswapriyo Nath <nathbappai@gmail.com>
+Date: Sun, 4 Dec 2022 18:39:07 +0530
+Subject: [PATCH] mdnsresponder: include headers
+
+---
+ mDNSShared/CommonServices.h   | 1 +
+ mDNSShared/dnssd_clientstub.c | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/mDNSShared/CommonServices.h b/mDNSShared/CommonServices.h
+index be49257..9780827 100644
+--- a/mDNSShared/CommonServices.h
++++ b/mDNSShared/CommonServices.h
+@@ -262,6 +262,7 @@
+ 		
+ 	#endif
+ 
++	#include	<stdint.h>
+ 	#include	<windows.h>
+ 	#include	<winsock2.h>
+ 	#include	<Ws2tcpip.h>
+diff --git a/mDNSShared/dnssd_clientstub.c b/mDNSShared/dnssd_clientstub.c
+index 574c77b..930ee55 100644
+--- a/mDNSShared/dnssd_clientstub.c
++++ b/mDNSShared/dnssd_clientstub.c
+@@ -42,6 +42,7 @@ static int gDaemonErr = kDNSServiceErr_NoError;
+ 	#include <ws2tcpip.h>
+ 	#include <windows.h>
+ 	#include <stdarg.h>
++	#include <stdio.h>
+ 	
+ 	#define sockaddr_mdns sockaddr_in
+ 	#define AF_MDNS AF_INET

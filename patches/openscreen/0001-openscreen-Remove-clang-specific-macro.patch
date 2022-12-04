@@ -1,0 +1,22 @@
+From 7c5d480ede656f4269fe28e37d69751e51275fc6 Mon Sep 17 00:00:00 2001
+From: Biswapriyo Nath <nathbappai@gmail.com>
+Date: Sun, 4 Dec 2022 18:35:29 +0530
+Subject: [PATCH] openscreen: Remove clang specific macro
+
+---
+ platform/api/task_runner.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/platform/api/task_runner.h b/platform/api/task_runner.h
+index 948eb08..b28196a 100644
+--- a/platform/api/task_runner.h
++++ b/platform/api/task_runner.h
+@@ -24,7 +24,7 @@ class TaskRunner {
+  public:
+ // Seem to get an error using clang when compiling with -fno-exceptions:
+ //   error: implicit instantiation of undefined template 'std::__1::packaged_task<void () noexcept>'
+-#if __has_feature(cxx_exceptions)
++#if 0
+   using Task = std::packaged_task<void() noexcept>;
+ #else
+   using Task = std::packaged_task<void()>;

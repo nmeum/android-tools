@@ -1,0 +1,103 @@
+# SPDX-License-Identifier: Apache-2.0
+# File: CMakeLists.openscreen.txt
+
+set(libopenscreen_absl_SOURCES
+	openscreen/third_party/abseil/src/absl/base/internal/raw_logging.cc
+	openscreen/third_party/abseil/src/absl/base/internal/throw_delegate.cc
+	openscreen/third_party/abseil/src/absl/hash/internal/city.cc
+	openscreen/third_party/abseil/src/absl/hash/internal/hash.cc
+	openscreen/third_party/abseil/src/absl/numeric/int128.cc
+	openscreen/third_party/abseil/src/absl/strings/ascii.cc
+	openscreen/third_party/abseil/src/absl/strings/charconv.cc
+	openscreen/third_party/abseil/src/absl/strings/escaping.cc
+	openscreen/third_party/abseil/src/absl/strings/internal/charconv_bigint.cc
+	openscreen/third_party/abseil/src/absl/strings/internal/charconv_parse.cc
+	openscreen/third_party/abseil/src/absl/strings/internal/escaping.cc
+	openscreen/third_party/abseil/src/absl/strings/internal/memutil.cc
+	openscreen/third_party/abseil/src/absl/strings/internal/utf8.cc
+	openscreen/third_party/abseil/src/absl/strings/match.cc
+	openscreen/third_party/abseil/src/absl/strings/numbers.cc
+	openscreen/third_party/abseil/src/absl/strings/str_cat.cc
+	openscreen/third_party/abseil/src/absl/strings/str_replace.cc
+	openscreen/third_party/abseil/src/absl/strings/str_split.cc
+	openscreen/third_party/abseil/src/absl/strings/string_view.cc
+	openscreen/third_party/abseil/src/absl/strings/substitute.cc
+	openscreen/third_party/abseil/src/absl/types/bad_optional_access.cc
+	openscreen/third_party/abseil/src/absl/types/bad_variant_access.cc)
+
+add_library(libopenscreen_absl STATIC ${libopenscreen_absl_SOURCES})
+target_include_directories(libopenscreen_absl PRIVATE
+	openscreen/third_party/abseil/src)
+
+set(libopenscreen_platform_impl_SOURCES
+	openscreen/platform/impl/time.cc
+	openscreen/platform/impl/network_interface.cc)
+
+if(APPLE)
+	list(APPEND libopenscreen_platform_impl_SOURCES
+		openscreen/platform/impl/network_interface_mac.cc)
+elseif(WIN32)
+	list(APPEND libopenscreen_platform_impl_SOURCES
+		openscreen/platform/impl/network_interface_win.cc)
+else()
+	list(APPEND libopenscreen_platform_impl_SOURCES
+		openscreen/platform/impl/network_interface_linux.cc)
+endif()
+
+add_library(libopenscreen_platform_impl STATIC ${libopenscreen_platform_impl_SOURCES})
+if(APPLE)
+	target_compile_definitions(libopenscreen_platform_impl PRIVATE
+		-D__APPLE_USE_RFC_3542)
+endif()
+target_compile_options(libopenscreen_platform_impl PRIVATE
+	-fno-strict-aliasing
+	-fno-exceptions
+	-fno-unwind-tables
+	-fno-asynchronous-unwind-tables)
+target_include_directories(libopenscreen_platform_impl PRIVATE
+	openscreen
+	openscreen/third_party/abseil/src)
+
+set(libopenscreen_discovery_SOURCES
+	openscreen/platform/api/udp_socket.cc
+	openscreen/platform/base/error.cc
+	openscreen/platform/base/interface_info.cc
+	openscreen/platform/base/ip_address.cc
+	openscreen/platform/base/udp_packet.cc
+	openscreen/util/alarm.cc
+	openscreen/util/big_endian.cc
+	openscreen/discovery/dnssd/impl/conversion_layer.cc
+	openscreen/discovery/dnssd/impl/dns_data_graph.cc
+	openscreen/discovery/dnssd/impl/instance_key.cc
+	openscreen/discovery/dnssd/impl/network_interface_config.cc
+	openscreen/discovery/dnssd/impl/publisher_impl.cc
+	openscreen/discovery/dnssd/impl/querier_impl.cc
+	openscreen/discovery/dnssd/impl/service_dispatcher.cc
+	openscreen/discovery/dnssd/impl/service_instance.cc
+	openscreen/discovery/dnssd/impl/service_key.cc
+	openscreen/discovery/dnssd/public/dns_sd_instance.cc
+	openscreen/discovery/dnssd/public/dns_sd_instance_endpoint.cc
+	openscreen/discovery/dnssd/public/dns_sd_txt_record.cc
+	openscreen/discovery/mdns/mdns_probe.cc
+	openscreen/discovery/mdns/mdns_probe_manager.cc
+	openscreen/discovery/mdns/mdns_publisher.cc
+	openscreen/discovery/mdns/mdns_querier.cc
+	openscreen/discovery/mdns/mdns_reader.cc
+	openscreen/discovery/mdns/mdns_receiver.cc
+	openscreen/discovery/mdns/mdns_records.cc
+	openscreen/discovery/mdns/mdns_responder.cc
+	openscreen/discovery/mdns/mdns_sender.cc
+	openscreen/discovery/mdns/mdns_service_impl.cc
+	openscreen/discovery/mdns/mdns_trackers.cc
+	openscreen/discovery/mdns/mdns_writer.cc
+	openscreen/discovery/mdns/public/mdns_service.cc)
+
+add_library(libopenscreen_discovery STATIC ${libopenscreen_discovery_SOURCES})
+target_compile_options(libopenscreen_discovery PRIVATE
+	-fno-strict-aliasing
+	-fno-exceptions
+	-fno-unwind-tables
+	-fno-asynchronous-unwind-tables)
+target_include_directories(libopenscreen_discovery PRIVATE
+	openscreen
+	openscreen/third_party/abseil/src)

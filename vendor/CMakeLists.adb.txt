@@ -159,6 +159,7 @@ add_executable(adb
 	  adb/adb.cpp
 	  adb/adb_io.cpp
 	  adb/adb_listeners.cpp
+	  adb/adb_mdns.cpp
 	  adb/adb_trace.cpp
 	  adb/adb_unique_fd.cpp
 	  adb/adb_utils.cpp
@@ -170,14 +171,27 @@ add_executable(adb
 	  adb/socket_spec.cpp
 	  adb/transport.cpp
 	  adb/transport_fd.cpp
+	  adb/client/openscreen/mdns_service_info.cpp
+	  adb/client/openscreen/mdns_service_watcher.cpp
+	  adb/client/openscreen/platform/logging.cpp
+	  adb/client/openscreen/platform/task_runner.cpp
+	  adb/client/openscreen/platform/udp_socket.cpp
 	  adb/client/transport_local.cpp
+	  adb/client/mdnsresponder_client.cpp
+	  adb/client/mdns_utils.cpp
+	  adb/client/transport_mdns.cpp
 	  adb/client/transport_usb.cpp
 	  adb/types.cpp
 	  ${ADB_KEY_TYPE_PROTO_HDRS})
 
+if(APPLE)
+	target_compile_definitions(adb PRIVATE
+		-D__APPLE_USE_RFC_3542)
+endif()
 target_include_directories(adb PRIVATE
 	core/include libbase/include adb
-	core/libcrypto_utils/include boringssl/include)
+	core/libcrypto_utils/include boringssl/include
+	mdnsresponder/mDNSShared openscreen)
 target_link_libraries(adb
 	libadb
 	libadb_crypto_defaults
@@ -188,6 +202,10 @@ target_link_libraries(adb
 	libcutils
 	libdiagnoseusb
 	liblog
+	libmdnssd
+	libopenscreen_discovery
+	libopenscreen_platform_impl
+	libopenscreen_absl
 	libzip
 	crypto
 	ssl

@@ -34,7 +34,9 @@ set(android-vendored
 	libufdt
 	libziparchive
 	logging
+	mdnsresponder
 	mkbootimg
+	openscreen
 	native
 	selinux
 	f2fs-tools
@@ -84,7 +86,9 @@ include(CMakeLists.libandroidfw.txt)
 include(CMakeLists.adb.txt)
 include(CMakeLists.sparse.txt)
 include(CMakeLists.fastboot.txt)
+include(CMakeLists.mdns.txt)
 include(CMakeLists.mke2fs.txt)
+include(CMakeLists.openscreen.txt)
 include(CMakeLists.partition.txt)
 include(CMakeLists.mkbootimg.txt)
 include(CMakeLists.libufdt.txt)

@@ -63,5 +63,14 @@
 	path = vendor/fmtlib
 	url = https://android.googlesource.com/platform/external/fmtlib.git
 [submodule "vendor/libufdt"]
+	shallow = true
 	path = vendor/libufdt
 	url = https://android.googlesource.com/platform/system/libufdt.git
+[submodule "vendor/mdnsresponder"]
+	shallow = true
+	path = vendor/mdnsresponder
+	url = https://android.googlesource.com/platform/external/mdnsresponder.git
+[submodule "vendor/openscreen"]
+	shallow = true
+	path = vendor/openscreen
+	url = https://android.googlesource.com/platform/external/openscreen.git

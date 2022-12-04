@@ -1,0 +1,50 @@
+# SPDX-License-Identifier: Apache-2.0
+# File: CMakeLists.mdns.txt
+
+set(libmdnssd_SOURCES
+	mdnsresponder/mDNSShared/dnssd_clientlib.c
+	mdnsresponder/mDNSShared/dnssd_clientstub.c
+	mdnsresponder/mDNSShared/dnssd_ipc.c)
+
+if(WIN32)
+	list(APPEND libmdnssd_SOURCES
+		mdnsresponder/mDNSWindows/DLL/dllmain.c)
+endif()
+
+add_library(libmdnssd STATIC ${libmdnssd_SOURCES})
+target_compile_definitions(libmdnssd PRIVATE
+	-D_GNU_SOURCE
+	-DHAVE_IPV6
+	-DNOT_HAVE_SA_LEN
+	-DPLATFORM_NO_RLIMIT
+	-DMDNS_DEBUGMSGS=0
+	-DMDNS_USERNAME="mdnsr")
+
+if(APPLE)
+	target_compile_definitions(libmdnssd PRIVATE
+		-DTARGET_OS_MAC
+		-DMDNS_UDS_SERVERPATH="/var/run/mDNSResponder")
+elseif(WIN32)
+	target_compile_definitions(libmdnssd PRIVATE
+		-DTARGET_OS_WINDOWS
+		-DWIN32
+		-DNDEBUG
+		-D_WIN32_LEAN_AND_MEAN
+		-DUSE_TCP_LOOPBACK
+		-D_CRT_SECURE_NO_DEPRECATE
+		-D_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES=1
+		-D_WINDOWS
+		-D_USERDLL
+		-D_MDNS_DEBUGMSGS=0
+		-D_SSIZE_T
+		-DNOT_HAVE_SA_LENGTH)
+else()
+	target_compile_definitions(libmdnssd PRIVATE
+		-DTARGET_OS_LINUX
+		-DHAVE_LINUX
+		-DUSES_NETLINK
+		-DMDNS_UDS_SERVERPATH="/dev/socket/mdnsd")
+endif()
+
+target_include_directories(libmdnssd PRIVATE
+	mdnsresponder/mDNSShared)

@@ -1,0 +1,51 @@
+From d4a297c0e938381e25b21735ed8671a6b4a96a8f Mon Sep 17 00:00:00 2001
+From: Biswapriyo Nath <nathbappai@gmail.com>
+Date: Sun, 4 Dec 2022 15:44:00 +0530
+Subject: [PATCH] adb: include headers
+
+---
+ adb_mdns.cpp          | 4 ++++
+ adb_mdns.h            | 1 +
+ client/mdns_utils.cpp | 2 ++
+ 3 files changed, 7 insertions(+)
+
+diff --git a/adb_mdns.cpp b/adb_mdns.cpp
+index 087a9ab..c56a434 100644
+--- a/adb_mdns.cpp
++++ b/adb_mdns.cpp
+@@ -25,6 +25,10 @@
+ 
+ #include "adb_trace.h"
+ 
++#include <string.h>
++
++#include <atomic>
++
+ #define ADB_SECURE_SERVICE_VERSION_TXT_RECORD(ver) ("v=" #ver)
+ 
+ const char* kADBSecurePairingServiceTxtRecord =
+diff --git a/adb_mdns.h b/adb_mdns.h
+index 10a8b14..0a29ae3 100644
+--- a/adb_mdns.h
++++ b/adb_mdns.h
+@@ -16,6 +16,7 @@
+ 
+ #pragma once
+ 
++#include <functional>
+ #include <optional>
+ #include <string>
+ #include <string_view>
+diff --git a/client/mdns_utils.cpp b/client/mdns_utils.cpp
+index 8666b18..cc6f378 100644
+--- a/client/mdns_utils.cpp
++++ b/client/mdns_utils.cpp
+@@ -14,6 +14,8 @@
+  * limitations under the License.
+  */
+ 
++#include <array>
++
+ #include "client/mdns_utils.h"
+ 
+ #include <android-base/strings.h>
