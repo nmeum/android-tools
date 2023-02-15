@@ -36,18 +36,6 @@ target_include_directories(libext4 PUBLIC
 	core/libsparse/include core/include selinux/libselinux/include
 	extras/ext4_utils/include libbase/include)
 
-add_library(libfsmgr STATIC
-	core/fs_mgr/liblp/images.cpp
-	core/fs_mgr/liblp/partition_opener.cpp
-	core/fs_mgr/liblp/reader.cpp
-	core/fs_mgr/liblp/utility.cpp
-	core/fs_mgr/liblp/writer.cpp)
-target_include_directories(libfsmgr PRIVATE
-	core/fs_mgr/liblp/include libbase/include
-	extras/ext4_utils/include core/libsparse/include
-	boringssl/include)
-target_link_libraries(libfsmgr PUBLIC fmt::fmt)
-
 # Only add common sources from libselinux_defaults and libselinux
 # See the file list in selinux/libselinux/Android.bp
 add_library(libselinux STATIC
@@ -133,7 +121,7 @@ target_compile_definitions(fastboot PRIVATE
 	-D_GNU_SOURCE -D_XOPEN_SOURCE=700 -DUSE_F2FS
 	-DANDROID_MKE2FS_NAME="${ANDROID_MKE2FS_NAME}")
 target_link_libraries(fastboot
-	libsparse libzip libcutils liblog libfsmgr libutil
+	libsparse libzip libcutils liblog liblp libutil
 	libbase libext4 libselinux libsepol libdiagnoseusb crypto
 	z PkgConfig::libpcre2-8 Threads::Threads dl)
 
