@@ -1,0 +1,25 @@
+From 31d49215b221e6f7677c1983dc97a05640db3691 Mon Sep 17 00:00:00 2001
+From: Biswapriyo Nath <nathbappai@gmail.com>
+Date: Sat, 25 Feb 2023 15:13:29 +0530
+Subject: [PATCH] core include missing headers
+
+---
+ fastboot/super_flash_helper.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/fastboot/super_flash_helper.cpp b/fastboot/super_flash_helper.cpp
+index b617ce8..647b26f 100644
+--- a/fastboot/super_flash_helper.cpp
++++ b/fastboot/super_flash_helper.cpp
+@@ -20,6 +20,8 @@
+ 
+ #include "util.h"
+ 
++#include <limits.h>
++
+ using android::base::borrowed_fd;
+ using android::base::unique_fd;
+ using android::fs_mgr::SuperImageExtent;
+-- 
+2.39.2
+
