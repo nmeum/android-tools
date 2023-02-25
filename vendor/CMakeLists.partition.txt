@@ -1,5 +1,6 @@
 add_library(liblp STATIC
         core/fs_mgr/liblp/builder.cpp
+        core/fs_mgr/liblp/super_layout_builder.cpp
         core/fs_mgr/liblp/images.cpp
         core/fs_mgr/liblp/partition_opener.cpp
         core/fs_mgr/liblp/property_fetcher.cpp

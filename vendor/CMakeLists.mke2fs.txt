@@ -85,6 +85,7 @@ add_library(libext2fs STATIC
 	e2fsprogs/lib/ext2fs/undo_io.c
 	e2fsprogs/lib/ext2fs/unix_io.c
 	e2fsprogs/lib/ext2fs/valid_blk.c
+	e2fsprogs/lib/support/devname.c
 	e2fsprogs/lib/support/dict.c
 	e2fsprogs/lib/support/mkquota.c
 	e2fsprogs/lib/support/parse_qtype.c

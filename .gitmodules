@@ -63,5 +63,6 @@
 	path = vendor/fmtlib
 	url = https://android.googlesource.com/platform/external/fmtlib.git
 [submodule "vendor/libufdt"]
+	shallow = true
 	path = vendor/libufdt
 	url = https://android.googlesource.com/platform/system/libufdt.git

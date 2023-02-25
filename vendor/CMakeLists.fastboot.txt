@@ -98,6 +98,7 @@ set(fastboot_SOURCES
 	core/fastboot/fs.cpp
 	core/fastboot/main.cpp
 	core/fastboot/socket.cpp
+	core/fastboot/super_flash_helper.cpp
 	core/fastboot/tcp.cpp
 	core/fastboot/udp.cpp
 	core/fastboot/vendor_boot_img_utils.cpp
