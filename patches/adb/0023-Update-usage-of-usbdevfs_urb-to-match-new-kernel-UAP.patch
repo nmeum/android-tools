@@ -40,17 +40,17 @@ diff --git a/client/usb_linux.cpp b/client/usb_linux.cpp
 index 7f926266..235a21be 100644
 --- a/client/usb_linux.cpp
 +++ b/client/usb_linux.cpp
-@@ -71,8 +71,8 @@ struct usb_handle {
-     unsigned zero_mask;
-     unsigned writeable = 1;
- 
+@@ -76,8 +76,8 @@ struct usb_handle {
+     // to fill in those values, ignore this warning.
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wgnu-variable-sized-type-not-at-end"
 -    usbdevfs_urb urb_in;
 -    usbdevfs_urb urb_out;
 +    usbdevfs_urb *urb_in;
 +    usbdevfs_urb *urb_out;
- 
+ #pragma clang diagnostic pop
+
      bool urb_in_busy = false;
-     bool urb_out_busy = false;
 @@ -303,7 +303,7 @@ static int usb_bulk_write(usb_handle* h, const void* data, int len) {
      std::unique_lock<std::mutex> lock(h->mutex);
      D("++ usb_bulk_write ++");

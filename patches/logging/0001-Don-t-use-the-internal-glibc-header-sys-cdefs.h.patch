@@ -162,18 +162,6 @@ index b835bd5a..25cb94c5 100644
  #include <sys/stat.h>
  #include <sys/types.h>
  #include <sys/wait.h>
-diff --git a/logd/ChattyLogBuffer.cpp b/logd/ChattyLogBuffer.cpp
-index 19dad178..89d71144 100644
---- a/logd/ChattyLogBuffer.cpp
-+++ b/logd/ChattyLogBuffer.cpp
-@@ -23,7 +23,6 @@
- #include <errno.h>
- #include <stdio.h>
- #include <string.h>
--#include <sys/cdefs.h>
- #include <sys/user.h>
- #include <time.h>
- #include <unistd.h>
 diff --git a/logd/LogListener.cpp b/logd/LogListener.cpp
 index a6ab50b8..641def0f 100644
 --- a/logd/LogListener.cpp

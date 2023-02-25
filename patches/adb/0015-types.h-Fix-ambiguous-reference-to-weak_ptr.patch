@@ -16,7 +16,7 @@ diff --git a/types.h b/types.h
 index be9fb1f6..a5747d05 100644
 --- a/types.h
 +++ b/types.h
-@@ -347,13 +347,13 @@ struct enable_weak_from_this {
+@@ -346,13 +346,13 @@ struct enable_weak_from_this {
          }
      }
  
@@ -24,7 +24,7 @@ index be9fb1f6..a5747d05 100644
 +    ::weak_ptr<T> weak() { return ::weak_ptr<T>(static_cast<T*>(this)); }
  
      void schedule_deletion() {
-         fdevent_run_on_main_thread([this]() { delete static_cast<T*>(this); });
+         fdevent_run_on_looper([this]() { delete static_cast<T*>(this); });
      }
  
    private:

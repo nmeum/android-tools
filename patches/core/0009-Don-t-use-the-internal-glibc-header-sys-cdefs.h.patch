@@ -504,13 +504,16 @@ diff --git a/libprocessgroup/include/processgroup/processgroup.h b/libprocessgro
 index c5badc941f..8ecc416784 100644
 --- a/libprocessgroup/include/processgroup/processgroup.h
 +++ b/libprocessgroup/include/processgroup/processgroup.h
-@@ -16,12 +16,13 @@
+@@ -16,7 +16,6 @@
  
  #pragma once
  
 -#include <sys/cdefs.h>
  #include <sys/types.h>
- #include <string>
+ #include <initializer_list>
+ #include <span>
+@@ -24,7 +23,9 @@
+ #include <string_view>
  #include <vector>
  
 -__BEGIN_DECLS
@@ -520,8 +523,30 @@ index c5badc941f..8ecc416784 100644
  
  static constexpr const char* CGROUPV2_CONTROLLER_NAME = "cgroup2";
  
-@@ -74,4 +75,6 @@ bool getAttributePathForTask(const std::string& attr_name, int tid, std::string*
- 
+@@ -37,7 +38,9 @@ bool CgroupGetAttributePathForTask(const std::string& attr_name, int tid, std::s
+ bool SetTaskProfiles(int tid, const std::vector<std::string>& profiles, bool use_fd_cache = false);
+ bool SetProcessProfiles(uid_t uid, pid_t pid, const std::vector<std::string>& profiles);
+
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+
+ bool SetTaskProfiles(int tid, std::initializer_list<std::string_view> profiles,
+                      bool use_fd_cache = false);
+@@ -48,7 +51,9 @@ bool SetTaskProfiles(int tid, std::span<const std::string_view> profiles,
+ bool SetProcessProfiles(uid_t uid, pid_t pid, std::span<const std::string_view> profiles);
+ #endif
+
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+
+ #ifndef __ANDROID_VNDK__
+
+@@ -92,4 +97,6 @@ bool getAttributePathForTask(const std::string& attr_name, int tid, std::string*
+
  #endif // __ANDROID_VNDK__
  
 -__END_DECLS
@@ -538,8 +563,8 @@ index 9ee3781a62..f424483603 100644
  
 -#include <sys/cdefs.h>
  #include <sys/types.h>
+ #include <functional>
  #include <map>
- #include <mutex>
 diff --git a/libsuspend/autosuspend_ops.h b/libsuspend/autosuspend_ops.h
 index b0024c8bb2..ea0eafd00e 100644
 --- a/libsuspend/autosuspend_ops.h
