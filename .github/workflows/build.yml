@@ -22,6 +22,10 @@ jobs:
         run: |
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
+      - name: get vendor modules
+        run: |
+          cd vendor/boringssl
+          go mod vendor
       - name: build & install
         run: |
           mkdir build && cd build
@@ -123,6 +127,7 @@ jobs:
 
       - name: build & install
         run: |
+          export GOFLAGS="-mod=vendor"
           tar -xf android-tools-*.tar.xz
           cd android-tools-*/
           test -n "${{ matrix.env1 }}" && export ${{ matrix.env1 }}
