@@ -1,5 +1,5 @@
-project(android-tools)
 cmake_minimum_required(VERSION 3.12.0)
+project(android-tools)
 
 # To ease installation of utility files such as bash completions, etc.
 # See: https://cmake.org/cmake/help/latest/module/GNUInstallDirs.html
