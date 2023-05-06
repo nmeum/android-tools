@@ -814,9 +814,9 @@ index 2a66941cef..fac80c0185 100644
 +extern "C" {
 +#endif
  
- /**
-  * This registers the service with the default service manager under this instance name. This does
-@@ -267,4 +268,6 @@ bool AServiceManager_tryUnregister() __INTRODUCED_IN(31);
+ enum AServiceManager_AddServiceFlag : uint32_t {
+     /**
+@@ -294,4 +295,6 @@ bool AServiceManager_tryUnregister() __INTRODUCED_IN(31);
   */
  void AServiceManager_reRegister() __INTRODUCED_IN(31);
  

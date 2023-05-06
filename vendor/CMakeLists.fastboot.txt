@@ -99,10 +99,13 @@ set(fastboot_SOURCES
 	core/fastboot/bootimg_utils.cpp
 	core/fastboot/fastboot.cpp
 	core/fastboot/fastboot_driver.cpp
+	core/fastboot/filesystem.cpp
 	core/fastboot/fs.cpp
 	core/fastboot/main.cpp
 	core/fastboot/socket.cpp
+	core/fastboot/storage.cpp
 	core/fastboot/super_flash_helper.cpp
+	core/fastboot/task.cpp
 	core/fastboot/tcp.cpp
 	core/fastboot/udp.cpp
 	core/fastboot/vendor_boot_img_utils.cpp
