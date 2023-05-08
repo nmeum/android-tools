@@ -88,12 +88,12 @@ add_library(libsepol
 	selinux/libsepol/src/write.c
 	selinux/libsepol/src/optimize.c)
 
+if(HAVE_REALLOCARRAY)
+	target_compile_definitions(libsepol PRIVATE HAVE_REALLOCARRAY)
+endif()
+
 target_include_directories(libsepol PUBLIC
 	selinux/libsepol/include)
-if(NOT APPLE)
-	target_compile_definitions(libsepol PRIVATE
-		-DHAVE_REALLOCARRAY)
-endif()
 
 set(fastboot_SOURCES
 	core/fastboot/bootimg_utils.cpp
