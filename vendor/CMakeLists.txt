@@ -78,6 +78,7 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
 check_symbol_exists(strlcpy "string.h" HAVE_STRLCPY)
+check_symbol_exists(reallocarray "stdlib.h" HAVE_REALLOCARRAY)
 
 include_directories(${PROTOBUF_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
