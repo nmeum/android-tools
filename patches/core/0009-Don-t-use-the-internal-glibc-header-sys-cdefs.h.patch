@@ -523,30 +523,30 @@ index c5badc941f..8ecc416784 100644
  
  static constexpr const char* CGROUPV2_CONTROLLER_NAME = "cgroup2";
  
-@@ -37,7 +38,9 @@ bool CgroupGetAttributePathForTask(const std::string& attr_name, int tid, std::s
- bool SetTaskProfiles(int tid, const std::vector<std::string>& profiles, bool use_fd_cache = false);
+@@ -38,7 +39,9 @@ bool SetTaskProfiles(int tid, const std::vector<std::string>& profiles, bool use
  bool SetProcessProfiles(uid_t uid, pid_t pid, const std::vector<std::string>& profiles);
-
+ bool SetUserProfiles(uid_t uid, const std::vector<std::string>& profiles);
+ 
 -__END_DECLS
 +#ifdef __cplusplus
 +}
 +#endif
-
+ 
  bool SetTaskProfiles(int tid, std::initializer_list<std::string_view> profiles,
                       bool use_fd_cache = false);
-@@ -48,7 +51,9 @@ bool SetTaskProfiles(int tid, std::span<const std::string_view> profiles,
+@@ -49,7 +52,9 @@ bool SetTaskProfiles(int tid, std::span<const std::string_view> profiles,
  bool SetProcessProfiles(uid_t uid, pid_t pid, std::span<const std::string_view> profiles);
  #endif
-
+ 
 -__BEGIN_DECLS
 +#ifdef __cplusplus
 +extern "C" {
 +#endif
-
+ 
  #ifndef __ANDROID_VNDK__
-
-@@ -92,4 +97,6 @@ bool getAttributePathForTask(const std::string& attr_name, int tid, std::string*
-
+ 
+@@ -98,4 +103,6 @@ bool getAttributePathForTask(const std::string& attr_name, int tid, std::string*
+ 
  #endif // __ANDROID_VNDK__
  
 -__END_DECLS
