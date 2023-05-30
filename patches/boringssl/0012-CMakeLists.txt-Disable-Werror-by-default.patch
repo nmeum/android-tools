@@ -5,18 +5,24 @@ Subject: [PATCH] CMakeLists.txt: Disable -Werror by default
 
 Boringssl regularly fails to compile with newer GCC versions due
 to new warnings introduced by GCC upstream.
+
 ---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1fd56a21f..c48092124 100644
+index a1fb153..b9a3475 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -117,7 +117,7 @@ endif()
+@@ -138,7 +138,7 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
  if(CMAKE_COMPILER_IS_GNUCXX OR CLANG)
    # Note clang-cl is odd and sets both CLANG and MSVC. We base our configuration
    # primarily on our normal Clang one.
--  set(C_CXX_FLAGS "-Werror -Wformat=2 -Wsign-compare -Wmissing-field-initializers -Wwrite-strings -Wvla -Wshadow")
-+  set(C_CXX_FLAGS "-Wformat=2 -Wsign-compare -Wmissing-field-initializers -Wwrite-strings -Wvla -Wshadow")
+-  set(C_CXX_FLAGS "-Werror -Wformat=2 -Wsign-compare -Wmissing-field-initializers -Wwrite-strings -Wvla -Wshadow -Wtype-limits")
++  set(C_CXX_FLAGS "-Wformat=2 -Wsign-compare -Wmissing-field-initializers -Wwrite-strings -Wvla -Wshadow -Wtype-limits")
    if(MSVC)
      # clang-cl sets different default warnings than clang. It also treats -Wall
      # as -Weverything, to match MSVC. Instead -W3 is the alias for -Wall.
+-- 
+2.40.1
 

@@ -696,13 +696,12 @@ diff --git a/libs/binder/ndk/include_ndk/android/binder_parcel.h b/libs/binder/n
 index 84575811f0..018672f4a0 100644
 --- a/libs/binder/ndk/include_ndk/android/binder_parcel.h
 +++ b/libs/binder/ndk/include_ndk/android/binder_parcel.h
-@@ -28,14 +28,15 @@
- 
+@@ -29,13 +29,14 @@
+ #include <android/binder_status.h>
  #include <stdbool.h>
  #include <stddef.h>
 -#include <sys/cdefs.h>
- 
- #include <android/binder_status.h>
+ #include <uchar.h>
  
  struct AIBinder;
  typedef struct AIBinder AIBinder;
@@ -868,7 +867,7 @@ index f408fadee0..985afca785 100644
   * This creates a threadpool for incoming binder transactions if it has not already been created.
 @@ -81,4 +82,6 @@ __attribute__((weak)) binder_status_t ABinderProcess_setupPolling(int* fd) __INT
   */
- __attribute__((weak)) binder_status_t ABinderProcess_handlePolledCommands() __INTRODUCED_IN(31);
+ __attribute__((weak)) binder_status_t ABinderProcess_handlePolledCommands(void) __INTRODUCED_IN(31);
  
 -__END_DECLS
 +#ifdef __cplusplus
