@@ -42,10 +42,23 @@ add_subdirectory(vendor)
 # patched versions of the vendored dependencies.
 set(CPACK_SOURCE_GENERATOR "TXZ")
 set(CPACK_SOURCE_PACKAGE_FILE_NAME "${PROJECT_NAME}-${ANDROID_VERSION}")
-set(CPACK_SOURCE_IGNORE_FILES "/patches/" "/build/" "/.git/" "/tests/"
-	"/testdata/" "/extras/simpleperf/scripts/" "\\\\.so$" "\\\\.zip$"
+set(CPACK_SOURCE_IGNORE_FILES "/patches/" "/build/" "/.git/" "/.github/" "/tests/"
+	"/testdata/" "/extras/simpleperf/scripts/"
 	"/vendor/base/[a-k].*" "/vendor/base/[m-z].*" "without_trace_offcpu.html"
-	"\\\\.orig" "\\\\.rej" "aes_128_gcm.txt" "aes_256_gcm.txt"
-	"/fuzz/" "\\\\.tar$" "\\\\.tar\\\\..*$" "\\\\.tgz$" "\\\\.data$"
-	"/wycheproof_testvectors/")
+	"aes_128_gcm.txt" "aes_256_gcm.txt"
+	"/fuzz/"
+	"/wycheproof_testvectors/"
+	"\\\\.apk$"
+	"\\\\.data$"
+	"\\\\.html$"
+	"\\\\.orig$"
+	"\\\\.pdf$"
+	"\\\\.png$"
+	"\\\\.rej$"
+	"\\\\.so$"
+	"\\\\.tar$"
+	"\\\\.tar\\\\..*$"
+	"\\\\.tgz$"
+	"\\\\.zip$"
+)
 include(CPack)
