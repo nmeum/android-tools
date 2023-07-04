@@ -12,26 +12,30 @@ diff --git a/libjsonpb/parse/jsonpb.cpp b/libjsonpb/parse/jsonpb.cpp
 index 3a042e7..62d651d 100644
 --- a/libjsonpb/parse/jsonpb.cpp
 +++ b/libjsonpb/parse/jsonpb.cpp
-@@ -48,7 +48,11 @@ ErrorOr<std::string> MessageToJsonString(const Message& message) {
+@@ -48,7 +48,13 @@ ErrorOr<std::string> MessageToJsonString(const Message& message) {
                                     &json, options);
  
    if (!status.ok()) {
 +#if GOOGLE_PROTOBUF_VERSION < 3016000
 +    return MakeError<std::string>(status.error_message().as_string());
-+#else
++#elif GOOGLE_PROTOBUF_VERSION < 4022000
      return MakeError<std::string>(status.message().as_string());
++#else
++    return MakeError<std::string>(std::string(status.message()));
 +#endif
    }
    return ErrorOr<std::string>(std::move(json));
  }
-@@ -61,7 +65,11 @@ ErrorOr<std::monostate> JsonStringToMessage(const std::string& content, Message*
+@@ -61,7 +67,13 @@ ErrorOr<std::monostate> JsonStringToMessage(const std::string& content, Message*
    std::string binary;
    auto status = JsonToBinaryString(resolver.get(), GetTypeUrl(*message), content, &binary);
    if (!status.ok()) {
 +#if GOOGLE_PROTOBUF_VERSION < 3016000
 +    return MakeError<std::monostate>(status.error_message().as_string());
-+#else
++#elif GOOGLE_PROTOBUF_VERSION < 4022000
      return MakeError<std::monostate>(status.message().as_string());
++#else
++    return MakeError<std::monostate>(std::string(status.message()));
 +#endif
    }
    if (!message->ParseFromString(binary)) {
