@@ -191,7 +191,7 @@ target_link_libraries(adb
 	libzip
 	crypto
 	ssl
-	${PROTOBUF_LIBRARIES}
+	protobuf::libprotobuf
 	PkgConfig::libbrotlicommon
 	PkgConfig::libbrotlidec
 	PkgConfig::libbrotlienc
