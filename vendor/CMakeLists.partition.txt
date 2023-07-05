@@ -28,7 +28,7 @@ add_library(liblpdump STATIC
 	${DYNAMIC_PARTITIONS_DEVICE_INFO_PROTO_SRCS} ${DYNAMIC_PARTITIONS_DEVICE_INFO_PROTO_HDRS}
 	extras/partition_tools/lpdump.cc)
 target_link_libraries(liblpdump PRIVATE
-	libbase libjsonpbparse liblp ${PROTOBUF_LIBRARIES})
+	libbase libjsonpbparse liblp protobuf::libprotobuf)
 
 add_executable(lpdump
 	extras/partition_tools/lpdump_host.cc)
