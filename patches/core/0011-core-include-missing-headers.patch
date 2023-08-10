@@ -5,8 +5,6 @@ Subject: [PATCH] core include missing headers
 
 ---
  fastboot/fastboot.h             | 1 +
- fastboot/fastboot_driver.h      | 1 +
- fastboot/storage.cpp            | 3 ++-
  fastboot/super_flash_helper.cpp | 2 ++
  4 files changed, 6 insertions(+), 1 deletion(-)
 
@@ -22,37 +20,6 @@ index b3dc67d..f946564 100644
  #include <string>
  #include "fastboot_driver.h"
  #include "fastboot_driver_interface.h"
-diff --git a/fastboot/fastboot_driver.h b/fastboot/fastboot_driver.h
-index 3d6c7b0..6ac26ce 100644
---- a/fastboot/fastboot_driver.h
-+++ b/fastboot/fastboot_driver.h
-@@ -28,6 +28,7 @@
- #pragma once
- #include <cstdlib>
- #include <deque>
-+#include <functional>
- #include <limits>
- #include <string>
- #include <vector>
-diff --git a/fastboot/storage.cpp b/fastboot/storage.cpp
-index d6e00cf..3ab7e13 100644
---- a/fastboot/storage.cpp
-+++ b/fastboot/storage.cpp
-@@ -18,6 +18,7 @@
- #include <android-base/logging.h>
- 
- #include <fstream>
-+#include <iterator>
- 
- #include "storage.h"
- #include "util.h"
-@@ -64,4 +65,4 @@ void ConnectedDevicesStorage::Clear(const FileLock&) {
- 
- FileLock ConnectedDevicesStorage::Lock() const {
-     return FileLock(devices_lock_path_);
--}
-\ No newline at end of file
-+}
 diff --git a/fastboot/super_flash_helper.cpp b/fastboot/super_flash_helper.cpp
 index b617ce8..647b26f 100644
 --- a/fastboot/super_flash_helper.cpp
