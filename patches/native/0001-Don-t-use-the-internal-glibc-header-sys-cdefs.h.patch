@@ -864,8 +864,8 @@ index f408fadee0..985afca785 100644
 +#endif
  
  /**
-  * This creates a threadpool for incoming binder transactions if it has not already been created.
-@@ -81,4 +82,6 @@ __attribute__((weak)) binder_status_t ABinderProcess_setupPolling(int* fd) __INT
+  * This creates a threadpool for incoming binder transactions if it has not already been created,
+@@ -94,4 +95,6 @@ __attribute__((weak)) binder_status_t ABinderProcess_setupPolling(int* fd) __INT
   */
  __attribute__((weak)) binder_status_t ABinderProcess_handlePolledCommands(void) __INTRODUCED_IN(31);
  
@@ -1101,16 +1101,20 @@ index 78c56d9ed5..aca4eacff6 100644
 +#endif
  
  #endif // ANDROID_HARDWARE_BUFFER_H
-
+ 
 diff --git a/libs/nativewindow/include/android/hardware_buffer_aidl.h b/libs/nativewindow/include/android/hardware_buffer_aidl.h
-index 9fea21e..51a346b 100644
+index e269f0d..185ed90 100644
 --- a/libs/nativewindow/include/android/hardware_buffer_aidl.h
 +++ b/libs/nativewindow/include/android/hardware_buffer_aidl.h
-@@ -32,9 +32,10 @@
+@@ -32,13 +32,14 @@
  
  #include <android/binder_parcel.h>
  #include <android/hardware_buffer.h>
 -#include <sys/cdefs.h>
+ 
+ #ifdef __cplusplus
+ #include <string>
+ #endif
  
 -__BEGIN_DECLS
 +#ifdef __cplusplus
