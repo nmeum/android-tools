@@ -145,6 +145,9 @@ jobs:
     steps:
       - name: prep macos
         run: |
+          brew uninstall "openssl@1.1"
+          rm /usr/local/bin/openssl
+          rm -rf /usr/local/opt/openssl /usr/local/include/openssl
           brew install brotli cmake googletest libusb lz4 \
           ninja pcre2 protobuf zstd
 
