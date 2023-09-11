@@ -15,7 +15,7 @@ jobs:
             libgtest-dev liblz4-dev libpcre2-dev libprotobuf-dev libunwind-dev \
             libusb-1.0-0-dev libzstd-dev make pkg-config
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: true
       - name: git config
