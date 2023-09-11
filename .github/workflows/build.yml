@@ -145,7 +145,11 @@ jobs:
           /usr/local/bin/fastboot --version
 
   macos:
-    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-11, macos-12, macos-13]
+    runs-on: ${{ matrix.os }}
     needs: [upload-src]
     steps:
       - name: prep macos
@@ -153,7 +157,7 @@ jobs:
           brew uninstall "openssl@1.1"
           rm /usr/local/bin/openssl
           rm -rf /usr/local/opt/openssl /usr/local/include/openssl
-          brew install brotli cmake googletest libusb lz4 \
+          brew install --overwrite brotli cmake go googletest libusb lz4 \
           ninja pcre2 protobuf zstd
 
       - name: download source
