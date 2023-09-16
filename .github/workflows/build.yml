@@ -143,6 +143,7 @@ jobs:
         run: |
           /usr/local/bin/adb --version
           /usr/local/bin/fastboot --version
+          /usr/local/bin/make_f2fs -V
 
   macos:
     strategy:
@@ -180,3 +181,4 @@ jobs:
         run: |
           /usr/local/bin/adb --version
           /usr/local/bin/fastboot --version
+          /usr/local/bin/make_f2fs -V
