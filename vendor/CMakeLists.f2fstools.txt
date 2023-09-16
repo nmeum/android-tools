@@ -1,0 +1,31 @@
+# SPDX-License-Identifier: Apache-2.0
+# CMakeLists.f2fstools.txt: CMake file for f2fs-tools directory
+
+add_library(libf2fs STATIC
+	f2fs-tools/lib/libf2fs.c
+	f2fs-tools/mkfs/f2fs_format.c
+	f2fs-tools/mkfs/f2fs_format_utils.c
+	f2fs-tools/lib/libf2fs_zoned.c
+	f2fs-tools/lib/nls_utf8.c)
+
+target_compile_definitions(libf2fs PUBLIC
+	-DF2FS_MAJOR_VERSION=1
+	-DF2FS_MINOR_VERSION=16
+	-DF2FS_TOOLS_VERSION="1.16.0"
+	-DF2FS_TOOLS_DATE="2023-04-11"
+	-DWITH_ANDROID
+	-DWITH_BLKDISCARD)
+
+target_include_directories(libf2fs PUBLIC
+	core/libsparse/include
+	f2fs-tools/include)
+
+target_link_libraries(libf2fs PUBLIC
+	libext2_uuid)
+
+add_executable(make_f2fs
+	f2fs-tools/lib/libf2fs_io.c
+	f2fs-tools/mkfs/f2fs_format_main.c)
+
+target_link_libraries(make_f2fs PRIVATE
+	libf2fs libsparse z)

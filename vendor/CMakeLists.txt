@@ -89,6 +89,7 @@ include(CMakeLists.libandroidfw.txt)
 include(CMakeLists.adb.txt)
 include(CMakeLists.sparse.txt)
 include(CMakeLists.fastboot.txt)
+include(CMakeLists.f2fstools.txt)
 include(CMakeLists.mke2fs.txt)
 include(CMakeLists.partition.txt)
 include(CMakeLists.mkbootimg.txt)
@@ -107,6 +108,7 @@ install(TARGETS
 	lpflash
 	lpmake
 	lpunpack
+	make_f2fs
 	simg2img
 	e2fsdroid
 	ext2simg
