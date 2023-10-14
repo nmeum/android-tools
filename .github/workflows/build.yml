@@ -44,7 +44,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: "opensuse/leap:15.4"
+          - os: "opensuse/leap:latest"
             pkgs: "clang gcc11-c++"
             env1: "CC=clang CXX=clang++"
           - os: "opensuse/tumbleweed"
@@ -75,7 +75,7 @@ jobs:
       image: ${{ matrix.os }}
       # New versions of glibc use the new clone3() syscall which has not
       # yet been whitelisted in GitHub's secomp profile. To prevent jobs
-      # using these distros from failing (e.g. OpenSUSE) change the
+      # using these distros from failing (e.g. openSUSE) change the
       # secomp policy.
       #
       # See https://github.com/nmeum/android-tools/pull/48#issuecomment-944893176
