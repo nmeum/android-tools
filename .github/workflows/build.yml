@@ -144,6 +144,7 @@ jobs:
           /usr/local/bin/adb --version
           /usr/local/bin/fastboot --version
           /usr/local/bin/make_f2fs -V
+          /usr/local/bin/sload_f2fs -V
 
   macos:
     strategy:
@@ -182,3 +183,4 @@ jobs:
           /usr/local/bin/adb --version
           /usr/local/bin/fastboot --version
           /usr/local/bin/make_f2fs -V
+          /usr/local/bin/sload_f2fs -V
