@@ -109,6 +109,7 @@ install(TARGETS
 	lpmake
 	lpunpack
 	make_f2fs
+	sload_f2fs
 	simg2img
 	e2fsdroid
 	ext2simg
