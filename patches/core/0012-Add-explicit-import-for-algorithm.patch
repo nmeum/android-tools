@@ -1,0 +1,26 @@
+From 1f8bbf8c3dd76401b09de9af7e94d6099589a965 Mon Sep 17 00:00:00 2001
+From: Christopher Fore <csfore@posteo.net>
+Date: Mon, 20 Nov 2023 15:19:12 -0500
+Subject: [PATCH] fs_mgr: IWYU include <algorithm> for std::sort
+
+GCC 14 starts to no longer include <algorithm> by default, resulting in
+it needing to be explicitly declared.
+
+Test: Recompiled with GCC 14 and succeeded
+
+Change-Id: Ifc5dd58b7476ba728ae604cd2924cb68fbcab701
+Signed-off-by: Christopher Fore <csfore@posteo.net>
+---
+
+diff --git a/fs_mgr/liblp/include/liblp/liblp.h b/fs_mgr/liblp/include/liblp/liblp.h
+index 04f8987..c42dcdc 100644
+--- a/fs_mgr/liblp/include/liblp/liblp.h
++++ b/fs_mgr/liblp/include/liblp/liblp.h
+@@ -20,6 +20,7 @@
+ #include <stddef.h>
+ #include <stdint.h>
+ 
++#include <algorithm>
+ #include <map>
+ #include <memory>
+ #include <string>
