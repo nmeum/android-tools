@@ -16,8 +16,39 @@ https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-
  tests/lib/testUtil/include/testUtil.h                    | 8 ++++++--
  2 files changed, 12 insertions(+), 5 deletions(-)
 
+diff --git a/libatrace_rust/benchmark/src/trace_enabler.h b/libatrace_rust/benchmark/src/trace_enabler.h
+index 532c590..561ba6a 100644
+--- a/libatrace_rust/benchmark/src/trace_enabler.h
++++ b/libatrace_rust/benchmark/src/trace_enabler.h
+@@ -16,13 +16,14 @@
+ 
+ #pragma once
+ 
+-#include <sys/cdefs.h>
+ 
+ // A library to enable tracing for benchmarks.
+ // It only causes ftrace events to be emitted so that we can measure
+ // performance and is not intended to enable tracing for meaningful results.
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ // Disable tracing for ATRACE_TAG_APP events.
+ // Terminates the app on error and writes an error message to logd and stderr.
+@@ -33,4 +34,6 @@ void disable_app_atrace();
+ // Terminates the app on error and writes an error message to logd and stderr.
+ void enable_atrace_for_single_app(const char* name);
+ 
+-__END_DECLS
+\ No newline at end of file
++#ifdef __cplusplus
++}
++#endif
+\ No newline at end of file
 diff --git a/module_ndk_libs/libnativehelper/include/android/file_descriptor_jni.h b/module_ndk_libs/libnativehelper/include/android/file_descriptor_jni.h
-index 26529b99..083999d5 100644
+index 26529b9..083999d 100644
 --- a/module_ndk_libs/libnativehelper/include/android/file_descriptor_jni.h
 +++ b/module_ndk_libs/libnativehelper/include/android/file_descriptor_jni.h
 @@ -25,7 +25,6 @@

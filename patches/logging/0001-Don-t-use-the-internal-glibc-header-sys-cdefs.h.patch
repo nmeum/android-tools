@@ -49,7 +49,7 @@ index 1bd1c8ae..c71bbdd4 100644
  
  /*
   * Normally we strip the effects of ALOGV (VERBOSE messages),
-@@ -377,4 +378,6 @@ int __android_log_is_loggable_len(int prio, const char* tag, size_t len, int def
+@@ -375,4 +376,6 @@ int __android_log_is_loggable_len(int prio, const char* tag, size_t len, int def
  #pragma clang diagnostic pop
  #endif
  
@@ -139,10 +139,10 @@ index b784f9ff..88aeec9c 100644
 +}
 +#endif
 diff --git a/logcat/logcat.cpp b/logcat/logcat.cpp
-index 084003e7..9eecf737 100644
+index c8fcf46..aff013e 100644
 --- a/logcat/logcat.cpp
 +++ b/logcat/logcat.cpp
-@@ -26,7 +26,6 @@
+@@ -29,7 +29,6 @@
  #include <stdio.h>
  #include <stdlib.h>
  #include <string.h>
@@ -151,10 +151,10 @@ index 084003e7..9eecf737 100644
  #include <sys/resource.h>
  #include <sys/stat.h>
 diff --git a/logcat/tests/logcat_test.cpp b/logcat/tests/logcat_test.cpp
-index b835bd5a..25cb94c5 100644
+index dc1df96..c26fe1b 100644
 --- a/logcat/tests/logcat_test.cpp
 +++ b/logcat/tests/logcat_test.cpp
-@@ -22,7 +22,6 @@
+@@ -24,7 +24,6 @@
  #include <stdio.h>
  #include <stdlib.h>
  #include <string.h>
