@@ -1,0 +1,24 @@
+From c37bd188a394b36ecb5aa5eeac9469fc5ef4473a Mon Sep 17 00:00:00 2001
+From: Biswapriyo Nath <nathbappai@gmail.com>
+Date: Thu, 1 Feb 2024 19:39:48 +0530
+Subject: [PATCH] adb include missing headers
+
+---
+ sysdeps/uio.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/sysdeps/uio.h b/sysdeps/uio.h
+index f3ace64..266a20b 100644
+--- a/sysdeps/uio.h
++++ b/sysdeps/uio.h
+@@ -34,6 +34,7 @@ ssize_t adb_writev(borrowed_fd fd, const adb_iovec* iov, int iovcnt);
+ 
+ #else
+ 
++#include <limits.h>
+ #include <sys/uio.h>
+ using adb_iovec = struct iovec;
+ inline ssize_t adb_writev(borrowed_fd fd, const adb_iovec* iov, int iovcnt) {
+-- 
+2.43.0
+

@@ -68,6 +68,6 @@ target_include_directories(sload_f2fs PRIVATE
 	core/libcutils/include)
 
 target_link_libraries(sload_f2fs PRIVATE
-	libsparse libselinux libcutils z
+	libext2_uuid libsparse libselinux libcutils z
 	PkgConfig::libpcre2-8
 	PkgConfig::liblz4)

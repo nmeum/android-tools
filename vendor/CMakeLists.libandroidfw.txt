@@ -26,6 +26,7 @@ target_compile_definitions(libandroidfw PUBLIC -DSTATIC_ANDROIDFW_FOR_TOOLS)
 target_compile_definitions(libandroidfw PRIVATE -D_GNU_SOURCE -DNDEBUG)
 target_include_directories(libandroidfw PUBLIC
 	base/libs/androidfw/include
+	base/libs/androidfw/include_pathutils
 	core/libcutils/include
 	logging/liblog/include
 	core/libsystem/include

@@ -110,10 +110,10 @@ index 2ac7d4d350..8a7517e4a0 100644
  
  #ifdef __cplusplus
 diff --git a/include/android/choreographer.h b/include/android/choreographer.h
-index b743f49..b52ab94 100644
+index cd8e63d..912c663 100644
 --- a/include/android/choreographer.h
 +++ b/include/android/choreographer.h
-@@ -27,9 +27,10 @@
+@@ -49,9 +49,10 @@
  #define ANDROID_CHOREOGRAPHER_H
  
  #include <stdint.h>
@@ -749,10 +749,10 @@ index 384d4f7772..e4d22d1d81 100644
  
  /** @} */
 diff --git a/libs/binder/ndk/include_ndk/android/binder_status.h b/libs/binder/ndk/include_ndk/android/binder_status.h
-index 76c7aacb7c..98c73aae07 100644
+index 4786c89..d8f4b1f 100644
 --- a/libs/binder/ndk/include_ndk/android/binder_status.h
 +++ b/libs/binder/ndk/include_ndk/android/binder_status.h
-@@ -28,9 +28,10 @@
+@@ -29,9 +29,10 @@
  #include <errno.h>
  #include <stdbool.h>
  #include <stdint.h>
@@ -765,7 +765,7 @@ index 76c7aacb7c..98c73aae07 100644
  
  #ifndef __BIONIC__
  
-@@ -304,6 +305,8 @@ void AStatus_deleteDescription(const char* description) __INTRODUCED_IN(30);
+@@ -305,6 +306,8 @@ void AStatus_deleteDescription(const char* description) __INTRODUCED_IN(30);
   */
  void AStatus_delete(AStatus* status) __INTRODUCED_IN(29);
  
@@ -1047,35 +1047,35 @@ index 6eaa84e225..9a5a976f0c 100644
  #include <ui/FenceTime.h>
  #include <ui/GraphicBuffer.h>
 diff --git a/libs/nativewindow/include/android/data_space.h b/libs/nativewindow/include/android/data_space.h
-index e759513a63..a15dc9c37d 100644
+index 968c114..dbfaac9 100644
 --- a/libs/nativewindow/include/android/data_space.h
 +++ b/libs/nativewindow/include/android/data_space.h
 @@ -30,9 +30,10 @@
-
+ 
  #include <inttypes.h>
-
+ 
 -#include <sys/cdefs.h>
-
+ 
 -__BEGIN_DECLS
 +#ifdef __cplusplus
 +extern "C" {
 +#endif
-
+ 
  /**
   * ADataSpace.
 @@ -558,7 +559,9 @@ enum ADataSpace {
      DYNAMIC_DEPTH = 4098
  };
-
+ 
 -__END_DECLS
 +#ifdef __cplusplus
 +}
 +#endif
-
+ 
  #endif // ANDROID_DATA_SPACE_H
-
+ 
 diff --git a/libs/nativewindow/include/android/hardware_buffer.h b/libs/nativewindow/include/android/hardware_buffer.h
-index 78c56d9ed5..aca4eacff6 100644
+index 21798d0..042358a 100644
 --- a/libs/nativewindow/include/android/hardware_buffer.h
 +++ b/libs/nativewindow/include/android/hardware_buffer.h
 @@ -47,9 +47,10 @@
@@ -1091,7 +1091,7 @@ index 78c56d9ed5..aca4eacff6 100644
  
  // clang-format off
  
-@@ -575,7 +576,9 @@ int AHardwareBuffer_lockAndGetInfo(AHardwareBuffer* _Nonnull buffer, uint64_t us
+@@ -614,7 +615,9 @@ int AHardwareBuffer_lockAndGetInfo(AHardwareBuffer* _Nonnull buffer, uint64_t us
  int AHardwareBuffer_getId(const AHardwareBuffer* _Nonnull buffer, uint64_t* _Nonnull outId)
          __INTRODUCED_IN(31);
  
@@ -1123,7 +1123,7 @@ index e269f0d..185ed90 100644
  
  /**
   * Read an AHardwareBuffer from a AParcel. The output buffer will have an
-@@ -68,7 +69,9 @@ binder_status_t AHardwareBuffer_readFromParcel(const AParcel* _Nonnull parcel,
+@@ -72,7 +73,9 @@ binder_status_t AHardwareBuffer_readFromParcel(const AParcel* _Nonnull parcel,
  binder_status_t AHardwareBuffer_writeToParcel(const AHardwareBuffer* _Nonnull buffer,
          AParcel* _Nonnull parcel) __INTRODUCED_IN(34);
  
@@ -1216,7 +1216,7 @@ index 0923438eec..e4e51e912f 100644
  
  /*
   * perform bits that can be used with ANativeWindow_perform()
-@@ -220,4 +222,6 @@ int64_t ANativeWindow_getLastDequeueStartTime(ANativeWindow* window);
+@@ -207,4 +209,6 @@ int64_t ANativeWindow_getLastDequeueStartTime(ANativeWindow* window);
   */
  int ANativeWindow_setDequeueTimeout(ANativeWindow* window, int64_t timeout);
  
@@ -1247,7 +1247,7 @@ index 7f0113500d..75f97451ce 100644
  
  /*****************************************************************************/
  
-@@ -1131,4 +1132,6 @@ static inline int ANativeWindow_setQueryInterceptor(ANativeWindow* window,
+@@ -1154,4 +1155,6 @@ static inline int ANativeWindow_setQueryInterceptor(ANativeWindow* window,
      return window->perform(window, NATIVE_WINDOW_SET_QUERY_INTERCEPTOR, interceptor, data);
  }
  
@@ -1451,8 +1451,8 @@ index fe59d1ffba..5a9d93cf2d 100644
  
  // Avoid errors if this header is included in C code.
  #if defined(__cplusplus)
-ddiff --git a/libs/vr/libdvr/include/dvr/dvr_display_manager.h b/libs/vr/libdvr/include/dvr/dvr_display_manager.h
-index f910d610f5..29ba986d26 100644
+diff --git a/libs/vr/libdvr/include/dvr/dvr_display_manager.h b/libs/vr/libdvr/include/dvr/dvr_display_manager.h
+index f910d61..29ba986 100644
 --- a/libs/vr/libdvr/include/dvr/dvr_display_manager.h
 +++ b/libs/vr/libdvr/include/dvr/dvr_display_manager.h
 @@ -4,12 +4,13 @@
