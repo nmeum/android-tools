@@ -111,9 +111,14 @@ install(TARGETS
 	make_f2fs
 	sload_f2fs
 	simg2img
-	e2fsdroid
 	ext2simg
 	DESTINATION bin)
+
+if(NOT APPLE)
+	install(TARGETS
+		e2fsdroid
+		DESTINATION bin)
+endif()
 
 # Install common completion files.
 install(FILES adb/adb.bash RENAME adb DESTINATION "${COMPLETION_COMMON_DIR}")
