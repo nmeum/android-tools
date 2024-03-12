@@ -45,19 +45,33 @@ set(android-vendored
 	boringssl)
 
 # XXX: Consider using https://cmake.org/cmake/help/v3.0/module/ExternalProject.html
+
+find_package(Git)
+if(GIT_FOUND)
+  list(APPEND PATCH_PROGRAM ${GIT_EXECUTABLE} am)
+else()
+  find_program(PATCH_EXECUTABLE patch REQUIRED)
+  list(APPEND PATCH_PROGRAM ${PATCH_EXECUTABLE} -p1 -i)
+endif()
+
 if(ANDROID_TOOLS_PATCH_VENDOR AND EXISTS "${ANDROID_PATCH_DIR}/")
-	execute_process(COMMAND git submodule --quiet update)
+	if(GIT_FOUND)
+	  execute_process(COMMAND git submodule --quiet update)
+	endif()
 	foreach(v ${android-vendored})
-		file(GLOB patches ${ANDROID_PATCH_DIR}/${v}/*.patch)
-		if(patches)
-			message(STATUS "Applying patches for: ${v}")
-			execute_process(COMMAND git -C
-				${CMAKE_CURRENT_SOURCE_DIR}/${v} am ${patches}
-				RESULT_VARIABLE ret)
-			if(NOT "${ret}" STREQUAL "0")
-				message(FATAL_ERROR "Couldn't apply patches for ${v}")
-			endif()
-		endif(patches)
+	  file(GLOB patches ${ANDROID_PATCH_DIR}/${v}/*.patch)
+	  message(STATUS "Applying patches for: ${v}")
+	  if(patches)
+	  foreach(patch ${patches})
+		execute_process(COMMAND ${PATCH_PROGRAM} ${patch}
+		  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${v}
+		  RESULT_VARIABLE ret
+		  COMMAND_ECHO STDOUT)
+		if(NOT "${ret}" STREQUAL "0")
+		  message(FATAL_ERROR "Couldn't apply patches for ${v}, ${ret}")
+		endif()
+	  endforeach()
+	endif()
 	endforeach(v)
 endif()
 
