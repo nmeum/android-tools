@@ -17,7 +17,7 @@ index 0082c6c63..a85e12988 100644
  // Deprecated: use android::base::GetThreadId instead, which doesn't truncate on Mac/Windows.
  //
 -#if !defined(__GLIBC__) || __GLIBC__ >= 2 && __GLIBC_MINOR__ < 32
-+#if !defined(__GLIBC__) || __GLIBC__ >= 2 && __GLIBC_MINOR__ < 31
++#if !defined(__GLIBC__) || __GLIBC__ >= 2 && __GLIBC_MINOR__ < 30
  extern pid_t gettid();
  #endif
  
@@ -30,7 +30,7 @@ index 6ece7a3af..a15ff6aa3 100644
  #endif
  
 -#if defined(__BIONIC__) || defined(__GLIBC__) && __GLIBC_MINOR__ >= 32
-+#if defined(__BIONIC__) || defined(__GLIBC__) && __GLIBC_MINOR__ >= 31
++#if defined(__BIONIC__) || defined(__GLIBC__) && __GLIBC_MINOR__ >= 30
  // No definition needed for Android because we'll just pick up bionic's copy.
  // No definition needed for Glibc >= 2.32 because it exposes its own copy.
  #else
