@@ -1,0 +1,28 @@
+From 4c9629c66710d7ed4ec684f231406dd54c91ef98 Mon Sep 17 00:00:00 2001
+From: Anatol Pomozov <anatol.pomozov@gmail.com>
+Date: Tue, 19 Mar 2024 16:46:39 -0700
+Subject: [PATCH] Drop compile static check
+
+This static check does not work well with libstdc++. It is not entirely
+clear if this check error is valid or just clang being too strict.
+
+See https://github.com/nmeum/android-tools/pull/132#issuecomment-1949786658
+---
+ types.h | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/types.h b/types.h
+index 2865969f..6335d16f 100644
+--- a/types.h
++++ b/types.h
+@@ -232,7 +232,6 @@ struct IOVector {
+ 
+         size_t offset = 0;
+         iterate_blocks([&offset, &result](const char* data, size_t len) {
+-            static_assert(std::is_standard_layout<decltype(result)>());
+             memcpy(&result[offset], data, len);
+             offset += len;
+         });
+-- 
+2.44.0
+
