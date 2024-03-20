@@ -16,6 +16,22 @@ if(APPLE)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_DARWIN_C_SOURCE -D__DARWIN_C_LEVEL=__DARWIN_C_FULL")
 endif()
 
+# Different versions of clang require a different set of flags for -ftrivial-auto-var-init
+# Simplify this contruct once old clang version support is dropped
+include(CheckCXXCompilerFlag)
+check_cxx_compiler_flag("-ftrivial-auto-var-init=zero" COMPILER_SUPPORTS_TRIVIAL_ZERO_INIT)
+if(COMPILER_SUPPORTS_TRIVIAL_ZERO_INIT)
+	set(VAR_ZERO_INIT_FLAGS "-ftrivial-auto-var-init=zero")
+else()
+	check_cxx_compiler_flag("-ftrivial-auto-var-init=zero -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang"
+				COMPILER_REQUIRES_ENABLE_TRIVIAL_ZERO_INIT)
+	if(COMPILER_REQUIRES_ENABLE_TRIVIAL_ZERO_INIT)
+		set(VAR_ZERO_INIT_FLAGS "-ftrivial-auto-var-init=zero -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang")
+	endif()
+endif()
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${VAR_ZERO_INIT_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${VAR_ZERO_INIT_FLAGS}")
+
 # Android seems to use various attributes supported by clang but not by
 # GCC which causes it to emit lots of warnings. Since these attributes
 # don't seem to effect runtime behaviour simply disable the warnings.
