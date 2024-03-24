@@ -3,6 +3,8 @@ adopt-info: tools
 grade: stable
 confinement: strict
 base: core22
+compression: lzo
+license: Apache-2.0
 summary: Android development tools
 description: |
   Tools commonly used for Android development.
@@ -18,12 +20,21 @@ description: |
   In order to enable the full featureset you will have to
   grant permissions to this Snap:
 
+  ```
   sudo snap connect android-tools:adb-support
   sudo snap connect android-tools:block-devices
   sudo snap connect android-tools:raw-usb
   sudo snap connect android-tools:removable-media
   sudo snap connect android-tools:network
   sudo snap connect android-tools:network-bind
+  ```
+
+  Creating system-wide aliases is also possible:
+
+  ```
+  sudo snap alias android-tools.adb adb
+  sudo snap alias android-tools.fastboot fastboot
+  ```
 
 architectures:
   - build-on: [amd64]
@@ -36,11 +47,13 @@ apps:
     environment:
       LD_LIBRARY_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}
     command: usr/bin/adb
+    completer: usr/share/bash-completion/completions/adb
     plugs: [ adb-support, network, network-bind, raw-usb, home, removable-media ]
   fastboot:
     environment:
       LD_LIBRARY_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}
     command: usr/bin/fastboot
+    completer: usr/share/bash-completion/completions/fastboot
     plugs: [ raw-usb, home, removable-media ]
   mke2fs-android:
     environment:
@@ -90,22 +103,22 @@ apps:
   mkbootimg:
     environment:
       LD_LIBRARY_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}
-    command: usr/bin/python3 usr/bin/mkbootimg
+    command: usr/bin/python3 $SNAP/usr/bin/mkbootimg
     plugs: [ home, removable-media ]
   unpack-bootimg:
     environment:
       LD_LIBRARY_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}
-    command: usr/bin/python3 usr/bin/unpack_bootimg
+    command: usr/bin/python3 $SNAP/usr/bin/unpack_bootimg
     plugs: [ home, removable-media ]
   repack-bootimg:
     environment:
       LD_LIBRARY_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}
-    command: usr/bin/python3 usr/bin/repack_bootimg
+    command: usr/bin/python3 $SNAP/usr/bin/repack_bootimg
     plugs: [ home, removable-media ]
   avbtool:
     environment:
       LD_LIBRARY_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}
-    command: usr/bin/python3 usr/bin/avbtool
+    command: usr/bin/python3 $SNAP/usr/bin/avbtool
     plugs: [ home, removable-media ]
 
 parts:
@@ -140,6 +153,7 @@ parts:
       - libgtest-dev
     stage-packages:
       - python3-minimal
+      - python3.10-minimal
       - libusb-1.0-0
       - libbrotli1
       - libzstd1
