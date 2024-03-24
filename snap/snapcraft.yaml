@@ -1,0 +1,147 @@
+name: android-tools
+adopt-info: tools
+grade: stable
+confinement: strict
+base: core22
+summary: Android development tools
+description: |
+  Tools commonly used for Android development.
+  Currently the following tools are supported:
+
+  - adb
+  - fastboot
+  - mke2fs.android (required by fastboot)
+  - simg2img, img2simg, append2simg
+  - lpdump, lpmake, lpadd, lpflash, lpunpack
+  - mkbootimg, unpack_bootimg, repack_bootimg, avbtool
+
+  In order to enable the full featureset you will have to
+  grant permissions to this Snap:
+
+  sudo snap connect android-tools:adb-support
+  sudo snap connect android-tools:block-devices
+  sudo snap connect android-tools:raw-usb
+  sudo snap connect android-tools:removable-media
+  sudo snap connect android-tools:network
+  sudo snap connect android-tools:network-bind
+
+architectures:
+  - build-on: [amd64]
+    build-for: [amd64]
+  - build-on: [arm64]
+    build-for: [arm64]
+
+apps:
+  adb:
+    environment:
+      LD_LIBRARY_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}
+    command: usr/bin/adb
+    plugs: [ adb-support, network, network-bind, raw-usb, home, removable-media ]
+  fastboot:
+    environment:
+      LD_LIBRARY_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}
+    command: usr/bin/fastboot
+    plugs: [ raw-usb, home, removable-media ]
+  mke2fs-android:
+    environment:
+      LD_LIBRARY_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}
+    command: usr/bin/mke2fs.android
+    plugs: [ home, removable-media ]
+  simg2img:
+    environment:
+      LD_LIBRARY_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}
+    command: usr/bin/simg2img
+    plugs: [ home, removable-media ]
+  img2simg:
+    environment:
+      LD_LIBRARY_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}
+    command: usr/bin/img2simg
+    plugs: [ home, removable-media ]
+  append2simg:
+    environment:
+      LD_LIBRARY_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}
+    command: usr/bin/append2simg
+    plugs: [ home, removable-media ]
+  lpdump:
+    environment:
+      LD_LIBRARY_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}
+    command: usr/bin/lpdump
+    plugs: [ home, removable-media ]
+  lpmake:
+    environment:
+      LD_LIBRARY_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}
+    command: usr/bin/lpmake
+    plugs: [ home, removable-media ]
+  lpadd:
+    environment:
+      LD_LIBRARY_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}
+    command: usr/bin/lpadd
+    plugs: [ home, removable-media ]
+  lpflash:
+    environment:
+      LD_LIBRARY_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}
+    command: usr/bin/lpflash
+    plugs: [ block-devices, home, removable-media ]
+  lpunpack:
+    environment:
+      LD_LIBRARY_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}
+    command: usr/bin/lpunpack
+    plugs: [ home, removable-media ]
+  mkbootimg:
+    environment:
+      LD_LIBRARY_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}
+    command: usr/bin/python3 usr/bin/mkbootimg
+    plugs: [ home, removable-media ]
+  unpack-bootimg:
+    environment:
+      LD_LIBRARY_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}
+    command: usr/bin/python3 usr/bin/unpack_bootimg
+    plugs: [ home, removable-media ]
+  repack-bootimg:
+    environment:
+      LD_LIBRARY_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}
+    command: usr/bin/python3 usr/bin/repack_bootimg
+    plugs: [ home, removable-media ]
+  avbtool:
+    environment:
+      LD_LIBRARY_PATH: ${SNAP}/usr/lib/${SNAPCRAFT_ARCH_TRIPLET}
+    command: usr/bin/python3 usr/bin/avbtool
+    plugs: [ home, removable-media ]
+
+parts:
+  tools:
+    plugin: cmake
+    source: .
+    cmake-parameters:
+      - -GNinja
+      - -DCMAKE_INSTALL_PREFIX=/usr
+    override-build: |
+      cd $CRAFT_PART_SRC
+      version="$(git describe --abbrev=0 --tags)"
+      craftctl set version="$version"
+      find $CRAFT_PART_SRC/.git -type f -name rebase-apply -delete
+      craftctl default
+    build-packages:
+      - ninja-build
+      - cmake
+      - build-essential
+      - dpkg-dev
+      - libusb-1.0-0-dev
+      - libpcre2-dev
+      - googletest
+      - libprotobuf-dev
+      - libbrotli-dev
+      - libzstd-dev
+      - liblz4-dev
+      - golang
+      - perl
+      - pkg-config
+      - protobuf-compiler
+      - libgtest-dev
+    stage-packages:
+      - python3-minimal
+      - libusb-1.0-0
+      - libbrotli1
+      - libzstd1
+      - liblz4-1
+      - libprotobuf23
