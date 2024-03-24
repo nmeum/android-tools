@@ -3,3 +3,4 @@
 .vscode
 
 /cmake-build-debug/
+*.snap
