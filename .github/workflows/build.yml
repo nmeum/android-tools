@@ -31,6 +31,9 @@ jobs:
           mkdir build && cd build
           cmake ..
           make package_source
+          for x in sha1sum sha256sum sha512sum b2sum; do
+            printf "$x " && $x ${{ github.workspace }}/build/android-tools-*.tar.xz | cut -d " " -f 1
+          done
       - name: upload package_source
         uses: actions/upload-artifact@v3
         with:
