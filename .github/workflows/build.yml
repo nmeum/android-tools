@@ -35,7 +35,7 @@ jobs:
             printf "$x " && $x ${{ github.workspace }}/build/android-tools-*.tar.xz | cut -d " " -f 1
           done
       - name: upload package_source
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: package_source
           path: ${{ github.workspace }}/build/android-tools-*.tar.xz
@@ -124,7 +124,7 @@ jobs:
           libusbx-devel libzstd-devel tar xz
 
       - name: download source
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: package_source
 
@@ -166,7 +166,7 @@ jobs:
           ninja pcre2 protobuf zstd
 
       - name: download source
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: package_source
 
