@@ -6,7 +6,7 @@ utilities provided by [android-tools][android-tools].
 # Motivation
 
 [Many][void-linux] [Linux][arch-linux] [distributions][alpine-linux] have
-a package called android-tools which ships essential android command
+[a package called android-tools][repology] which ships essential android command
 line tools like adb or fastboot. Sadly the upstream build system for
 those tools is rather complex and doesn't allow building the command
 line tools only.
@@ -94,25 +94,27 @@ Release Page][release-page].
 
 # See also
 
-The Arch Linux [android-tools package][arch-linux] by [Anatol Pomozov][anatol.pomozov]
+[The build script][android-tools-legacy] for android platform tools by [Anatol Pomozov][anatol.pomozov]
 which inspired this project. Most definitions in the `CMakeLists.txt`
 have been copied from Anatol's ruby script.
 
-[android-tools]: https://sites.google.com/a/android.com/tools/
+[android-tools]: https://developer.android.com/tools/releases/platform-tools
 [void-linux]: https://github.com/void-linux/void-packages/tree/master/srcpkgs/android-tools
-[arch-linux]: https://www.archlinux.org/packages/community/x86_64/android-tools/
-[alpine-linux]: https://pkgs.alpinelinux.org/package/edge/testing/x86_64/android-tools
+[arch-linux]: https://archlinux.org/packages/extra/x86_64/android-tools/
+[alpine-linux]: https://pkgs.alpinelinux.org/package/edge/community/x86_64/android-tools
+[repology]: https://repology.org/project/android-tools/versions
 [release-page]: https://github.com/nmeum/android-tools/releases
-[libusb]: http://libusb.info/
-[PCRE]: http://pcre.sourceforge.net/
+[libusb]: https://libusb.info/
+[PCRE]: https://pcre.sourceforge.net/
 [gtest]: https://github.com/google/googletest
 [gcc]: https://gcc.gnu.org/
-[clang]: https://llvm.org/
-[golang]: https://golang.org/
+[clang]: https://clang.llvm.org/
+[golang]: https://go.dev/
 [cmake]: https://cmake.org/
 [perl]: https://www.perl.org/
 [protobuf]: https://github.com/protocolbuffers/protobuf
 [brotli]: https://github.com/google/brotli
 [zstd]: https://facebook.github.io/zstd/
 [lz4]: https://github.com/lz4/lz4
+[android-tools-legacy]: https://github.com/anatol/android-platform-tools-build
 [anatol.pomozov]: https://github.com/anatol
