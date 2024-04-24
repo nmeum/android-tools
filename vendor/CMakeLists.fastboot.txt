@@ -15,11 +15,16 @@ target_include_directories(libzip PUBLIC
 
 add_library(libutil STATIC
 	core/libutils/FileMap.cpp
-	core/libutils/SharedBuffer.cpp
-	core/libutils/String16.cpp
-	core/libutils/String8.cpp
-	core/libutils/VectorImpl.cpp
-	core/libutils/Unicode.cpp)
+	core/libutils/JenkinsHash.cpp
+	core/libutils/LightRefBase.cpp
+	core/libutils/NativeHandle.cpp
+	core/libutils/Printer.cpp
+	core/libutils/StopWatch.cpp
+	core/libutils/SystemClock.cpp
+	core/libutils/Threads.cpp
+	core/libutils/Timers.cpp
+	core/libutils/Tokenizer.cpp
+	core/libutils/misc.cpp)
 
 target_include_directories(libutil PUBLIC
 	core/include
