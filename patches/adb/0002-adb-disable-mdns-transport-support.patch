@@ -12,13 +12,14 @@ diff --git a/client/main.cpp b/client/main.cpp
 index 4fa58faf..c14b3463 100644
 --- a/client/main.cpp
 +++ b/client/main.cpp
-@@ -129,9 +129,6 @@ int adb_server_main(int is_daemon, const std::string& socket_spec, int ack_reply
+@@ -132,10 +132,6 @@ int adb_server_main(int is_daemon, const std::string& socket_spec, const char* o
+ 
      init_reconnect_handler();
  
-     adb_wifi_init();
 -    if (!getenv("ADB_MDNS") || strcmp(getenv("ADB_MDNS"), "0") != 0) {
 -        init_mdns_transport_discovery();
 -    }
- 
+-
      if (!getenv("ADB_USB") || strcmp(getenv("ADB_USB"), "0") != 0) {
          if (should_use_libusb()) {
+             libusb::usb_init();

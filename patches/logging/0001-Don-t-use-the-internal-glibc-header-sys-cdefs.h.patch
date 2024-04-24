@@ -186,10 +186,10 @@ index c0f62d39..5c759793 100644
  #include <sys/types.h>
  
  #include <private/android_logger.h>
-diff --git a/logd/libaudit.h b/logd/libaudit.h
+diff --git a/logd/libaudit/include/libaudit.h b/logd/libaudit/include/libaudit.h
 index 27b08669..872d6996 100644
---- a/logd/libaudit.h
-+++ b/logd/libaudit.h
+--- a/logd/libaudit/include/libaudit.h
++++ b/logd/libaudit/include/libaudit.h
 @@ -20,14 +20,15 @@
  #pragma once
  
@@ -208,10 +208,10 @@ index 27b08669..872d6996 100644
  
  #define MAX_AUDIT_MESSAGE_LENGTH 8970
  
-@@ -100,4 +101,6 @@ extern int audit_setup(int fd, pid_t pid);
+@@ -111,4 +112,6 @@ extern int audit_rate_limit(int fd, uint32_t limit);
   */
- extern int audit_rate_limit(int fd, uint32_t limit);
- 
+ extern int audit_log_android_avc_message(int fd, const char* msg);
+
 -__END_DECLS
 +#ifdef __cplusplus
 +}

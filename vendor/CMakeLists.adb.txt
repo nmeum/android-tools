@@ -1,5 +1,7 @@
 protobuf_generate_cpp(ADB_APP_PROCESSES_PROTO_SRCS ADB_APP_PROCESSES_PROTO_HDRS
 	adb/proto/app_processes.proto)
+protobuf_generate_cpp(ADB_DEVCIES_PROTO_SRCS ADB_DEVICES_PROTO_HDRS
+	adb/proto/devices.proto)
 protobuf_generate_cpp(ADB_KEY_TYPE_PROTO_SRCS ADB_KEY_TYPE_PROTO_HDRS
 	adb/proto/key_type.proto)
 protobuf_generate_cpp(ADB_KNOWN_HOSTS_PROTO_SRCS ADB_KNOWN_HOSTS_PROTO_HDRS
@@ -33,6 +35,7 @@ set(libadb_SOURCES
 	adb/sysdeps/errno.cpp
 	adb/sysdeps/posix/network.cpp
 	${ADB_APP_PROCESSES_PROTO_SRCS} ${ADB_APP_PROCESSES_PROTO_HDRS}
+	${ADB_DEVCIES_PROTO_SRCS} ${ADB_DEVICES_PROTO_HDRS}
 	${ADB_KNOWN_HOSTS_PROTO_SRCS} ${ADB_KNOWN_HOSTS_PROTO_HDRS}
 	${ADB_KEY_TYPE_PROTO_SRCS} ${ADB_KEY_TYPE_PROTO_HDRS}
 	${ADB_PAIRING_PROTO_SRCS} ${ADB_PAIRING_PROTO_HDRS})
