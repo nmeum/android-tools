@@ -1,0 +1,43 @@
+From 81759a376a14b910b0dcc5d3e07934522fe523ed Mon Sep 17 00:00:00 2001
+From: Biswapriyo Nath <nathbappai@gmail.com>
+Date: Wed, 24 Apr 2024 17:40:51 +0000
+Subject: [PATCH] boringssl: Workaround compiler error with gcc-14 and _Generic
+
+This workarounds the following compiler error:
+
+internal.h: In function 'uint32_t CRYPTO_addc_u32(uint32_t, uint32_t, uint32_t, uint32_t*)':
+internal.h:1151:7: error: expected primary-expression before 'unsigned'
+ 1151 |       unsigned: __builtin_addc,                     \
+      |       ^~~~~~~~
+internal.h:1158:10: note: in expansion of macro 'CRYPTO_GENERIC_ADDC'
+ 1158 |   return CRYPTO_GENERIC_ADDC(x, y, carry, out_carry);
+      |          ^~~~~~~~~~~~~~~~~~~
+---
+ crypto/internal.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/crypto/internal.h b/crypto/internal.h
+index e9da01065..68dc75ef8 100644
+--- a/crypto/internal.h
++++ b/crypto/internal.h
+@@ -1144,7 +1144,7 @@ static inline uint64_t CRYPTO_rotr_u64(uint64_t value, int shift) {
+ 
+ // CRYPTO_addc_* returns |x + y + carry|, and sets |*out_carry| to the carry
+ // bit. |carry| must be zero or one.
+-#if OPENSSL_HAS_BUILTIN(__builtin_addc)
++#if OPENSSL_HAS_BUILTIN(__builtin_addc) && (!defined(__GNUC__) || (defined(__GNUC__) && (__GNUC__ < 14)))
+ 
+ #define CRYPTO_GENERIC_ADDC(x, y, carry, out_carry) \
+   (_Generic((x),                                    \
+@@ -1196,7 +1196,7 @@ static inline uint64_t CRYPTO_addc_u64(uint64_t x, uint64_t y, uint64_t carry,
+ 
+ // CRYPTO_subc_* returns |x - y - borrow|, and sets |*out_borrow| to the borrow
+ // bit. |borrow| must be zero or one.
+-#if OPENSSL_HAS_BUILTIN(__builtin_subc)
++#if OPENSSL_HAS_BUILTIN(__builtin_subc) && (!defined(__GNUC__) || (defined(__GNUC__) && (__GNUC__ < 14)))
+ 
+ #define CRYPTO_GENERIC_SUBC(x, y, borrow, out_borrow) \
+   (_Generic((x),                                      \
+-- 
+2.44.0
+
