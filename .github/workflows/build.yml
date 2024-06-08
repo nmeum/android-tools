@@ -13,7 +13,7 @@ jobs:
           DEBIAN_FRONTEND=noninteractive sudo apt-get install -yq \
             ${{ matrix.pkgs }} cmake git golang libbrotli-dev \
             libgtest-dev liblz4-dev libpcre2-dev libprotobuf-dev libunwind-dev \
-            libusb-1.0-0-dev libzstd-dev make pkg-config
+            libusb-1.0-0-dev libzstd-dev make pandoc pkg-config
       - name: checkout
         uses: actions/checkout@v4
         with:
@@ -26,6 +26,10 @@ jobs:
         run: |
           cd vendor/boringssl
           go mod vendor
+      - name: generate man page
+        run: |
+          cd vendor/adb/docs/user
+          pandoc -s -t man adb.1.md -o adb.1
       - name: build & install
         run: |
           mkdir build && cd build
