@@ -213,3 +213,5 @@ if(APPLE)
 		"-framework CoreFoundation"
 		"-framework IOKit")
 endif()
+
+install(FILES adb/docs/user/adb.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
