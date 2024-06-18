@@ -51,7 +51,6 @@ set(android-vendored
 	libziparchive
 	logging
 	mkbootimg
-	native
 	selinux
 	f2fs-tools
 	e2fsprogs
