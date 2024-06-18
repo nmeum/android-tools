@@ -52,7 +52,6 @@ add_library(libadb STATIC ${libadb_SOURCES})
 target_compile_definitions(libadb PRIVATE -D_GNU_SOURCE)
 target_compile_definitions(libadb PUBLIC -DADB_HOST=1)
 target_include_directories(libadb PUBLIC
-	base/libs/androidfw/include
 	boringssl/include
 	adb
 	adb/crypto/include

@@ -44,7 +44,6 @@ set(CPACK_SOURCE_GENERATOR "TXZ")
 set(CPACK_SOURCE_PACKAGE_FILE_NAME "${PROJECT_NAME}-${ANDROID_VERSION}")
 set(CPACK_SOURCE_IGNORE_FILES "/patches/" "/build/" "/.git/" "/.github/" "/tests/"
 	"/testdata/" "/extras/simpleperf/scripts/" "/extras/simpleperf/demo/"
-	"/vendor/base/[a-k].*" "/vendor/base/[m-z].*" "without_trace_offcpu.html"
 	"aes_128_gcm.txt" "aes_256_gcm.txt"
 	"/fuzz/"
 	"/wycheproof_testvectors/"
