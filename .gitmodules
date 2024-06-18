@@ -38,10 +38,6 @@
 	shallow = true
 	path = vendor/libziparchive
 	url = https://android.googlesource.com/platform/system/libziparchive
-[submodule "vendor/native"]
-	shallow = true
-	path = vendor/native
-	url = https://android.googlesource.com/platform/frameworks/native
 [submodule "vendor/adb"]
 	shallow = true
 	path = vendor/adb

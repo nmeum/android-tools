@@ -62,8 +62,7 @@ target_include_directories(libadb PUBLIC
 	core/libcrypto_utils/include
 	core/libcutils/include
 	libbase/include
-	libziparchive/include
-	native/include)
+	libziparchive/include)
 
 add_library(libadb_crypto_defaults STATIC
 	adb/crypto/key.cpp
