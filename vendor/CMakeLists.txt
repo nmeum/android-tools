@@ -44,7 +44,6 @@ add_compile_definitions(_FILE_OFFSET_BITS=64 _LARGEFILE64_SOURCE)
 set(android-vendored
 	avb
 	adb
-	base
 	core
 	extras
 	libbase
@@ -101,7 +100,6 @@ include_directories(${PROTOBUF_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 include(CMakeLists.libbase.txt)
-include(CMakeLists.libandroidfw.txt)
 include(CMakeLists.adb.txt)
 include(CMakeLists.sparse.txt)
 include(CMakeLists.fastboot.txt)
