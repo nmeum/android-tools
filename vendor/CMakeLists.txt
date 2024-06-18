@@ -55,7 +55,6 @@ set(android-vendored
 	selinux
 	f2fs-tools
 	e2fsprogs
-	incremental_delivery
 	fmtlib
 	boringssl)
 
