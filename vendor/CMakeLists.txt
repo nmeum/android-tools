@@ -75,7 +75,13 @@ if(ANDROID_TOOLS_PATCH_VENDOR AND EXISTS "${ANDROID_PATCH_DIR}/")
 endif()
 
 add_subdirectory(boringssl EXCLUDE_FROM_ALL)
-add_subdirectory(fmtlib EXCLUDE_FROM_ALL)
+
+if(ANDROID_TOOLS_USE_BUNDLED_FMT)
+	add_subdirectory(fmtlib EXCLUDE_FROM_ALL)
+else()
+	find_package(fmt CONFIG REQUIRED)
+	message(STATUS "Found fmt: ${fmt_DIR} (version ${fmt_VERSION})")
+endif()
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(libbrotlicommon REQUIRED IMPORTED_TARGET libbrotlicommon)
