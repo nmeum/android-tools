@@ -9,6 +9,7 @@ include(GNUInstallDirs)
 # This helps to build vendor projects with or without any patching. Also if any
 # files are changed in vendor projects those can be retained with this option.
 option(ANDROID_TOOLS_PATCH_VENDOR "Patch vendor projects using patches directory" ON)
+option(ANDROID_TOOLS_USE_BUNDLED_FMT "Use bundled fmt library instead of system provided one" OFF)
 
 # Install bash/zsh completion files.
 set(COMPLETION_COMMON_DIR "${CMAKE_INSTALL_FULL_DATADIR}/android-tools/completions")

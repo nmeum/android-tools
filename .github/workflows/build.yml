@@ -33,7 +33,9 @@ jobs:
       - name: build & install
         run: |
           mkdir build && cd build
-          cmake ..
+          cmake \
+            -DANDROID_TOOLS_USE_BUNDLED_FMT=ON \
+            ..
           make package_source
           for x in sha1sum sha256sum sha512sum b2sum; do
             printf "$x " && $x ${{ github.workspace }}/build/android-tools-*.tar.xz | cut -d " " -f 1
@@ -140,7 +142,13 @@ jobs:
           test -n "${{ matrix.env1 }}" && export ${{ matrix.env1 }}
           test -n "${{ matrix.env2 }}" && export ${{ matrix.env2 }}
           mkdir build && cd build
-          cmake -DCMAKE_C_FLAGS="$CFLAGS" -DCMAKE_CXX_FLAGS="$CXXFLAGS" -DCMAKE_BUILD_TYPE=Release -GNinja ..
+          cmake \
+            -DCMAKE_C_FLAGS="$CFLAGS" \
+            -DCMAKE_CXX_FLAGS="$CXXFLAGS" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DANDROID_TOOLS_USE_BUNDLED_FMT=ON \
+            -GNinja \
+            ..
           ninja --verbose
           echo -e "\n### make install ###\n"
           cmake --install . --prefix /usr/local
@@ -184,8 +192,14 @@ jobs:
           tar -xf android-tools-*.tar.xz
           cd android-tools-*/
           mkdir build && cd build
-          cmake -DCMAKE_C_FLAGS="$CFLAGS" -DCMAKE_CXX_FLAGS="$CXXFLAGS" -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_INSTALL_PREFIX=$HOME/android-tools -GNinja ..
+          cmake \
+            -DCMAKE_C_FLAGS="$CFLAGS" \
+            -DCMAKE_CXX_FLAGS="$CXXFLAGS" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX=$HOME/android-tools \
+            -DANDROID_TOOLS_USE_BUNDLED_FMT=ON \
+            -GNinja \
+            ..
           ninja --verbose
           echo -e "\n### make install ###\n"
           cmake --install .
