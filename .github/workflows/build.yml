@@ -13,7 +13,7 @@ jobs:
           DEBIAN_FRONTEND=noninteractive sudo apt-get install -yq \
             ${{ matrix.pkgs }} cmake git golang libbrotli-dev \
             libgtest-dev liblz4-dev libpcre2-dev libprotobuf-dev libunwind-dev \
-            libusb-1.0-0-dev libzstd-dev make pandoc pkg-config
+            libzstd-dev make pandoc pkg-config
       - name: checkout
         uses: actions/checkout@v4
         with:
@@ -35,6 +35,7 @@ jobs:
           mkdir build && cd build
           cmake \
             -DANDROID_TOOLS_USE_BUNDLED_FMT=ON \
+            -DANDROID_TOOLS_USE_BUNDLED_LIBUSB=ON \
             ..
           make package_source
           for x in sha1sum sha256sum sha512sum b2sum; do
@@ -97,7 +98,7 @@ jobs:
           zypper -n ref
           zypper -n in ${{ matrix.pkgs }} cmake git go gtest pcre2-devel pkgconfig \
             'pkgconfig(libbrotlicommon)' 'pkgconfig(liblz4)' \
-            'pkgconfig(libunwind-generic)' 'pkgconfig(libusb-1.0)' \
+            'pkgconfig(libunwind-generic)' \
             'pkgconfig(libzstd)' 'pkgconfig(protobuf)' ninja tar xz
 
       - name: prep archlinux
@@ -105,7 +106,7 @@ jobs:
         run: |
           pacman -Syu --needed --noconfirm \
             ${{ matrix.pkgs }} brotli cmake git go gtest libunwind \
-            libusb lz4 pcre2 pkgconfig protobuf zstd ninja
+            lz4 pcre2 pkgconfig protobuf zstd ninja
 
       - name: prep ubuntu
         if: startsWith(matrix.os, 'ubuntu')
@@ -114,12 +115,12 @@ jobs:
           DEBIAN_FRONTEND=noninteractive apt-get install -yq \
             ${{ matrix.pkgs }} cmake git golang libbrotli-dev \
             libgtest-dev liblz4-dev libpcre2-dev libprotobuf-dev libunwind-dev \
-            libusb-1.0-0-dev libzstd-dev pkg-config protobuf-compiler ninja-build
+            libzstd-dev pkg-config protobuf-compiler ninja-build
 
       - name: prep alpine
         if: startsWith(matrix.os, 'alpine')
         run: |
-          apk add build-base pcre2-dev linux-headers libusb-dev gtest-dev samurai \
+          apk add build-base pcre2-dev linux-headers gtest-dev samurai \
           go git perl cmake protobuf-dev brotli-dev zstd-dev lz4-dev
 
       - name: prep fedora
@@ -127,7 +128,7 @@ jobs:
         run: |
           dnf install -y ${{ matrix.pkgs }} cmake ninja-build perl git golang \
           brotli-devel gtest-devel lz4-devel pcre2-devel protobuf-devel \
-          libusbx-devel libzstd-devel tar xz
+          libzstd-devel tar xz
 
       - name: download source
         uses: actions/download-artifact@v4
@@ -147,6 +148,7 @@ jobs:
             -DCMAKE_CXX_FLAGS="$CXXFLAGS" \
             -DCMAKE_BUILD_TYPE=Release \
             -DANDROID_TOOLS_USE_BUNDLED_FMT=ON \
+            -DANDROID_TOOLS_USE_BUNDLED_LIBUSB=ON \
             -GNinja \
             ..
           ninja --verbose
@@ -179,7 +181,7 @@ jobs:
       - name: prep macos
         run: |
           rm -rf /opt/homebrew/include/openssl /usr/local/opt/openssl /usr/local/include/openssl
-          brew install --overwrite --quiet brotli cmake go googletest libusb lz4 \
+          brew install --overwrite --quiet brotli cmake go googletest lz4 \
           ninja pcre2 protobuf zstd
 
       - name: download source
@@ -198,6 +200,7 @@ jobs:
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_INSTALL_PREFIX=$HOME/android-tools \
             -DANDROID_TOOLS_USE_BUNDLED_FMT=ON \
+            -DANDROID_TOOLS_USE_BUNDLED_LIBUSB=ON \
             -GNinja \
             ..
           ninja --verbose

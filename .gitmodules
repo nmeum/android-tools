@@ -54,3 +54,7 @@
 	shallow = true
 	path = vendor/libufdt
 	url = https://android.googlesource.com/platform/system/libufdt.git
+[submodule "vendor/libusb"]
+	shallow = true
+	path = vendor/libusb
+	url = https://android.googlesource.com/platform/external/libusb.git
