@@ -11,12 +11,15 @@ diff --git a/client/usb_libusb.cpp b/client/usb_libusb.cpp
 index e0b0104a..bcfb03af 100644
 --- a/client/usb_libusb.cpp
 +++ b/client/usb_libusb.cpp
-@@ -36,7 +36,7 @@
+@@ -36,7 +36,11 @@
  #include <unordered_map>
  #include <vector>
  
--#include <libusb/libusb.h>
++#ifdef ANDROID_TOOLS_USE_BUNDLED_LIBUSB
+ #include <libusb/libusb.h>
++#else
 +#include <libusb-1.0/libusb.h>
++#endif
  
  #include <android-base/file.h>
  #include <android-base/logging.h>

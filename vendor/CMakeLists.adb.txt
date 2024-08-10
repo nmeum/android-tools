@@ -64,6 +64,11 @@ target_include_directories(libadb PUBLIC
 	libbase/include
 	libziparchive/include)
 
+if(ANDROID_TOOLS_USE_BUNDLED_LIBUSB)
+	target_compile_definitions(libadb PUBLIC ANDROID_TOOLS_USE_BUNDLED_LIBUSB)
+	target_include_directories(libadb PUBLIC libusb)
+endif()
+
 add_library(libadb_crypto_defaults STATIC
 	adb/crypto/key.cpp
 	adb/crypto/rsa_2048_key.cpp
@@ -202,9 +207,14 @@ target_link_libraries(adb
 	PkgConfig::libbrotlienc
 	PkgConfig::liblz4
 	Threads::Threads
-	PkgConfig::libusb-1.0
 	z
 	PkgConfig::libzstd)
+
+if(ANDROID_TOOLS_USE_BUNDLED_LIBUSB)
+	target_link_libraries(adb android_tools_libusb)
+else()
+	target_link_libraries(adb PkgConfig::libusb-1.0)
+endif()
 
 if(APPLE)
 	target_link_libraries(adb
