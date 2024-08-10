@@ -222,4 +222,6 @@ if(APPLE)
 		"-framework IOKit")
 endif()
 
-install(FILES adb/docs/user/adb.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/adb/docs/user/adb.1)
+	install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/adb/docs/user/adb.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
+endif()
