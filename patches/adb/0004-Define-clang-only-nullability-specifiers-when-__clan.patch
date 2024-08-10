@@ -5,9 +5,27 @@ Subject: [PATCH] Define clang-only nullability specifiers when __clang__ is
  not defined
 
 ---
- sysdeps.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ adb_mdns.h | 6 ++++++
+ sysdeps.h  | 6 ++++++
+ 2 files changed, 12 insertions(+)
 
+diff --git a/adb_mdns.h b/adb_mdns.h
+index a015f53..0e8fc4e 100644
+--- a/adb_mdns.h
++++ b/adb_mdns.h
+@@ -21,6 +21,12 @@
+ #include <string>
+ #include <string_view>
+ 
++// Clang-only nullability specifiers
++#ifndef __clang__
++#define _Nonnull
++#define _Nullable
++#endif
++
+ // The rules for Service Names [RFC6335] state that they may be no more
+ // than fifteen characters long (not counting the mandatory underscore),
+ // consisting of only letters, digits, and hyphens, must begin and end
 diff --git a/sysdeps.h b/sysdeps.h
 index 5ba85b4d..2115a32b 100644
 --- a/sysdeps.h
