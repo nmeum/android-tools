@@ -32,12 +32,13 @@ jobs:
           pandoc -s -t man adb.1.md -o adb.1
       - name: build & install
         run: |
-          mkdir build && cd build
+          export SOURCE_DATE_EPOCH=$(date +%s)
+          echo "SOURCE_DATE_EPOCH: ${SOURCE_DATE_EPOCH}"
           cmake \
             -DANDROID_TOOLS_USE_BUNDLED_FMT=ON \
             -DANDROID_TOOLS_USE_BUNDLED_LIBUSB=ON \
-            ..
-          make package_source
+            -B build
+          cmake --build build --target package_source
           for x in sha1sum sha256sum sha512sum b2sum; do
             printf "$x " && $x ${{ github.workspace }}/build/android-tools-*.tar.xz | cut -d " " -f 1
           done
