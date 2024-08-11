@@ -13,7 +13,7 @@ jobs:
           DEBIAN_FRONTEND=noninteractive sudo apt-get install -yq \
             ${{ matrix.pkgs }} cmake git golang libbrotli-dev \
             libgtest-dev liblz4-dev libpcre2-dev libprotobuf-dev libunwind-dev \
-            libzstd-dev make pandoc pkg-config
+            libzstd-dev make pandoc pkg-config xz-utils
       - name: checkout
         uses: actions/checkout@v4
         with:
@@ -68,12 +68,12 @@ jobs:
           - os: "archlinux:base"
             pkgs: clang
             env1: "CC=clang CXX=clang++"
-          - os: "ubuntu:20.04"
+          - os: "ubuntu:24.04"
             pkgs: "gcc-10 g++-10"
             env1: "CC=gcc-10 CXX=g++-10"
-          - os: "ubuntu:20.04"
-            pkgs: "clang-11 libstdc++-10-dev"
-            env1: "CC=clang-11 CXX=clang++-11"
+          - os: "ubuntu:24.04"
+            pkgs: "clang-15 libstdc++-10-dev"
+            env1: "CC=clang-15 CXX=clang++-15"
           - os: "alpine"
             pkgs: "gcc"
             env1: "CC=gcc CXX=g++"
@@ -116,7 +116,7 @@ jobs:
           DEBIAN_FRONTEND=noninteractive apt-get install -yq \
             ${{ matrix.pkgs }} cmake git golang libbrotli-dev \
             libgtest-dev liblz4-dev libpcre2-dev libprotobuf-dev libunwind-dev \
-            libzstd-dev pkg-config protobuf-compiler ninja-build
+            libzstd-dev pkg-config protobuf-compiler ninja-build xz-utils
 
       - name: prep alpine
         if: startsWith(matrix.os, 'alpine')
