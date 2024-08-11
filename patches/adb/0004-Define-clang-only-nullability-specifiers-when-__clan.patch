@@ -30,9 +30,9 @@ diff --git a/sysdeps.h b/sysdeps.h
 index 5ba85b4d..2115a32b 100644
 --- a/sysdeps.h
 +++ b/sysdeps.h
-@@ -49,6 +49,12 @@ static inline void* mempcpy(void* dst, const void* src, size_t n) {
- }
- #endif
+@@ -55,6 +55,12 @@ static inline void* mempcpy(void* dst, const void* src, size_t n) {
+ 
+ std::optional<ssize_t> network_peek(borrowed_fd fd);
  
 +// Clang-only nullability specifiers
 +#ifndef __clang__

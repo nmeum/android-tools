@@ -1,0 +1,25 @@
+From bedc0c38148add6841832f0815fb589c78cc16f7 Mon Sep 17 00:00:00 2001
+From: Biswapriyo Nath <nathbappai@gmail.com>
+Date: Sun, 11 Aug 2024 04:47:21 +0000
+Subject: [PATCH] adb: Disable bonjour check
+
+---
+ adb.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/adb.cpp b/adb.cpp
+index 225ddaf..1be30eb 100644
+--- a/adb.cpp
++++ b/adb.cpp
+@@ -1319,7 +1319,7 @@ HostRequestResult handle_host_request(std::string_view service, TransportType ty
+         }
+         status.set_usb_backend_forced(getenv("ADB_LIBUSB") != nullptr);
+ 
+-        if (using_bonjour()) {
++        if (false) {
+             status.set_mdns_backend(adb::proto::AdbServerStatus::BONJOUR);
+         } else {
+             status.set_mdns_backend(adb::proto::AdbServerStatus::OPENSCREEN);
+-- 
+2.46.0
+

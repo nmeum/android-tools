@@ -21,5 +21,5 @@ index 4fa58faf..c14b3463 100644
 -    }
 -
      if (!getenv("ADB_USB") || strcmp(getenv("ADB_USB"), "0") != 0) {
-         if (should_use_libusb()) {
+         if (is_libusb_enabled()) {
              libusb::usb_init();

@@ -44,7 +44,7 @@ index 97debae1..35278e2f 100644
          auto metadata = extract_metadata(apk_file[0]);
          if (metadata.has_value()) {
              auto patchFd = apply_patch_on_device(apk_dest.c_str());
-@@ -290,6 +295,9 @@ static int install_app_legacy(int argc, const char** argv, bool use_fastdeploy)
+@@ -285,6 +285,9 @@ static int install_app_legacy(int argc, const char** argv, bool use_fastdeploy)
  
              return status;
          }
@@ -53,8 +53,8 @@ index 97debae1..35278e2f 100644
 +#endif
      }
  
-     if (do_sync_push(apk_file, apk_dest.c_str(), false, CompressionType::Any, false)) {
-@@ -499,6 +507,7 @@ int install_app(int argc, const char** argv) {
+     if (do_sync_push(apk_file, apk_dest.c_str(), false, CompressionType::Any, false, false)) {
+@@ -494,6 +497,7 @@ int install_app(int argc, const char** argv) {
          error_exit("Attempting to use streaming install on unsupported device");
      }
  

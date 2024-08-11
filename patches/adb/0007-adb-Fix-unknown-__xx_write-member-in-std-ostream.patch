@@ -1,0 +1,29 @@
+From bfd129ad4c023ffec8a16c1dbd8f1efebd68ff7b Mon Sep 17 00:00:00 2001
+From: Biswapriyo Nath <nathbappai@gmail.com>
+Date: Sat, 10 Aug 2024 20:24:00 +0000
+Subject: [PATCH] adb: Fix unknown __xx_write member in std::ostream
+
+This fixes the following compiler error.
+
+sysdeps.h:559:17: error: 'std::ostream` {aka 'class std::basic_ostream<char>`} has no member named '___xxx_write`
+  559 | #define  write  ___xxx_write
+      |                 ^~~~~~~~~~~~
+---
+ sysdeps.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/sysdeps.h b/sysdeps.h
+index e87501c..af548c5 100644
+--- a/sysdeps.h
++++ b/sysdeps.h
+@@ -555,8 +555,10 @@ static inline int adb_pwrite(int fd, const void* buf, size_t len, off64_t offset
+ #endif
+ }
+ 
++#ifdef write
+ #undef   write
+ #define  write  ___xxx_write
++#endif
+ #undef pwrite
+ #define pwrite ___xxx_pwrite
+ 
