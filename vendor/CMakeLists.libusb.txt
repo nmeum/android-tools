@@ -25,8 +25,12 @@ else()
 	list(APPEND android_tools_libusb_SOURCES
 		libusb/libusb/os/events_posix.c
 		libusb/libusb/os/linux_usbfs.c
-		libusb/libusb/os/threads_posix.c
-		libusb/libusb/os/linux_netlink.c)
+		libusb/libusb/os/threads_posix.c)
+	if(ANDROID_TOOLS_LIBUSB_ENABLE_UDEV)
+		list(APPEND android_tools_libusb_SOURCES libusb/libusb/os/linux_udev.c)
+	else()
+		list(APPEND android_tools_libusb_SOURCES libusb/libusb/os/linux_netlink.c)
+	endif()
 endif()
 
 add_library(android_tools_libusb STATIC ${android_tools_libusb_SOURCES})
@@ -44,5 +48,9 @@ elseif(APPLE)
 		"-framework Security"
 		"-lobjc")
 else()
+	if(ANDROID_TOOLS_LIBUSB_ENABLE_UDEV)
+		target_compile_definitions(android_tools_libusb PRIVATE HAVE_LIBUDEV)
+		target_link_libraries(android_tools_libusb PUBLIC PkgConfig::libudev)
+	endif()
 	target_include_directories(android_tools_libusb PRIVATE libusb/linux)
 endif()
