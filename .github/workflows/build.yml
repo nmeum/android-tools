@@ -100,7 +100,7 @@ jobs:
           zypper -n in ${{ matrix.pkgs }} cmake git go gtest pcre2-devel pkgconfig \
             'pkgconfig(libbrotlicommon)' 'pkgconfig(liblz4)' \
             'pkgconfig(libunwind-generic)' \
-            'pkgconfig(libzstd)' 'pkgconfig(protobuf)' ninja tar xz
+            'pkgconfig(libzstd)' 'pkgconfig(protobuf)' ninja tar xz zlib-devel
 
       - name: prep archlinux
         if: startsWith(matrix.os, 'archlinux')
