@@ -6,18 +6,18 @@ utilities provided by [android-tools][android-tools].
 # Motivation
 
 [Many][void-linux] [Linux][arch-linux] [distributions][alpine-linux] have
-[a package called android-tools][repology] which ships essential android command
+[a package called android-tools][repology] which ships essential Android command
 line tools like adb or fastboot. Sadly the upstream build system for
 those tools is rather complex and doesn't allow building the command
 line tools only.
 
-Linux Distribution therefore mostly ship their own build systems for
+Linux distributions therefore mostly ship their own build systems for
 building the command line utilities. This repository aims to make
 packaging of android command utilities easier by providing a simple
 CMake based build system and a ready-to-use tarball which doesn't
 require cloning all of the required git repositories manually. Besides
 this makes it easy to collect all patches required to build standalone
-android command line utilities in a central place.
+Android command line utilities in a central place.
 
 # Status
 
