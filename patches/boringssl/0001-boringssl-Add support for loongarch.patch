@@ -1,5 +1,15 @@
+From 9c18fe1eeef6ce09c027abaa5355efab449fce4c Mon Sep 17 00:00:00 2001
+From: wuruilong <wuruilong@loongson.cn>
+Date: Thu, 4 Jul 2024 12:32:15 +0000
+Subject: [PATCH] Add support for loongarch
+
+---
+ crypto/fipsmodule/rand/getrandom_fillin.h | 2 ++
+ include/openssl/target.h                  | 3 +++
+ 2 files changed, 5 insertions(+)
+
 diff --git a/crypto/fipsmodule/rand/getrandom_fillin.h b/crypto/fipsmodule/rand/getrandom_fillin.h
-index 7c2b62e93487b772990fddc1905f22d4cfaee4a4..9c18fe1eeef6ce09c027abaa5355efab449fce4c 100644
+index 0f290e9637..3eac6d2f8f 100644
 --- a/crypto/fipsmodule/rand/getrandom_fillin.h
 +++ b/crypto/fipsmodule/rand/getrandom_fillin.h
 @@ -30,6 +30,8 @@
@@ -11,9 +21,8 @@ index 7c2b62e93487b772990fddc1905f22d4cfaee4a4..9c18fe1eeef6ce09c027abaa5355efab
  #elif defined(OPENSSL_RISCV64)
  #define EXPECTED_NR_getrandom 278
  #endif
-
- diff --git a/include/openssl/target.h b/include/openssl/target.h
-index 7c2b62e93487b772990fddc1905f22d4cfaee4a4..9c18fe1eeef6ce09c027abaa5355efab449fce4c 100644
+diff --git a/include/openssl/target.h b/include/openssl/target.h
+index 2760f52ce8..bc944d2b9c 100644
 --- a/include/openssl/target.h
 +++ b/include/openssl/target.h
 @@ -34,6 +34,9 @@
@@ -26,4 +35,3 @@ index 7c2b62e93487b772990fddc1905f22d4cfaee4a4..9c18fe1eeef6ce09c027abaa5355efab
  #elif defined(__MIPSEL__) && !defined(__LP64__)
  #define OPENSSL_32_BIT
  #define OPENSSL_MIPS
- 
