@@ -13,7 +13,7 @@ jobs:
           DEBIAN_FRONTEND=noninteractive sudo apt-get install -yq \
             ${{ matrix.pkgs }} cmake git golang libbrotli-dev \
             libgtest-dev liblz4-dev libpcre2-dev libprotobuf-dev libunwind-dev \
-            libzstd-dev make pandoc pkg-config xz-utils
+            libzstd-dev make pandoc pkg-config protobuf-compiler xz-utils
       - name: checkout
         uses: actions/checkout@v4
         with:
