@@ -1,0 +1,29 @@
+add_library(libutils STATIC
+	# core/libutils/CallStack.cpp
+	# core/libutils/FileMap.cpp
+	# core/libutils/JenkinsHash.cpp
+	# core/libutils/LightRefBase.cpp
+	# core/libutils/Looper.cpp
+	# core/libutils/NativeHandle.cpp
+	# core/libutils/Printer.cpp
+	# core/libutils/ProcessCallStack.cpp
+	# core/libutils/StopWatch.cpp
+	# core/libutils/SystemClock.cpp
+	# core/libutils/Threads.cpp
+	# core/libutils/Timers.cpp
+	# core/libutils/Tokenizer.cpp
+	# core/libutils/Trace.cpp
+	core/libutils/binder/Errors.cpp
+	# core/libutils/binder/RefBase.cpp
+	# core/libutils/binder/SharedBuffer.cpp
+	# core/libutils/binder/String16.cpp
+	# core/libutils/binder/String8.cpp
+	# core/libutils/binder/StrongPointer.cpp
+	# core/libutils/binder/Unicode.cpp
+	# core/libutils/binder/VectorImpl.cpp
+	# core/libutils/misc.cpp
+	)
+
+target_include_directories(libutils PUBLIC
+	core/libutils/include)
+target_link_libraries(libutils PUBLIC liblog)

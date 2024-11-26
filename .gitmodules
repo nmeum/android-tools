@@ -58,3 +58,7 @@
 	shallow = true
 	path = vendor/libusb
 	url = https://android.googlesource.com/platform/external/libusb.git
+[submodule "vendor/build"]
+	shallow = true
+	path = vendor/build
+	url = https://android.googlesource.com/platform/build.git

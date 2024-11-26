@@ -1,0 +1,14 @@
+find_package(Zopfli REQUIRED)
+
+add_executable(zipalign
+	build/tools/zipalign/include/ZipAlign.h
+	build/tools/zipalign/ZipAlign.cpp
+	build/tools/zipalign/ZipAlignMain.cpp
+	build/tools/zipalign/ZipEntry.cpp
+	build/tools/zipalign/ZipEntry.h
+	build/tools/zipalign/ZipFile.cpp
+	build/tools/zipalign/ZipFile.h)
+
+target_include_directories(zipalign PRIVATE
+	build/tools/zipalign/include)
+target_link_libraries(zipalign PRIVATE libutils libzip zopfli)

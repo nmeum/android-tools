@@ -113,6 +113,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include(CMakeLists.libbase.txt)
 include(CMakeLists.adb.txt)
 include(CMakeLists.sparse.txt)
+include(CMakeLists.libziparchive.txt)
 include(CMakeLists.fastboot.txt)
 include(CMakeLists.f2fstools.txt)
 include(CMakeLists.mke2fs.txt)
@@ -120,6 +121,8 @@ include(CMakeLists.partition.txt)
 include(CMakeLists.mkbootimg.txt)
 include(CMakeLists.libufdt.txt)
 include(CMakeLists.avb.txt)
+include(CMakeLists.libutils.txt)
+include(CMakeLists.zipalign.txt)
 
 # Targets which should be installed by `make install`.
 install(TARGETS
@@ -137,6 +140,7 @@ install(TARGETS
 	sload_f2fs
 	simg2img
 	ext2simg
+	zipalign
 	DESTINATION bin)
 
 if(NOT APPLE)
