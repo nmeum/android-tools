@@ -1,18 +1,3 @@
-add_library(libzip STATIC
-	libziparchive/zip_archive.cc
-	libziparchive/zip_archive_stream_entry.cc
-	libziparchive/zip_cd_entry_map.cc
-	libziparchive/zip_error.cpp
-	libziparchive/zip_writer.cc)
-
-target_compile_definitions(libzip PRIVATE -DZLIB_CONST)
-target_include_directories(libzip PUBLIC
-	libziparchive/include
-	libziparchive/incfs_support/include
-	core/include
-	logging/liblog/include
-	libbase/include)
-
 add_library(libutil STATIC
 	core/libutils/FileMap.cpp
 	core/libutils/JenkinsHash.cpp
