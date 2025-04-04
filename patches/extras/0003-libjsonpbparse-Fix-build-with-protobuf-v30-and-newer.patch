@@ -1,0 +1,25 @@
+From 135b8278b64ce8c157299c525125e9ac9b017514 Mon Sep 17 00:00:00 2001
+From: Salvo Giangreco <giangrecosalvo9@gmail.com>
+Date: Fri, 4 Apr 2025 16:06:57 +0200
+Subject: [PATCH] libjsonpbparse: Fix build with protobuf v30 and newer
+
+---
+ libjsonpb/parse/jsonpb.cpp | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/libjsonpb/parse/jsonpb.cpp b/libjsonpb/parse/jsonpb.cpp
+index 6c42828..c943e0a 100644
+--- a/libjsonpb/parse/jsonpb.cpp
++++ b/libjsonpb/parse/jsonpb.cpp
+@@ -33,7 +33,11 @@ using google::protobuf::util::TypeResolver;
+ static constexpr char kTypeUrlPrefix[] = "type.googleapis.com";
+ 
+ std::string GetTypeUrl(const Message& message) {
++#if GOOGLE_PROTOBUF_VERSION >= 5030000
++  return absl::StrCat(std::string(kTypeUrlPrefix), "/", message.GetDescriptor()->full_name());
++#else
+   return std::string(kTypeUrlPrefix) + "/" + message.GetDescriptor()->full_name();
++#endif
+ }
+ 
+ ErrorOr<std::string> MessageToJsonString(const Message& message) {
