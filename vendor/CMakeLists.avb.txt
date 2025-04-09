@@ -1,1 +1,28 @@
+add_library(libavb STATIC
+	avb/libavb/avb_chain_partition_descriptor.c
+	avb/libavb/avb_cmdline.c
+	avb/libavb/avb_crc32.c
+	avb/libavb/avb_crypto.c
+	avb/libavb/avb_descriptor.c
+	avb/libavb/avb_footer.c
+	avb/libavb/avb_hash_descriptor.c
+	avb/libavb/avb_hashtree_descriptor.c
+	avb/libavb/avb_kernel_cmdline_descriptor.c
+	avb/libavb/avb_property_descriptor.c
+	avb/libavb/avb_rsa.c
+	avb/libavb/avb_slot_verify.c
+	avb/libavb/avb_util.c
+	avb/libavb/avb_vbmeta_image.c
+	avb/libavb/avb_version.c
+	avb/libavb/boringssl/sha.c
+	avb/libavb/avb_sysdeps_posix.c)
+
+target_include_directories(libavb PUBLIC
+	avb)
+target_include_directories(libavb PRIVATE
+	avb/libavb/boringssl
+	boringssl/include)
+target_link_libraries(libavb PRIVATE crypto)
+target_compile_definitions(libavb PRIVATE AVB_ENABLE_DEBUG AVB_COMPILATION)
+
 install(PROGRAMS avb/avbtool.py DESTINATION bin RENAME avbtool)

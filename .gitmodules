@@ -58,3 +58,11 @@
 	shallow = true
 	path = vendor/libusb
 	url = https://android.googlesource.com/platform/external/libusb.git
+[submodule "vendor/fec"]
+	shallow = true
+	path = vendor/fec
+	url = https://android.googlesource.com/platform/external/fec.git
+[submodule "vendor/squashfs-tools"]
+	shallow = true
+	path = vendor/squashfs-tools
+	url = https://android.googlesource.com/platform/external/squashfs-tools.git

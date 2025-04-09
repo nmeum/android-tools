@@ -1,0 +1,47 @@
+add_library(libfec_rs STATIC
+	fec/encode_rs_char.c
+	fec/decode_rs_char.c
+	fec/init_rs_char.c)
+
+target_include_directories(libfec_rs PUBLIC
+	fec)
+
+add_library(libsquashfs_utils STATIC
+	extras/squashfs_utils/squashfs_utils.c)
+
+target_include_directories(libsquashfs_utils PUBLIC
+	extras/squashfs_utils)
+target_include_directories(libsquashfs_utils PRIVATE
+	squashfs-tools/squashfs-tools)
+target_link_libraries(libsquashfs_utils PRIVATE libcutils)
+target_compile_definitions(libsquashfs_utils PRIVATE SQUASHFS_NO_KLOG)
+
+set(libfec_SOURCES
+	extras/libfec/fec_open.cpp
+	extras/libfec/fec_read.cpp
+	extras/libfec/fec_verity.cpp
+	extras/libfec/fec_process.cpp)
+
+if(APPLE)
+	list(APPEND libfec_SOURCES
+		extras/libfec/avb_utils_stub.cpp)
+else()
+	list(APPEND libfec_SOURCES
+		extras/libfec/avb_utils.cpp)
+endif()
+
+add_library(libfec STATIC ${libfec_SOURCES})
+
+target_include_directories(libfec PUBLIC
+	extras/libfec/include)
+if(NOT APPLE)
+	target_link_libraries(libfec PRIVATE libavb)
+endif()
+target_link_libraries(libfec PRIVATE libbase libcrypto libext4 libfec_rs libsquashfs_utils)
+target_compile_definitions(libfec PRIVATE FEC_NO_KLOG)
+
+add_executable(fec
+	extras/verity/fec/main.cpp
+	extras/verity/fec/image.cpp)
+
+target_link_libraries(fec PRIVATE libbase libcrypto libfec libfec_rs libsparse z)
