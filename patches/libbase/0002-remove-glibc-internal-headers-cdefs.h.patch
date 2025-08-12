@@ -14,22 +14,22 @@ index b47494b..c29845e 100644
 +++ b/include/android-base/endian.h
 @@ -19,7 +19,7 @@
  /* A cross-platform equivalent of bionic's <sys/endian.h>. */
-
+ 
  /* For __BIONIC__ and __GLIBC__ */
 -#include <sys/cdefs.h>
 +#include <cfloat>
-
+ 
  #if defined(__BIONIC__)
-
+ 
 diff --git a/include/android-base/properties.h b/include/android-base/properties.h
 index 021f466..53b8ea1 100644
 --- a/include/android-base/properties.h
 +++ b/include/android-base/properties.h
 @@ -16,7 +16,6 @@
-
+ 
  #pragma once
-
+ 
 -#include <sys/cdefs.h>
-
+ 
  #include <chrono>
  #include <limits>

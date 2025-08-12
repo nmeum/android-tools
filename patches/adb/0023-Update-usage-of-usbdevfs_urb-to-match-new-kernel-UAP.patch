@@ -49,7 +49,7 @@ index 7f926266..235a21be 100644
 +    usbdevfs_urb *urb_in;
 +    usbdevfs_urb *urb_out;
  #pragma clang diagnostic pop
-
+ 
      bool urb_in_busy = false;
 @@ -303,7 +303,7 @@ static int usb_bulk_write(usb_handle* h, const void* data, int len) {
      std::unique_lock<std::mutex> lock(h->mutex);
