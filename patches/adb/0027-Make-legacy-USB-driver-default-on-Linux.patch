@@ -1,0 +1,34 @@
+From 55d30a3098c29431bcbeb2d2a5f1a0c40844c311 Mon Sep 17 00:00:00 2001
+From: Fabien Sanglard <sanglardf@google.com>
+Date: Mon, 23 Jun 2025 11:21:16 -0700
+Subject: [PATCH] Make legacy USB driver default on Linux
+
+Bug: 366314975
+Bug: 398328647
+Test: Manual
+Flag: EXEMPT (adb.exe)
+Change-Id: Id49df58587d3f479d263a5b2da1679a1e675feb5
+---
+ client/transport_usb.cpp | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/client/transport_usb.cpp b/client/transport_usb.cpp
+index 3b0b4906..d3b4929c 100644
+--- a/client/transport_usb.cpp
++++ b/client/transport_usb.cpp
+@@ -177,9 +177,9 @@ bool is_adb_interface(int usb_class, int usb_subclass, int usb_protocol) {
+ }
+ 
+ bool is_libusb_enabled() {
+-    bool enable = true;
+-#if defined(_WIN32)
+-    enable = false;
++    bool enable = false;
++#if defined(__APPLE__)
++    enable = true;
+ #endif
+     char* env = getenv("ADB_LIBUSB");
+     if (env) {
+-- 
+2.52.0
+
