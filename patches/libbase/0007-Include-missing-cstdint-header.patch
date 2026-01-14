@@ -1,0 +1,29 @@
+From 4fedf25206c442d655d21e95e6ec5557383db006 Mon Sep 17 00:00:00 2001
+From: meator <meator.dev@gmail.com>
+Date: Wed, 14 Jan 2026 11:57:22 +0100
+Subject: [PATCH] Include missing cstdint header
+
+This code relied on the fact that some system headers pulled <cstdint>,
+so it did not bother to include it itself. However, this behavior is not
+specified, so compiler updates can break the code by no longer including
+this header.
+---
+ hex.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/hex.cpp b/hex.cpp
+index a4b7715..c46f42d 100644
+--- a/hex.cpp
++++ b/hex.cpp
+@@ -18,6 +18,8 @@
+ 
+ #include "android-base/logging.h"
+ 
++#include <cstdint>
++
+ namespace android {
+ namespace base {
+ 
+-- 
+2.51.2
+
