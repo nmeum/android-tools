@@ -1,0 +1,25 @@
+From 66ca034c9a3cd067666f99208af65f945508082a Mon Sep 17 00:00:00 2001
+From: LuK1337 <priv.luk@gmail.com>
+Date: Fri, 16 Jan 2026 12:57:35 +0100
+Subject: [PATCH] hex: Add <cstdint> include
+
+---
+ hex.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/hex.cpp b/hex.cpp
+index a4b7715..c46f42d 100644
+--- a/hex.cpp
++++ b/hex.cpp
+@@ -18,6 +18,8 @@
+ 
+ #include "android-base/logging.h"
+ 
++#include <cstdint>
++
+ namespace android {
+ namespace base {
+ 
+-- 
+2.52.0
+
