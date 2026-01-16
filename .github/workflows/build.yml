@@ -57,26 +57,30 @@ jobs:
         include:
           - os: "opensuse/leap:latest"
             pkgs: "clang gcc11-c++"
-            env1: "CC=clang CXX=clang++"
+            expo: "CC=clang CXX=clang++"
           - os: "opensuse/tumbleweed"
-            pkgs: "gcc gcc-c++"
+            pkgs: "gcc gcc-c++ fmt-devel libusb-1_0-devel"
+            bfmt: OFF
+            busb: OFF
           - os: "opensuse/tumbleweed"
-            pkgs: clang
-            env1: "CC=clang CXX=clang++"
+            pkgs: "clang fmt-devel libusb-1_0-devel"
+            expo: "CC=clang CXX=clang++"
+            bfmt: OFF
+            busb: OFF
           - os: "archlinux:base"
             pkgs: gcc
           - os: "archlinux:base"
             pkgs: clang
-            env1: "CC=clang CXX=clang++"
+            expo: "CC=clang CXX=clang++"
           - os: "ubuntu:24.04"
             pkgs: "gcc-10 g++-10"
-            env1: "CC=gcc-10 CXX=g++-10"
+            expo: "CC=gcc-10 CXX=g++-10"
           - os: "ubuntu:24.04"
             pkgs: "clang-15 libstdc++-10-dev"
-            env1: "CC=clang-15 CXX=clang++-15"
+            expo: "CC=clang-15 CXX=clang++-15"
           - os: "alpine"
             pkgs: "gcc"
-            env1: "CC=gcc CXX=g++"
+            expo: "CC=gcc CXX=g++"
           - os: "fedora:latest"
             pkgs: "gcc gcc-g++"
           - os: "fedora:rawhide"
@@ -141,15 +145,16 @@ jobs:
           export GOFLAGS="-mod=vendor"
           tar -xf android-tools-*.tar.xz
           cd android-tools-*/
-          test -n "${{ matrix.env1 }}" && export ${{ matrix.env1 }}
-          test -n "${{ matrix.env2 }}" && export ${{ matrix.env2 }}
+          test -n "${{ matrix.expo }}" && export ${{ matrix.expo }}
+          test -n "${{ matrix.bfmt }}" && bfmt=${{ matrix.bfmt }} || bfmt=ON
+          test -n "${{ matrix.busb }}" && busb=${{ matrix.busb }} || busb=ON
           mkdir build && cd build
           cmake \
             -DCMAKE_C_FLAGS="$CFLAGS" \
             -DCMAKE_CXX_FLAGS="$CXXFLAGS" \
             -DCMAKE_BUILD_TYPE=Release \
-            -DANDROID_TOOLS_USE_BUNDLED_FMT=ON \
-            -DANDROID_TOOLS_USE_BUNDLED_LIBUSB=ON \
+            -DANDROID_TOOLS_USE_BUNDLED_FMT=$bfmt \
+            -DANDROID_TOOLS_USE_BUNDLED_LIBUSB=$busb \
             -GNinja \
             ..
           ninja --verbose
