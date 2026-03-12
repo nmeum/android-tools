@@ -1,5 +1,4 @@
 add_library(libbase STATIC
-	libbase/abi_compatibility.cpp
     libbase/chrono_utils.cpp
     libbase/cmsg.cpp
     libbase/file.cpp

@@ -1,4 +1,4 @@
-From 27e41fc05d0a4cd86833fd23962a4c8a7dd32e2b Mon Sep 17 00:00:00 2001
+From 09edca34cf75a69cdcd476386e8e4568ac81090f Mon Sep 17 00:00:00 2001
 From: Anatol Pomozov <anatol.pomozov@gmail.com>
 Date: Fri, 25 Aug 2017 23:30:34 +0000
 Subject: [PATCH] Include string.h in various file missing it
@@ -6,10 +6,11 @@ Subject: [PATCH] Include string.h in various file missing it
 Most of these need string.h for strerror(3).
 ---
  sysdeps/posix/network.cpp | 1 +
- 1 file changed, 1 insertion(+)
+ tls/tls_connection.cpp    | 1 +
+ 2 files changed, 2 insertions(+)
 
 diff --git a/sysdeps/posix/network.cpp b/sysdeps/posix/network.cpp
-index a4d9013d..ec4c7c8e 100644
+index a4d9013..ec4c7c8 100644
 --- a/sysdeps/posix/network.cpp
 +++ b/sysdeps/posix/network.cpp
 @@ -22,6 +22,7 @@
@@ -20,3 +21,18 @@ index a4d9013d..ec4c7c8e 100644
  
  #include <android-base/logging.h>
  #include <android-base/stringprintf.h>
+diff --git a/tls/tls_connection.cpp b/tls/tls_connection.cpp
+index 0ea3605..26dc927 100644
+--- a/tls/tls_connection.cpp
++++ b/tls/tls_connection.cpp
+@@ -17,6 +17,7 @@
+ #include "adb/tls/tls_connection.h"
+ 
+ #include <limits.h>
++#include <string.h>
+ 
+ #include <algorithm>
+ #include <vector>
+-- 
+2.53.0
+

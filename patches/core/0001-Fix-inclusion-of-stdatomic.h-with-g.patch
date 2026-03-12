@@ -1,4 +1,4 @@
-From 448fa2a3c470ff3a58135458fb34d33732600f67 Mon Sep 17 00:00:00 2001
+From 8ce0a3fc1b3a4849d641ac702009228d21126a4d Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Tue, 27 Feb 2018 16:30:30 +0100
 Subject: [PATCH] Fix inclusion of stdatomic.h with g++
@@ -10,7 +10,7 @@ See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=60932#c5
  2 files changed, 11 insertions(+)
 
 diff --git a/libcutils/include/cutils/atomic.h b/libcutils/include/cutils/atomic.h
-index 0c88bfedd..84606e307 100644
+index 68e00bed..f93a20fa 100644
 --- a/libcutils/include/cutils/atomic.h
 +++ b/libcutils/include/cutils/atomic.h
 @@ -19,7 +19,13 @@
@@ -25,10 +25,10 @@ index 0c88bfedd..84606e307 100644
  #include <stdatomic.h>
 +#endif
  
- #ifndef ANDROID_ATOMIC_INLINE
- #define ANDROID_ATOMIC_INLINE static inline
+ /*
+  * A handful of basic atomic operations.
 diff --git a/libcutils/include/cutils/trace.h b/libcutils/include/cutils/trace.h
-index ef426ff7b..f7d7ccc3c 100644
+index 7f57637e..4cbc4e6d 100644
 --- a/libcutils/include/cutils/trace.h
 +++ b/libcutils/include/cutils/trace.h
 @@ -18,7 +18,12 @@
@@ -44,3 +44,6 @@ index ef426ff7b..f7d7ccc3c 100644
  #include <stdbool.h>
  #include <stdint.h>
  #include <stdio.h>
+-- 
+2.53.0
+

@@ -1,0 +1,411 @@
+From b9c8b7ddc67a70a3f0f48fb92976662f630cb600 Mon Sep 17 00:00:00 2001
+From: LuK1337 <priv.luk@gmail.com>
+Date: Fri, 13 Mar 2026 00:15:41 +0100
+Subject: [PATCH] Migrate to fmt::format()
+
+Restores support for older toolchains.
+---
+ adb.cpp                        |  2 +-
+ client/discovered_services.cpp |  4 ++--
+ client/discovered_services.h   |  6 +++---
+ client/incremental.cpp         | 22 +++++++++++-----------
+ client/incremental_utils.cpp   | 14 +++++++-------
+ client/transport_mdns.cpp      |  8 ++++----
+ client/usb_libusb_device.cpp   | 10 +++++-----
+ client/usb_libusb_hotplug.cpp  |  4 +++-
+ client/usb_osx.cpp             |  3 ++-
+ transport.cpp                  |  3 ++-
+ 10 files changed, 40 insertions(+), 36 deletions(-)
+
+diff --git a/adb.cpp b/adb.cpp
+index 6321981..438243b 100644
+--- a/adb.cpp
++++ b/adb.cpp
+@@ -433,7 +433,7 @@ static void handle_new_connection(atransport* t, apacket* p) {
+ }
+ 
+ void handle_packet(apacket* p, atransport* t) {
+-    VLOG(PACKETS) << std::format("packet <-- {}{}{}{}", ((char*)(&(p->msg.command)))[0],
++    VLOG(PACKETS) << fmt::format("packet <-- {}{}{}{}", ((char*)(&(p->msg.command)))[0],
+                                  ((char*)(&(p->msg.command)))[1], ((char*)(&(p->msg.command)))[2],
+                                  ((char*)(&(p->msg.command)))[3]);
+ 
+diff --git a/client/discovered_services.cpp b/client/discovered_services.cpp
+index a5fd0d5..7e7ceb0 100644
+--- a/client/discovered_services.cpp
++++ b/client/discovered_services.cpp
+@@ -64,7 +64,7 @@ namespace mdns {
+ DiscoveredServices discovered_services [[clang::no_destroy]];
+ 
+ static std::string fq_name(const ServiceInfo& si) {
+-    return std::format("{}.{}", si.instance, si.service);
++    return fmt::format("{}.{}", si.instance, si.service);
+ }
+ 
+ void DiscoveredServices::ServiceCreated(const ServiceInfo& service_info) {
+@@ -124,7 +124,7 @@ void DiscoveredServices::ServiceDeleted(const ServiceInfo& service_info) {
+ std::optional<ServiceInfo> DiscoveredServices::FindInstance(const std::string& service,
+                                                             const std::string& instance) {
+     std::lock_guard lock(services_mutex_);
+-    std::string fully_qualified_name = std::format("{}.{}", instance, service);
++    std::string fully_qualified_name = fmt::format("{}.{}", instance, service);
+     if (!services_.contains(fully_qualified_name)) {
+         return {};
+     }
+diff --git a/client/discovered_services.h b/client/discovered_services.h
+index be8bffa..36731b9 100644
+--- a/client/discovered_services.h
++++ b/client/discovered_services.h
+@@ -17,10 +17,10 @@
+ #pragma once
+ 
+ #include <android-base/thread_annotations.h>
++#include <fmt/format.h>
+ 
+ #include <cstdint>
+ #include <cstring>
+-#include <format>
+ #include <functional>
+ #include <iostream>
+ #include <memory>
+@@ -49,7 +49,7 @@ struct IPv6Address {
+ 
+         for (size_t i = 0; i < 16; i += 2) {
+             uint16_t word = (static_cast<uint16_t>(bytes[i]) << 8) | bytes[i + 1];
+-            result += std::format("{:x}", word);
++            result += fmt::format("{:x}", word);
+ 
+             if (i < 14) {
+                 result += ":";
+@@ -102,7 +102,7 @@ struct ServiceInfo {
+         if (!v4_address.has_value()) {
+             return "";
+         }
+-        return std::format("{}.{}.{}.{}", v4_address->bytes[0], v4_address->bytes[1],
++        return fmt::format("{}.{}.{}.{}", v4_address->bytes[0], v4_address->bytes[1],
+                            v4_address->bytes[2], v4_address->bytes[3]);
+     }
+ 
+diff --git a/client/incremental.cpp b/client/incremental.cpp
+index d63a6d1..e93132c 100644
+--- a/client/incremental.cpp
++++ b/client/incremental.cpp
+@@ -18,7 +18,6 @@
+ 
+ #include <cstdio>
+ #include <cstring>
+-#include <format>
+ #include <memory>
+ #include <mutex>
+ #include <optional>
+@@ -33,6 +32,7 @@
+ #include <android-base/file.h>
+ #include <android-base/logging.h>
+ #include <android-base/scopeguard.h>
++#include <fmt/format.h>
+ #include <openssl/base64.h>
+ 
+ #include "adb_install.h"
+@@ -84,7 +84,7 @@ class ISSignedDatabaseEntry : public ISDatabaseEntry {
+     bool is_v4_signed() const override { return true; };
+ 
+     std::string serialize() const override {
+-        return std::format("{}:{}:{}:{}:{}", filename_, size_, file_id_, signature_,
++        return fmt::format("{}:{}:{}:{}:{}", filename_, size_, file_id_, signature_,
+                            kProtocolVersion);
+     }
+ 
+@@ -106,7 +106,7 @@ class ISUnsignedDatabaseEntry : public ISDatabaseEntry {
+     bool is_v4_signed() const override { return false; };
+ 
+     std::string serialize() const override {
+-        return std::format("{}:{}:{}", filename_, size_, file_id_);
++        return fmt::format("{}:{}:{}", filename_, size_, file_id_);
+     }
+ 
+     borrowed_fd fd() const { return fd_; }
+@@ -129,7 +129,7 @@ static std::optional<std::pair<std::vector<char>, int32_t>> read_signature(
+         if (errno == ENOENT) {
+             return std::make_pair(std::vector<char>{}, 0);
+         }
+-        *error = std::format("Failed to open signature file '{}': {}", signature_file,
++        *error = fmt::format("Failed to open signature file '{}': {}", signature_file,
+                              strerror(errno));
+         return {};
+     }
+@@ -140,14 +140,14 @@ static std::optional<std::pair<std::vector<char>, int32_t>> read_signature(
+ static bool validate_signature(const std::vector<char>& signature, int32_t tree_size,
+                                size_t file_size, std::string* error) {
+     if (signature.size() > kMaxSignatureSize) {
+-        *error = std::format("Signature is too long: {}. Max allowed is {}", signature.size(),
++        *error = fmt::format("Signature is too long: {}. Max allowed is {}", signature.size(),
+                              kMaxSignatureSize);
+         return false;
+     }
+ 
+     if (Size expected = verity_tree_size_for_file(file_size); tree_size != expected) {
+         *error =
+-                std::format("Verity tree size mismatch [was {}, expected {}]", tree_size, expected);
++                fmt::format("Verity tree size mismatch [was {}, expected {}]", tree_size, expected);
+         return false;
+     }
+ 
+@@ -176,13 +176,13 @@ static std::optional<std::pair<unique_fd, size_t>> open_and_get_size(const std::
+                                                                      std::string* error) {
+     unique_fd fd(adb_open(file.c_str(), O_RDONLY));
+     if (fd < 0) {
+-        *error = std::format("Failed to open input file '{}': {}", file, strerror(errno));
++        *error = fmt::format("Failed to open input file '{}': {}", file, strerror(errno));
+         return {};
+     }
+ 
+     struct stat st;
+     if (fstat(fd.get(), &st)) {
+-        *error = std::format("Failed to stat input file '{}': {}", file, strerror(errno));
++        *error = fmt::format("Failed to stat input file '{}': {}", file, strerror(errno));
+         return {};
+     }
+ 
+@@ -205,7 +205,7 @@ static std::optional<std::vector<std::unique_ptr<ISDatabaseEntry>>> build_databa
+             return {};
+         }
+         if (requires_v4_signature(file) && signature_and_tree_size->first.empty()) {
+-            std::string error_msg = std::format("V4 signature missing for '{}'", file);
++            std::string error_msg = fmt::format("V4 signature missing for '{}'", file);
+             if (check_policy == CheckPolicy::ALLOW_MISSING_SIGNATURES) {
+                 fprintf(stderr, "%s.\n", error_msg.c_str());
+             } else {
+@@ -284,7 +284,7 @@ static std::optional<unique_fd> connect_and_send_database(
+     std::string inner_error;
+     auto connection_fd = unique_fd(send_abb_exec_command(command_args, &inner_error));
+     if (connection_fd < 0) {
+-        *error = std::format("Failed to run '{}': {}", android::base::Join(command_args, " "),
++        *error = fmt::format("Failed to run '{}': {}", android::base::Join(command_args, " "),
+                              inner_error);
+         return {};
+     }
+@@ -340,7 +340,7 @@ static bool wait_for_installation(int read_fd, std::string* error) {
+     std::string child_stdout;
+     child_stdout.resize(kMaxMessageSize);
+     if (!ReadFdExactly(read_fd, child_stdout.data(), kMaxMessageSize) && errno != 0) {
+-        *error = std::format("Failed to read output: {}", strerror(errno));
++        *error = fmt::format("Failed to read output: {}", strerror(errno));
+         return false;
+     }
+     // Truncate to '\0'. `ReadFdExactly` reads until the end of the steam and leaves the remaining
+diff --git a/client/incremental_utils.cpp b/client/incremental_utils.cpp
+index fae5f83..1eb7961 100644
+--- a/client/incremental_utils.cpp
++++ b/client/incremental_utils.cpp
+@@ -21,7 +21,6 @@
+ #include <algorithm>
+ #include <array>
+ #include <cstring>
+-#include <format>
+ #include <numeric>
+ #include <optional>
+ #include <unordered_set>
+@@ -32,6 +31,7 @@
+ #include <android-base/strings.h>
+ #include <ziparchive/zip_archive.h>
+ #include <ziparchive/zip_writer.h>
++#include <fmt/format.h>
+ 
+ #include "adb_io.h"
+ #include "adb_trace.h"
+@@ -71,7 +71,7 @@ static inline std::optional<int32_t> read_int32(borrowed_fd fd, std::string* err
+     int32_t result;
+     if (!ReadFdExactly(fd, &result, sizeof(result))) {
+         *error =
+-                std::format("Failed to read int: {}", errno == 0 ? "End of file" : strerror(errno));
++                fmt::format("Failed to read int: {}", errno == 0 ? "End of file" : strerror(errno));
+         return {};
+     }
+     return result;
+@@ -79,7 +79,7 @@ static inline std::optional<int32_t> read_int32(borrowed_fd fd, std::string* err
+ 
+ static inline bool skip_int(borrowed_fd fd, std::string* error) {
+     if (adb_lseek(fd, 4, SEEK_CUR) < 0) {
+-        *error = std::format("Failed to seek: {}", strerror(errno));
++        *error = fmt::format("Failed to seek: {}", strerror(errno));
+         return false;
+     }
+     return true;
+@@ -104,7 +104,7 @@ static inline bool append_bytes_with_size(borrowed_fd fd, std::vector<char>* byt
+     }
+     int32_t size = int32_t(le32toh(*le_size));
+     if (size < 0 || size > *bytes_left) {
+-        *error = std::format("Invalid size {}", size);
++        *error = fmt::format("Invalid size {}", size);
+         return false;
+     }
+     if (size == 0) {
+@@ -115,7 +115,7 @@ static inline bool append_bytes_with_size(borrowed_fd fd, std::vector<char>* byt
+     bytes->resize(old_size + sizeof(*le_size) + size);
+     memcpy(bytes->data() + old_size, &le_size.value(), sizeof(*le_size));
+     if (!ReadFdExactly(fd, bytes->data() + old_size + sizeof(*le_size), size)) {
+-        *error = std::format("Failed to read data: {}",
++        *error = fmt::format("Failed to read data: {}",
+                              errno == 0 ? "End of file" : strerror(errno));
+         return false;
+     }
+@@ -129,7 +129,7 @@ static inline bool skip_bytes_with_size(borrowed_fd fd, std::string* error) {
+     }
+     int32_t size = int32_t(le32toh(*le_size));
+     if (size < 0) {
+-        *error = std::format("Invalid size {}", size);
++        *error = fmt::format("Invalid size {}", size);
+         return false;
+     }
+     if (adb_lseek(fd, size, SEEK_CUR) < 0) {
+@@ -177,7 +177,7 @@ std::optional<std::pair<off64_t, ssize_t>> skip_id_sig_headers(borrowed_fd fd, s
+     int32_t tree_size = int32_t(le32toh(*le_tree_size));  // size of the verity tree
+     off_t offset = adb_lseek(fd, 0, SEEK_CUR);
+     if (offset < 0) {
+-        *error = std::format("Failed to get offset: {}", strerror(errno));
++        *error = fmt::format("Failed to get offset: {}", strerror(errno));
+         return {};
+     }
+     return std::make_pair(offset, tree_size);
+diff --git a/client/transport_mdns.cpp b/client/transport_mdns.cpp
+index e3aa9d7..03e481d 100644
+--- a/client/transport_mdns.cpp
++++ b/client/transport_mdns.cpp
+@@ -53,8 +53,8 @@ static void RequestConnectToDevice(const ServiceInfo& info) {
+     std::thread([=] {
+         VLOG(MDNS) << "Attempting to secure connect to instance '" << info << "'";
+         std::string response;
+-        connect_device(std::format("{}.{}", info.instance, info.service), &response);
+-        VLOG(MDNS) << std::format("secure connect to {} regtype {} ({}:{}) : {}", info.instance,
++        connect_device(fmt::format("{}.{}", info.instance, info.service), &response);
++        VLOG(MDNS) << fmt::format("secure connect to {} regtype {} ({}:{}) : {}", info.instance,
+                                   info.service, info.v4_address_string(), info.port, response);
+     }).detach();
+ }
+@@ -152,7 +152,7 @@ std::string mdns_check() {
+ std::string mdns_list_discovered_services() {
+     std::string result;
+     auto cb = [&](const ServiceInfo& si) {
+-        result += std::format("{}\t{}\t{}:{}\n", si.instance, si.service, si.v4_address_string(),
++        result += fmt::format("{}\t{}\t{}:{}\n", si.instance, si.service, si.v4_address_string(),
+                               si.port);
+     };
+     mdns::discovered_services.ForAllServices(cb);
+@@ -169,7 +169,7 @@ std::optional<ServiceInfo> mdns_get_connect_service_info(const std::string& name
+     }
+ 
+     std::string fq_service =
+-            std::format("{}.{}", mdns_instance->service_name, mdns_instance->transport_type);
++            fmt::format("{}.{}", mdns_instance->service_name, mdns_instance->transport_type);
+     return mdns::discovered_services.FindInstance(fq_service, mdns_instance->instance_name);
+ }
+ 
+diff --git a/client/usb_libusb_device.cpp b/client/usb_libusb_device.cpp
+index d5d162d..f75178e 100644
+--- a/client/usb_libusb_device.cpp
++++ b/client/usb_libusb_device.cpp
+@@ -22,7 +22,6 @@
+ #include <atomic>
+ #include <chrono>
+ #include <condition_variable>
+-#include <format>
+ #include <memory>
+ #include <mutex>
+ #include <thread>
+@@ -40,6 +39,7 @@
+ #include <android-base/stringprintf.h>
+ #include <android-base/strings.h>
+ #include <android-base/thread_annotations.h>
++#include <fmt/format.h>
+ 
+ #include "adb.h"
+ #include "adb_trace.h"
+@@ -255,8 +255,8 @@ bool LibUsbDevice::FindAdbInterface() {
+             const uint8_t endpoint_addr = endpoint_desc.bEndpointAddress;
+             const uint8_t endpoint_attr = endpoint_desc.bmAttributes;
+             VLOG(USB) << "Scanning endpoint=" << endpoint_num
+-                      << ", addr=" << std::format("{:#02x}", endpoint_addr)
+-                      << ", attr=" << std::format("{:#02x}", endpoint_attr);
++                      << ", addr=" << fmt::format("{:#02x}", endpoint_addr)
++                      << ", attr=" << fmt::format("{:#02x}", endpoint_attr);
+ 
+             const uint8_t transfer_type = endpoint_attr & LIBUSB_TRANSFER_TYPE_MASK;
+ 
+@@ -308,8 +308,8 @@ bool LibUsbDevice::FindAdbInterface() {
+     read_endpoint_ = bulk_in;
+ 
+     VLOG(USB) << "Found ADB interface=" << interface_num_
+-              << " bulk_in=" << std::format("{:#02x}", bulk_in)
+-              << " bulk_out=" << std::format("{:#02x}", bulk_out);
++              << " bulk_in=" << fmt::format("{:#02x}", bulk_in)
++              << " bulk_out=" << fmt::format("{:#02x}", bulk_out);
+     return true;
+ }
+ 
+diff --git a/client/usb_libusb_hotplug.cpp b/client/usb_libusb_hotplug.cpp
+index 125db35..9570570 100644
+--- a/client/usb_libusb_hotplug.cpp
++++ b/client/usb_libusb_hotplug.cpp
+@@ -33,6 +33,8 @@
+ #include <thread>
+ #include <unordered_map>
+ 
++#include <fmt/format.h>
++
+ #ifdef ANDROID_TOOLS_USE_BUNDLED_LIBUSB
+ #include "libusb/libusb.h"
+ #else
+@@ -60,7 +62,7 @@ static void process_device(libusb_device* raw_device) {
+     }
+ 
+     if (!device->IsInitialized()) {
+-        VLOG(USB) << std::format("Can't init address='{}', serial='{}'", device->GetAddress(),
++        VLOG(USB) << fmt::format("Can't init address='{}', serial='{}'", device->GetAddress(),
+                                  device->GetSerial());
+         return;
+     }
+diff --git a/client/usb_osx.cpp b/client/usb_osx.cpp
+index 0e5af48..730150b 100644
+--- a/client/usb_osx.cpp
++++ b/client/usb_osx.cpp
+@@ -41,6 +41,7 @@
+ #include <android-base/logging.h>
+ #include <android-base/stringprintf.h>
+ #include <android-base/thread_annotations.h>
++#include <fmt/format.h>
+ 
+ #include "adb.h"
+ #include "transport.h"
+@@ -388,7 +389,7 @@ static std::string darwinErrorToString(IOReturn result) {
+         case kIOUSBUnknownPipeErr:
+             return "pipe ref not recognized";
+         default:
+-            return std::format("unknown error ({:#x})", result);
++            return fmt::format("unknown error ({:#x})", result);
+     }
+ }
+ 
+diff --git a/transport.cpp b/transport.cpp
+index c5fe0aa..cf8561f 100644
+--- a/transport.cpp
++++ b/transport.cpp
+@@ -46,6 +46,7 @@
+ #include <android-base/strings.h>
+ #include <android-base/thread_annotations.h>
+ #include <diagnose_usb.h>
++#include <fmt/format.h>
+ 
+ #include "adb.h"
+ #include "adb_auth.h"
+@@ -563,7 +564,7 @@ void FdConnection::Close() {
+ }
+ 
+ void send_packet(apacket* p, atransport* t) {
+-    VLOG(PACKETS) << std::format("packet --> {}{}{}{}", ((char*)(&(p->msg.command)))[0],
++    VLOG(PACKETS) << fmt::format("packet --> {}{}{}{}", ((char*)(&(p->msg.command)))[0],
+                                  ((char*)(&(p->msg.command)))[1], ((char*)(&(p->msg.command)))[2],
+                                  ((char*)(&(p->msg.command)))[3]);
+ 
+-- 
+2.54.0
+

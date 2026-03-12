@@ -65,6 +65,7 @@ add_library(libext2fs STATIC
 	e2fsprogs/lib/ext2fs/gen_bitmap64.c
 	e2fsprogs/lib/ext2fs/gen_bitmap.c
 	e2fsprogs/lib/ext2fs/get_num_dirs.c
+	e2fsprogs/lib/ext2fs/getenv.c
 	e2fsprogs/lib/ext2fs/getsectsize.c
 	e2fsprogs/lib/ext2fs/getsize.c
 	e2fsprogs/lib/ext2fs/hashmap.c
@@ -87,6 +88,7 @@ add_library(libext2fs STATIC
 	e2fsprogs/lib/ext2fs/newdir.c
 	e2fsprogs/lib/ext2fs/nls_utf8.c
 	e2fsprogs/lib/ext2fs/openfs.c
+	e2fsprogs/lib/ext2fs/orphan.c
 	e2fsprogs/lib/ext2fs/progress.c
 	e2fsprogs/lib/ext2fs/punch.c
 	e2fsprogs/lib/ext2fs/rbtree.c
@@ -110,6 +112,7 @@ add_library(libext2fs STATIC
 	e2fsprogs/lib/support/quotaio.c
 	e2fsprogs/lib/support/quotaio_tree.c
 	e2fsprogs/lib/support/quotaio_v2.c
+	e2fsprogs/misc/create_inode_libarchive.c
 	e2fsprogs/misc/create_inode.c)
 
 target_include_directories(libext2fs PRIVATE

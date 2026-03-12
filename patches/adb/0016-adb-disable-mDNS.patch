@@ -1,4 +1,4 @@
-From 481ad29f9ac31c352d78d3bbab805921823f4fde Mon Sep 17 00:00:00 2001
+From 523cd5315e0748a40ad0febba4e6c472253a7097 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?=C4=90o=C3=A0n=20Tr=E1=BA=A7n=20C=C3=B4ng=20Danh?=
  <congdanhqx@gmail.com>
 Date: Sun, 1 Nov 2020 15:51:35 +0700
@@ -6,15 +6,14 @@ Subject: [PATCH] adb: disable mDNS
 
 ---
  adb.cpp         | 15 ---------------
- client/main.cpp |  2 --
- socket_spec.cpp | 25 +------------------------
- 3 files changed, 1 insertion(+), 41 deletions(-)
+ socket_spec.cpp | 24 +-----------------------
+ 2 files changed, 1 insertion(+), 38 deletions(-)
 
 diff --git a/adb.cpp b/adb.cpp
-index c1bb8f42..cbabfe8f 100644
+index ae57b00..6321981 100644
 --- a/adb.cpp
 +++ b/adb.cpp
-@@ -1131,21 +1131,6 @@ void adb_set_reject_kill_server(bool value) {
+@@ -1253,21 +1253,6 @@ void adb_set_reject_kill_server(bool value) {
  }
  
  static bool handle_mdns_request(std::string_view service, int reply_fd) {
@@ -36,27 +35,11 @@ index c1bb8f42..cbabfe8f 100644
      return false;
  }
  
-diff --git a/client/main.cpp b/client/main.cpp
-index c14b3463..552042e1 100644
---- a/client/main.cpp
-+++ b/client/main.cpp
-@@ -68,11 +68,9 @@ void adb_server_cleanup() {
-     //   1. close_smartsockets, so that we don't get any new clients
-     //   2. kick_all_transports, to avoid writing only part of a packet to a transport.
-     //   3. usb_cleanup, to tear down the USB stack.
--    //   4. mdns_cleanup, to tear down mdns stack.
-     close_smartsockets();
-     kick_all_transports();
-     usb_cleanup();
--    mdns_cleanup();
- }
- 
- static void intentionally_leak() {
 diff --git a/socket_spec.cpp b/socket_spec.cpp
-index c93b0230..4d3aa28d 100644
+index 5053e36..b01cb5b 100644
 --- a/socket_spec.cpp
 +++ b/socket_spec.cpp
-@@ -195,30 +195,7 @@ bool socket_spec_connect(unique_fd* fd, std::string_view address, int* port, std
+@@ -222,29 +222,7 @@ bool socket_spec_connect(unique_fd* fd, std::string_view address, int* port, std
          if (tcp_host_is_local(hostname)) {
              fd->reset(network_loopback_client(port_value, SOCK_STREAM, error));
          } else {
@@ -64,16 +47,15 @@ index c93b0230..4d3aa28d 100644
 -            // Check if the address is an mdns service we can connect to.
 -            if (auto mdns_info = mdns_get_connect_service_info(std::string(address.substr(4)));
 -                mdns_info != std::nullopt) {
--                fd->reset(network_connect(mdns_info->addr, mdns_info->port, SOCK_STREAM, 0, error));
+-                fd->reset(network_connect(mdns_info->v4_address_string(), mdns_info->port,
+-                                          SOCK_STREAM, 0, error));
 -                if (fd->get() != -1) {
 -                    // TODO(joshuaduong): We still show the ip address for the serial. Change it to
 -                    // use the mdns instance name, so we can adjust to address changes on
 -                    // reconnects.
 -                    port_value = mdns_info->port;
 -                    if (serial) {
--                        *serial = android::base::StringPrintf("%s.%s",
--                                                              mdns_info->service_name.c_str(),
--                                                              mdns_info->service_type.c_str());
+-                        *serial = std::format("{}.{}", mdns_info->instance, mdns_info->service);
 -                    }
 -                }
 -            } else {
@@ -88,3 +70,6 @@ index c93b0230..4d3aa28d 100644
          }
  
          if (fd->get() > 0) {
+-- 
+2.53.0
+

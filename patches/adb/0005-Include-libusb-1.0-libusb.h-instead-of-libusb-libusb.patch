@@ -1,17 +1,21 @@
-From 104860b6b131d8c45345dfd5c446afe11bca4d18 Mon Sep 17 00:00:00 2001
+From 77f2ac953945c66d0d0eac4e89a20ffcc169f3a8 Mon Sep 17 00:00:00 2001
 From: Anatol Pomozov <anatol.pomozov@gmail.com>
 Date: Fri, 25 Aug 2017 23:30:34 +0000
 Subject: [PATCH] Include libusb-1.0/libusb.h instead of libusb/libusb.h
 
 ---
- client/usb_libusb.cpp | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ client/usb_libusb_device.cpp          | 4 ++++
+ client/usb_libusb_device.h            | 4 ++++
+ client/usb_libusb_hotplug.cpp         | 4 ++++
+ client/usb_libusb_hotplug.h           | 4 ++++
+ client/usb_libusb_inhouse_hotplug.cpp | 4 ++++
+ 5 files changed, 20 insertions(+)
 
-diff --git a/client/usb_libusb.cpp b/client/usb_libusb.cpp
-index e0b0104a..bcfb03af 100644
---- a/client/usb_libusb.cpp
-+++ b/client/usb_libusb.cpp
-@@ -36,7 +36,11 @@
+diff --git a/client/usb_libusb_device.cpp b/client/usb_libusb_device.cpp
+index 2bb270e..dd51963 100644
+--- a/client/usb_libusb_device.cpp
++++ b/client/usb_libusb_device.cpp
+@@ -29,7 +29,11 @@
  #include <unordered_map>
  #include <vector>
  
@@ -23,4 +27,70 @@ index e0b0104a..bcfb03af 100644
  
  #include <android-base/file.h>
  #include <android-base/logging.h>
+diff --git a/client/usb_libusb_device.h b/client/usb_libusb_device.h
+index bab3af4..3e4316f 100644
+--- a/client/usb_libusb_device.h
++++ b/client/usb_libusb_device.h
+@@ -24,7 +24,11 @@
+ #include <optional>
+ #include <string>
+ 
++#ifdef ANDROID_TOOLS_USE_BUNDLED_LIBUSB
+ #include "libusb/libusb.h"
++#else
++#include <libusb-1.0/libusb.h>
++#endif
+ 
+ // A session is started when a device is connected to a workstation. It ends upon its
+ // disconnection. For in-house hotplug, we generate a unique identifier based on the device
+diff --git a/client/usb_libusb_hotplug.cpp b/client/usb_libusb_hotplug.cpp
+index 5efc4c0..125db35 100644
+--- a/client/usb_libusb_hotplug.cpp
++++ b/client/usb_libusb_hotplug.cpp
+@@ -33,7 +33,11 @@
+ #include <thread>
+ #include <unordered_map>
+ 
++#ifdef ANDROID_TOOLS_USE_BUNDLED_LIBUSB
+ #include "libusb/libusb.h"
++#else
++#include <libusb-1.0/libusb.h>
++#endif
+ 
+ using namespace std::chrono_literals;
+ 
+diff --git a/client/usb_libusb_hotplug.h b/client/usb_libusb_hotplug.h
+index 27d3ddf..3a2e2eb 100644
+--- a/client/usb_libusb_hotplug.h
++++ b/client/usb_libusb_hotplug.h
+@@ -18,7 +18,11 @@
+ 
+ #include "usb_libusb.h"
+ 
++#ifdef ANDROID_TOOLS_USE_BUNDLED_LIBUSB
+ #include <libusb/libusb.h>
++#else
++#include <libusb-1.0/libusb.h>
++#endif
+ 
+ namespace libusb {
+ 
+diff --git a/client/usb_libusb_inhouse_hotplug.cpp b/client/usb_libusb_inhouse_hotplug.cpp
+index dc42eba..1199e0c 100644
+--- a/client/usb_libusb_inhouse_hotplug.cpp
++++ b/client/usb_libusb_inhouse_hotplug.cpp
+@@ -23,7 +23,11 @@
+ #include "adb_trace.h"
+ #include "client/usb_libusb_hotplug.h"
+ 
++#ifdef ANDROID_TOOLS_USE_BUNDLED_LIBUSB
+ #include "libusb/libusb.h"
++#else
++#include <libusb-1.0/libusb.h>
++#endif
+ 
+ namespace libusb_inhouse_hotplug {
+ 
+-- 
+2.53.0
 

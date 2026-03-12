@@ -1,0 +1,28 @@
+From 368f1c721e46e12d64faad411600822421dce16e Mon Sep 17 00:00:00 2001
+From: LuK1337 <priv.luk@gmail.com>
+Date: Thu, 12 Mar 2026 22:54:00 +0100
+Subject: [PATCH] macOS does not support lsetxattr
+
+---
+ fsck/dump.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fsck/dump.c b/fsck/dump.c
+index 66d6c79..2587d37 100644
+--- a/fsck/dump.c
++++ b/fsck/dump.c
+@@ -462,9 +462,9 @@ static void dump_xattr(struct f2fs_sb_info *sbi, struct f2fs_node *node_blk, int
+ 					le16_to_cpu(ent->e_value_size), 0,
+ 					XATTR_CREATE);
+ 		} if (S_ISLNK(type) && c.preserve_symlinks) {
+-			ret = lsetxattr(c.dump_symlink, xattr_name, value,
++			ret = setxattr(c.dump_symlink, xattr_name, value,
+ 					le16_to_cpu(ent->e_value_size), 0,
+-					XATTR_CREATE);
++					XATTR_CREATE | XATTR_NOFOLLOW);
+ 		} else {
+ 			ret = fsetxattr(c.dump_fd, xattr_name, value,
+ 					le16_to_cpu(ent->e_value_size), 0,
+-- 
+2.53.0
+
