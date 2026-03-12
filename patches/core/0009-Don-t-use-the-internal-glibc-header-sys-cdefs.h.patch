@@ -1,4 +1,4 @@
-From 49a3dad208220b35ca7d81b7ea7f053801ada9dd Mon Sep 17 00:00:00 2001
+From 4a9044f321dc4b47e92a29ca94f997af8bebd4fb Mon Sep 17 00:00:00 2001
 From: John Zimmermann <me@johnnynator.dev>
 Date: Thu, 18 Mar 2021 12:22:51 +0100
 Subject: [PATCH] Don't use the internal glibc header sys/cdefs.h
@@ -15,7 +15,6 @@ https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-
  debuggerd/include/debuggerd/client.h          |  1 -
  debuggerd/include/debuggerd/handler.h         |  9 +++++---
  debuggerd/util.h                              |  1 -
- fs_mgr/fs_mgr_priv_boot_config.h              |  1 -
  init/keychords.cpp                            |  1 -
  init/reboot.cpp                               |  1 -
  libasyncio/include/asyncio/AsyncIO.h          |  1 -
@@ -29,13 +28,10 @@ https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-
  libcutils/include/cutils/trace.h              |  9 +++++---
  libcutils/include/private/canned_fs_config.h  |  9 +++++---
  libcutils/include/private/fs_config.h         |  9 +++++---
- libkeyutils/include/keyutils.h                |  9 +++++---
  libnetutils/include/netutils/ifc.h            |  9 +++++---
  .../packagelistparser/packagelistparser.h     |  8 +++++--
- libprocessgroup/cgroup_map.h                  |  1 -
- .../cgrouprc/include/android/cgrouprc.h       |  8 +++++--
- .../include/processgroup/processgroup.h       |  9 +++++---
- libprocessgroup/task_profiles.h               |  1 -
+ .../cgrouprc/include/android/cgrouprc.h       |  9 +++++---
+ libstats/push_compat/statsd_writer.h          |  8 +++++--
  libsuspend/autosuspend_ops.h                  |  8 +++++--
  libsuspend/include/suspend/autosuspend.h      |  9 +++++---
  libsync/include/android/sync.h                |  8 +++++--
@@ -44,15 +40,16 @@ https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-
  libsystem/include/system/camera.h             |  9 +++++---
  libsystem/include/system/radio.h              |  1 -
  libutils/Singleton_test.h                     |  9 +++++---
+ .../include/vendorsupport/api_level.h         |  9 +++++---
  llkd/include/llkd.h                           | 21 +++++++++++++------
  llkd/libllkd.cpp                              |  1 -
  trusty/gatekeeper/trusty_gatekeeper_ipc.h     |  8 +++++--
  .../ipc/trusty_keymaster_ipc.h                |  8 +++++--
  .../storage/lib/include/trusty/lib/storage.h  |  8 +++++--
- 37 files changed, 165 insertions(+), 84 deletions(-)
+ 34 files changed, 165 insertions(+), 81 deletions(-)
 
 diff --git a/debuggerd/include/debuggerd/client.h b/debuggerd/include/debuggerd/client.h
-index b7284b08ec..b85b6e542e 100644
+index e7401cc4..61abd284 100644
 --- a/debuggerd/include/debuggerd/client.h
 +++ b/debuggerd/include/debuggerd/client.h
 @@ -17,7 +17,6 @@
@@ -64,7 +61,7 @@ index b7284b08ec..b85b6e542e 100644
  
  #include <android-base/unique_fd.h>
 diff --git a/debuggerd/include/debuggerd/handler.h b/debuggerd/include/debuggerd/handler.h
-index ebb5372..07e3c1e 100644
+index 954f049a..48b3b59e 100644
 --- a/debuggerd/include/debuggerd/handler.h
 +++ b/debuggerd/include/debuggerd/handler.h
 @@ -20,11 +20,12 @@
@@ -82,7 +79,7 @@ index ebb5372..07e3c1e 100644
  
  // Forward declare these classes so not everyone has to include GWP-ASan
  // headers.
-@@ -94,4 +95,6 @@ static void __attribute__((__unused__)) debuggerd_register_handlers(struct sigac
+@@ -98,4 +99,6 @@ static void __attribute__((__unused__)) debuggerd_register_handlers(struct sigac
    sigaction(BIONIC_SIGNAL_DEBUGGER, action, nullptr);
  }
  
@@ -91,7 +88,7 @@ index ebb5372..07e3c1e 100644
 +}
 +#endif
 diff --git a/debuggerd/util.h b/debuggerd/util.h
-index 4375870..58c0816 100644
+index 535b0f77..8308d6e7 100644
 --- a/debuggerd/util.h
 +++ b/debuggerd/util.h
 @@ -20,7 +20,6 @@
@@ -103,7 +100,7 @@ index 4375870..58c0816 100644
  
  std::vector<std::string> get_command_line(pid_t pid);
 diff --git a/init/keychords.cpp b/init/keychords.cpp
-index adec383..40e8524 100644
+index adec3832..40e85248 100644
 --- a/init/keychords.cpp
 +++ b/init/keychords.cpp
 @@ -19,7 +19,6 @@
@@ -115,10 +112,10 @@ index adec383..40e8524 100644
  #include <sys/ioctl.h>
  #include <sys/types.h>
 diff --git a/init/reboot.cpp b/init/reboot.cpp
-index 3351c4c..3bf4518 100644
+index 959232aa..45f849fc 100644
 --- a/init/reboot.cpp
 +++ b/init/reboot.cpp
-@@ -24,7 +24,6 @@
+@@ -27,7 +27,6 @@
  #include <mntent.h>
  #include <semaphore.h>
  #include <stdlib.h>
@@ -127,7 +124,7 @@ index 3351c4c..3bf4518 100644
  #include <sys/mount.h>
  #include <sys/stat.h>
 diff --git a/libasyncio/include/asyncio/AsyncIO.h b/libasyncio/include/asyncio/AsyncIO.h
-index 9620d2a..005fc66 100644
+index 9620d2a8..005fc664 100644
 --- a/libasyncio/include/asyncio/AsyncIO.h
 +++ b/libasyncio/include/asyncio/AsyncIO.h
 @@ -20,7 +20,6 @@
@@ -139,7 +136,7 @@ index 9620d2a..005fc66 100644
  #include <time.h>
  #include <unistd.h>
 diff --git a/libcutils/android_get_control_env.h b/libcutils/android_get_control_env.h
-index a830269..40edc2d 100644
+index a8302691..40edc2d3 100644
 --- a/libcutils/android_get_control_env.h
 +++ b/libcutils/android_get_control_env.h
 @@ -16,11 +16,14 @@
@@ -161,7 +158,7 @@ index a830269..40edc2d 100644
 +}
 +#endif
 diff --git a/libcutils/include/cutils/android_reboot.h b/libcutils/include/cutils/android_reboot.h
-index 24e32d5..56a31bc 100644
+index 24e32d56..56a31bc7 100644
 --- a/libcutils/include/cutils/android_reboot.h
 +++ b/libcutils/include/cutils/android_reboot.h
 @@ -16,9 +16,10 @@
@@ -186,7 +183,7 @@ index 24e32d5..56a31bc 100644
 +}
 +#endif
 diff --git a/libcutils/include/cutils/bitops.h b/libcutils/include/cutils/bitops.h
-index 38d2840..79193b5 100644
+index 38d28403..79193b58 100644
 --- a/libcutils/include/cutils/bitops.h
 +++ b/libcutils/include/cutils/bitops.h
 @@ -20,9 +20,10 @@
@@ -213,7 +210,7 @@ index 38d2840..79193b5 100644
  
  #endif /* __CUTILS_BITOPS_H */
 diff --git a/libcutils/include/cutils/klog.h b/libcutils/include/cutils/klog.h
-index 5ae6216..8006be7 100644
+index 5ae6216e..8006be73 100644
 --- a/libcutils/include/cutils/klog.h
 +++ b/libcutils/include/cutils/klog.h
 @@ -17,11 +17,12 @@
@@ -243,7 +240,7 @@ index 5ae6216..8006be7 100644
  #define KLOG_ERROR_LEVEL   3
  #define KLOG_WARNING_LEVEL 4
 diff --git a/libcutils/include/cutils/partition_utils.h b/libcutils/include/cutils/partition_utils.h
-index 8bc9b48..ff1d13a 100644
+index 8bc9b48b..ff1d13a0 100644
 --- a/libcutils/include/cutils/partition_utils.h
 +++ b/libcutils/include/cutils/partition_utils.h
 @@ -17,12 +17,15 @@
@@ -266,7 +263,7 @@ index 8bc9b48..ff1d13a 100644
  
  #endif /* __CUTILS_PARTITION_WIPED_H__ */
 diff --git a/libcutils/include/cutils/properties.h b/libcutils/include/cutils/properties.h
-index 78d8bc6..9f87212 100644
+index 78d8bc65..9f872120 100644
 --- a/libcutils/include/cutils/properties.h
 +++ b/libcutils/include/cutils/properties.h
 @@ -16,7 +16,6 @@
@@ -278,7 +275,7 @@ index 78d8bc6..9f87212 100644
  #include <stdint.h>
  
 diff --git a/libcutils/include/cutils/str_parms.h b/libcutils/include/cutils/str_parms.h
-index aa1435a..160792a 100644
+index aa1435a0..160792a3 100644
 --- a/libcutils/include/cutils/str_parms.h
 +++ b/libcutils/include/cutils/str_parms.h
 @@ -18,9 +18,10 @@
@@ -305,10 +302,10 @@ index aa1435a..160792a 100644
  
  #endif /* __CUTILS_STR_PARMS_H */
 diff --git a/libcutils/include/cutils/trace.h b/libcutils/include/cutils/trace.h
-index 7f57637..def5aeb 100644
+index 4cbc4e6d..83f407ce 100644
 --- a/libcutils/include/cutils/trace.h
 +++ b/libcutils/include/cutils/trace.h
-@@ -22,12 +22,13 @@
+@@ -27,12 +27,13 @@ using namespace std;
  #include <stdbool.h>
  #include <stdint.h>
  #include <stdio.h>
@@ -324,7 +321,7 @@ index 7f57637..def5aeb 100644
  
  /**
   * The ATRACE_TAG macro can be defined before including this header to trace
-@@ -320,6 +321,8 @@ static inline void atrace_int64(uint64_t tag, const char* name, int64_t value)
+@@ -325,6 +326,8 @@ static inline void atrace_int64(uint64_t tag, const char* name, int64_t value)
      }
  }
  
@@ -335,7 +332,7 @@ index 7f57637..def5aeb 100644
  
  #endif // _LIBS_CUTILS_TRACE_H
 diff --git a/libcutils/include/private/canned_fs_config.h b/libcutils/include/private/canned_fs_config.h
-index ad4de4c..caf4b61 100644
+index ad4de4ce..caf4b618 100644
 --- a/libcutils/include/private/canned_fs_config.h
 +++ b/libcutils/include/private/canned_fs_config.h
 @@ -17,12 +17,15 @@
@@ -358,7 +355,7 @@ index ad4de4c..caf4b61 100644
 +}
 +#endif
 diff --git a/libcutils/include/private/fs_config.h b/libcutils/include/private/fs_config.h
-index 45f46e5..b4ceade 100644
+index 9a727bc5..1b96e2d3 100644
 --- a/libcutils/include/private/fs_config.h
 +++ b/libcutils/include/private/fs_config.h
 @@ -24,14 +24,15 @@
@@ -387,35 +384,8 @@ index 45f46e5..b4ceade 100644
 +#ifdef __cplusplus
 +}
 +#endif
-diff --git a/libkeyutils/include/keyutils.h b/libkeyutils/include/keyutils.h
-index c508f27..2c3b4b0 100644
---- a/libkeyutils/include/keyutils.h
-+++ b/libkeyutils/include/keyutils.h
-@@ -31,9 +31,10 @@
- 
- #include <linux/keyctl.h>
- #include <stdint.h>
--#include <sys/cdefs.h>
- 
--__BEGIN_DECLS
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
- 
- typedef int32_t key_serial_t;
- 
-@@ -55,6 +56,8 @@ long keyctl_restrict_keyring(key_serial_t keyring, const char* type, const char*
- 
- long keyctl_get_security(key_serial_t key, char* buffer, size_t buflen);
- 
--__END_DECLS
-+#ifdef __cplusplus
-+}
-+#endif
- 
- #endif
 diff --git a/libnetutils/include/netutils/ifc.h b/libnetutils/include/netutils/ifc.h
-index ee896ac..3816f33 100644
+index ee896ac0..3816f337 100644
 --- a/libnetutils/include/netutils/ifc.h
 +++ b/libnetutils/include/netutils/ifc.h
 @@ -19,9 +19,10 @@
@@ -442,7 +412,7 @@ index ee896ac..3816f33 100644
  
  #endif /* _NETUTILS_IFC_H_ */
 diff --git a/libpackagelistparser/include/packagelistparser/packagelistparser.h b/libpackagelistparser/include/packagelistparser/packagelistparser.h
-index e89cb54..86b6604 100644
+index 9bd212af..88d4b22e 100644
 --- a/libpackagelistparser/include/packagelistparser/packagelistparser.h
 +++ b/libpackagelistparser/include/packagelistparser/packagelistparser.h
 @@ -19,7 +19,9 @@
@@ -456,7 +426,7 @@ index e89cb54..86b6604 100644
  
  typedef struct gid_list {
    /** Number of gids. */
-@@ -78,4 +80,6 @@ bool packagelist_parse_file(const char* path, bool (*callback)(pkg_info* info, v
+@@ -81,4 +83,6 @@ bool packagelist_parse_file(const char* path, bool (*callback)(pkg_info* info, v
  /** Frees the given `pkg_info`. */
  void packagelist_free(pkg_info* info);
  
@@ -465,7 +435,7 @@ index e89cb54..86b6604 100644
 +}
 +#endif
 diff --git a/libprocessgroup/cgrouprc/include/android/cgrouprc.h b/libprocessgroup/cgrouprc/include/android/cgrouprc.h
-index e704a36..e65aa4a 100644
+index 6fc2659c..d9945aef 100644
 --- a/libprocessgroup/cgrouprc/include/android/cgrouprc.h
 +++ b/libprocessgroup/cgrouprc/include/android/cgrouprc.h
 @@ -16,10 +16,11 @@
@@ -480,9 +450,9 @@ index e704a36..e65aa4a 100644
 +extern "C" {
 +#endif
  
- // For host builds, __INTRODUCED_IN is not defined.
- #ifndef __INTRODUCED_IN
-@@ -92,4 +93,6 @@ __attribute__((warn_unused_result)) const char* ACgroupController_getName(const
+ struct ACgroupController;
+ typedef struct ACgroupController ACgroupController;
+@@ -87,4 +88,6 @@ __attribute__((warn_unused_result)) const char* ACgroupController_getName(const
  __attribute__((warn_unused_result)) const char* ACgroupController_getPath(const ACgroupController*)
          __INTRODUCED_IN(29);
  
@@ -490,61 +460,8 @@ index e704a36..e65aa4a 100644
 +#ifdef __cplusplus
 +}
 +#endif
-diff --git a/libprocessgroup/include/processgroup/processgroup.h b/libprocessgroup/include/processgroup/processgroup.h
-index dbaeb93..0cc119c 100644
---- a/libprocessgroup/include/processgroup/processgroup.h
-+++ b/libprocessgroup/include/processgroup/processgroup.h
-@@ -16,7 +16,6 @@
- 
- #pragma once
- 
--#include <sys/cdefs.h>
- #include <sys/types.h>
- #include <initializer_list>
- #include <span>
-@@ -24,7 +23,9 @@
- #include <string_view>
- #include <vector>
- 
--__BEGIN_DECLS
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
- 
- static constexpr const char* CGROUPV2_HIERARCHY_NAME = "cgroup2";
- [[deprecated]] static constexpr const char* CGROUPV2_CONTROLLER_NAME = "cgroup2";
-@@ -40,7 +41,9 @@ bool SetTaskProfiles(pid_t tid, const std::vector<std::string>& profiles,
- bool SetProcessProfiles(uid_t uid, pid_t pid, const std::vector<std::string>& profiles);
- bool SetUserProfiles(uid_t uid, const std::vector<std::string>& profiles);
- 
--__END_DECLS
-+#ifdef __cplusplus
-+}
-+#endif
- 
- bool SetTaskProfiles(pid_t tid, std::initializer_list<std::string_view> profiles,
-                      bool use_fd_cache = false);
-@@ -49,7 +52,9 @@ bool SetTaskProfiles(int tid, std::span<const std::string_view> profiles,
- bool SetProcessProfiles(uid_t uid, pid_t pid, std::span<const std::string_view> profiles);
- #endif
- 
--__BEGIN_DECLS
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
- 
- #ifndef __ANDROID_VNDK__
- 
-@@ -102,4 +107,6 @@ bool isProfileValidForProcess(const std::string& profile_name, int uid, int pid)
- 
- #endif // __ANDROID_VNDK__
- 
--__END_DECLS
-+#ifdef __cplusplus
-+}
-+#endif
 diff --git a/libstats/push_compat/statsd_writer.h b/libstats/push_compat/statsd_writer.h
-index f030b96..ffd38ea 100644
+index f030b96c..ffd38ea4 100644
 --- a/libstats/push_compat/statsd_writer.h
 +++ b/libstats/push_compat/statsd_writer.h
 @@ -21,7 +21,9 @@
@@ -569,7 +486,7 @@ index f030b96..ffd38ea 100644
  
  #endif  // ANDROID_STATS_LOG_STATS_WRITER_H
 diff --git a/libsuspend/autosuspend_ops.h b/libsuspend/autosuspend_ops.h
-index b0024c8..ea0eafd 100644
+index b0024c8b..ea0eafd0 100644
 --- a/libsuspend/autosuspend_ops.h
 +++ b/libsuspend/autosuspend_ops.h
 @@ -24,8 +24,12 @@ struct autosuspend_ops {
@@ -588,7 +505,7 @@ index b0024c8..ea0eafd 100644
  
  #endif
 diff --git a/libsuspend/include/suspend/autosuspend.h b/libsuspend/include/suspend/autosuspend.h
-index 21f4d61..dbbca16 100644
+index 21f4d61b..dbbca161 100644
 --- a/libsuspend/include/suspend/autosuspend.h
 +++ b/libsuspend/include/suspend/autosuspend.h
 @@ -17,10 +17,11 @@
@@ -616,7 +533,7 @@ index 21f4d61..dbbca16 100644
  
  #endif
 diff --git a/libsync/include/android/sync.h b/libsync/include/android/sync.h
-index 32bb878..59a8f9f 100644
+index 32bb878b..59a8f9fa 100644
 --- a/libsync/include/android/sync.h
 +++ b/libsync/include/android/sync.h
 @@ -39,11 +39,15 @@
@@ -638,7 +555,7 @@ index 32bb878..59a8f9f 100644
  
  #endif /* __SYS_CORE_SYNC_H */
 diff --git a/libsync/include/ndk/sync.h b/libsync/include/ndk/sync.h
-index 38ccb68..04c8e07 100644
+index 38ccb686..04c8e07a 100644
 --- a/libsync/include/ndk/sync.h
 +++ b/libsync/include/ndk/sync.h
 @@ -27,11 +27,12 @@
@@ -668,7 +585,7 @@ index 38ccb68..04c8e07 100644
  #endif /* ANDROID_SYNC_H */
  
 diff --git a/libsync/sw_sync.h b/libsync/sw_sync.h
-index fda1c4c..395c380 100644
+index fda1c4c5..395c3807 100644
 --- a/libsync/sw_sync.h
 +++ b/libsync/sw_sync.h
 @@ -19,7 +19,9 @@
@@ -693,7 +610,7 @@ index fda1c4c..395c380 100644
  
  #endif /* __SYS_CORE_SW_SYNC_H */
 diff --git a/libsystem/include/system/camera.h b/libsystem/include/system/camera.h
-index 2ca90c3..c42f559 100644
+index 2ca90c39..c42f5596 100644
 --- a/libsystem/include/system/camera.h
 +++ b/libsystem/include/system/camera.h
 @@ -18,13 +18,14 @@
@@ -724,7 +641,7 @@ index 2ca90c3..c42f559 100644
  
  #endif /* SYSTEM_CORE_INCLUDE_ANDROID_CAMERA_H */
 diff --git a/libsystem/include/system/radio.h b/libsystem/include/system/radio.h
-index acf3ea7..dfd254f 100644
+index acf3ea78..dfd254fc 100644
 --- a/libsystem/include/system/radio.h
 +++ b/libsystem/include/system/radio.h
 @@ -20,7 +20,6 @@
@@ -736,7 +653,7 @@ index acf3ea7..dfd254f 100644
  
  
 diff --git a/libutils/Singleton_test.h b/libutils/Singleton_test.h
-index c77d9ff..00bd562 100644
+index c77d9ffe..00bd5624 100644
 --- a/libutils/Singleton_test.h
 +++ b/libutils/Singleton_test.h
 @@ -17,7 +17,6 @@
@@ -768,7 +685,7 @@ index c77d9ff..00bd562 100644
  }
  
 diff --git a/libvendorsupport/include/vendorsupport/api_level.h b/libvendorsupport/include/vendorsupport/api_level.h
-index 3427bc6..080389d 100644
+index 24469873..3fc0ab4d 100644
 --- a/libvendorsupport/include/vendorsupport/api_level.h
 +++ b/libvendorsupport/include/vendorsupport/api_level.h
 @@ -14,9 +14,10 @@
@@ -784,8 +701,8 @@ index 3427bc6..080389d 100644
  
  #define __ANDROID_VENDOR_API_MAX__ 1000000
  #define __INVALID_API_LEVEL -1
-@@ -62,4 +63,6 @@ int AVendorSupport_getSdkApiLevelOf(int vendorApiLevel);
- int AVendorSupport_getVendorApiLevel();
+@@ -77,4 +78,6 @@ int AVendorSupport_getVendorApiLevel();
+ int AVendorSupport_getFirstVendorApiLevel();
  #endif  // __ANDROID_VENDOR__
  
 -__END_DECLS
@@ -793,7 +710,7 @@ index 3427bc6..080389d 100644
 +}
 +#endif
 diff --git a/llkd/include/llkd.h b/llkd/include/llkd.h
-index 0822a3e..a4e3037 100644
+index 0822a3e2..a4e3037c 100644
 --- a/llkd/include/llkd.h
 +++ b/llkd/include/llkd.h
 @@ -22,9 +22,10 @@
@@ -840,7 +757,7 @@ index 0822a3e..a4e3037 100644
  
  /* clang-format off */
 diff --git a/llkd/libllkd.cpp b/llkd/libllkd.cpp
-index 42602e9..ed348bb 100644
+index 42602e9e..ed348bb8 100644
 --- a/llkd/libllkd.cpp
 +++ b/llkd/libllkd.cpp
 @@ -25,7 +25,6 @@
@@ -852,10 +769,10 @@ index 42602e9..ed348bb 100644
  #include <sys/prctl.h>
  #include <sys/stat.h>     // lstat()
 diff --git a/trusty/gatekeeper/trusty_gatekeeper_ipc.h b/trusty/gatekeeper/trusty_gatekeeper_ipc.h
-index f8de7f8..fa8fd40 100644
+index 47ba33b3..f546076a 100644
 --- a/trusty/gatekeeper/trusty_gatekeeper_ipc.h
 +++ b/trusty/gatekeeper/trusty_gatekeeper_ipc.h
-@@ -14,11 +14,15 @@
+@@ -14,7 +14,9 @@
   * limitations under the License.
   */
  
@@ -864,8 +781,9 @@ index f8de7f8..fa8fd40 100644
 +extern "C" {
 +#endif
  
+ void trusty_gatekeeper_set_dev_name(const char* device_name);
  int trusty_gatekeeper_connect();
- int trusty_gatekeeper_call(uint32_t cmd, void *in, uint32_t in_size, uint8_t *out,
+@@ -22,4 +24,6 @@ int trusty_gatekeeper_call(uint32_t cmd, void *in, uint32_t in_size, uint8_t *ou
                             uint32_t *out_size);
  void trusty_gatekeeper_disconnect();
  
@@ -874,7 +792,7 @@ index f8de7f8..fa8fd40 100644
 +}
 +#endif
 diff --git a/trusty/keymaster/include/trusty_keymaster/ipc/trusty_keymaster_ipc.h b/trusty/keymaster/include/trusty_keymaster/ipc/trusty_keymaster_ipc.h
-index 16207e6..9a12458 100644
+index 15241f4a..94936b80 100644
 --- a/trusty/keymaster/include/trusty_keymaster/ipc/trusty_keymaster_ipc.h
 +++ b/trusty/keymaster/include/trusty_keymaster/ipc/trusty_keymaster_ipc.h
 @@ -20,7 +20,9 @@
@@ -888,7 +806,7 @@ index 16207e6..9a12458 100644
  
  const uint32_t TRUSTY_KEYMASTER_RECV_BUF_SIZE = 2 * 4096;
  const uint32_t TRUSTY_KEYMASTER_SEND_BUF_SIZE =
-@@ -35,6 +37,8 @@ keymaster_error_t translate_error(int err);
+@@ -36,6 +38,8 @@ keymaster_error_t translate_error(int err);
  keymaster_error_t trusty_keymaster_send(uint32_t command, const keymaster::Serializable& req,
                                          keymaster::KeymasterResponse* rsp);
  
@@ -899,7 +817,7 @@ index 16207e6..9a12458 100644
  
  #endif  // TRUSTY_KEYMASTER_TRUSTY_KEYMASTER_IPC_H_
 diff --git a/trusty/storage/lib/include/trusty/lib/storage.h b/trusty/storage/lib/include/trusty/lib/storage.h
-index b8ddf67..6cac875 100644
+index 43356198..57dedac0 100644
 --- a/trusty/storage/lib/include/trusty/lib/storage.h
 +++ b/trusty/storage/lib/include/trusty/lib/storage.h
 @@ -21,7 +21,9 @@
@@ -921,3 +839,6 @@ index b8ddf67..6cac875 100644
 +#ifdef __cplusplus
 +}
 +#endif
+-- 
+2.53.0
+

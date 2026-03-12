@@ -1,36 +1,63 @@
-From 71ea766e0a45c4082e49962009342958b2c764e1 Mon Sep 17 00:00:00 2001
+From 8eecdbf08ad72b9fa9222640a38559ed4e8241da Mon Sep 17 00:00:00 2001
 From: John Zimmermann <me@johnnynator.dev>
 Date: Thu, 18 Mar 2021 15:08:33 +0100
 Subject: [PATCH] Don't use the internal glibc header sys/cdefs.h
 
 ---
- liblog/include/android/log.h  | 1 -
- liblog/include/log/log_main.h | 9 ++++++---
- liblog/logd_reader.h          | 9 ++++++---
- liblog/logger.h               | 9 ++++++---
- liblog/pmsg_reader.h          | 9 ++++++---
- logcat/logcat.cpp             | 1 -
- logcat/tests/logcat_test.cpp  | 1 -
- logd/ChattyLogBuffer.cpp      | 1 -
- logd/LogListener.cpp          | 1 -
- logd/LogUtils.h               | 1 -
- logd/libaudit.h               | 9 ++++++---
- 11 files changed, 30 insertions(+), 21 deletions(-)
+ liblog/include/android/log.h        |  1 -
+ liblog/include/android/log_macros.h | 10 ++++++----
+ liblog/include/log/log_main.h       |  9 ++++++---
+ liblog/logd_reader.h                |  9 ++++++---
+ liblog/logger.h                     |  2 --
+ liblog/pmsg_reader.h                |  9 ++++++---
+ logcat/logcat.cpp                   |  1 -
+ logcat/logcat_test.cpp              |  1 -
+ logd/LogListener.cpp                |  1 -
+ logd/LogUtils.h                     |  1 -
+ logd/libaudit/include/libaudit.h    |  9 ++++++---
+ 11 files changed, 30 insertions(+), 23 deletions(-)
 
 diff --git a/liblog/include/android/log.h b/liblog/include/android/log.h
-index 5dc365a4..12de5958 100644
+index 9131364..b436764 100644
 --- a/liblog/include/android/log.h
 +++ b/liblog/include/android/log.h
-@@ -57,7 +57,6 @@
- #include <stdarg.h>
+@@ -58,7 +58,6 @@
+ #include <stdbool.h>
  #include <stddef.h>
  #include <stdint.h>
 -#include <sys/cdefs.h>
+ #include <sys/time.h>
  
  #if !defined(__BIONIC__) && !defined(__INTRODUCED_IN)
- #define __INTRODUCED_IN(x)
+diff --git a/liblog/include/android/log_macros.h b/liblog/include/android/log_macros.h
+index 829b943..936ffa7 100644
+--- a/liblog/include/android/log_macros.h
++++ b/liblog/include/android/log_macros.h
+@@ -16,11 +16,11 @@
+ 
+ #pragma once
+ 
+-#include <sys/cdefs.h>
+-
+ #include <android/log.h>
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ /*
+  * #define LOG_TAG before including this header to control the log tag used by
+@@ -41,4 +41,6 @@ __BEGIN_DECLS
+ #define ALOGV(fmt, ...) \
+   ((void)__android_log_print(ANDROID_LOG_VERBOSE, (LOG_TAG), (fmt)__VA_OPT__(, ) __VA_ARGS__))
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
 diff --git a/liblog/include/log/log_main.h b/liblog/include/log/log_main.h
-index 1bd1c8ae..c71bbdd4 100644
+index 0cb7dd7..30fb3c6 100644
 --- a/liblog/include/log/log_main.h
 +++ b/liblog/include/log/log_main.h
 @@ -17,12 +17,13 @@
@@ -49,7 +76,7 @@ index 1bd1c8ae..c71bbdd4 100644
  
  /*
   * Normally we strip the effects of ALOGV (VERBOSE messages),
-@@ -375,4 +376,6 @@ int __android_log_is_loggable_len(int prio, const char* tag, size_t len, int def
+@@ -366,4 +367,6 @@ extern int __fake_use_va_args(int, ...);
  #pragma clang diagnostic pop
  #endif
  
@@ -58,7 +85,7 @@ index 1bd1c8ae..c71bbdd4 100644
 +}
 +#endif
 diff --git a/liblog/logd_reader.h b/liblog/logd_reader.h
-index 68eef027..64e400ff 100644
+index 68eef02..64e400f 100644
 --- a/liblog/logd_reader.h
 +++ b/liblog/logd_reader.h
 @@ -16,16 +16,19 @@
@@ -85,36 +112,20 @@ index 68eef027..64e400ff 100644
 +}
 +#endif
 diff --git a/liblog/logger.h b/liblog/logger.h
-index ddff19dd..263859db 100644
+index b18b06e..6edbc0a 100644
 --- a/liblog/logger.h
 +++ b/liblog/logger.h
-@@ -17,13 +17,14 @@
- #pragma once
+@@ -18,8 +18,6 @@
  
- #include <stdatomic.h>
+ #include <atomic>
+ 
 -#include <sys/cdefs.h>
- 
+-
  #include <log/log.h>
  
  #include "uio.h"
- 
--__BEGIN_DECLS
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
- 
- struct logger_list {
-   atomic_int fd;
-@@ -48,4 +49,6 @@ inline bool android_logger_is_logd(struct logger* logger) {
-   return reinterpret_cast<uintptr_t>(logger) & LOGGER_LOGD;
- }
- 
--__END_DECLS
-+#ifdef __cplusplus
-+}
-+#endif
 diff --git a/liblog/pmsg_reader.h b/liblog/pmsg_reader.h
-index b784f9ff..88aeec9c 100644
+index b784f9f..88aeec9 100644
 --- a/liblog/pmsg_reader.h
 +++ b/liblog/pmsg_reader.h
 @@ -16,14 +16,17 @@
@@ -139,7 +150,7 @@ index b784f9ff..88aeec9c 100644
 +}
 +#endif
 diff --git a/logcat/logcat.cpp b/logcat/logcat.cpp
-index c8fcf46..aff013e 100644
+index d5ba1cf..6817d94 100644
 --- a/logcat/logcat.cpp
 +++ b/logcat/logcat.cpp
 @@ -29,7 +29,6 @@
@@ -150,10 +161,10 @@ index c8fcf46..aff013e 100644
  #include <sys/ioctl.h>
  #include <sys/resource.h>
  #include <sys/stat.h>
-diff --git a/logcat/tests/logcat_test.cpp b/logcat/tests/logcat_test.cpp
-index dc1df96..c26fe1b 100644
---- a/logcat/tests/logcat_test.cpp
-+++ b/logcat/tests/logcat_test.cpp
+diff --git a/logcat/logcat_test.cpp b/logcat/logcat_test.cpp
+index f27ba44..140e1f5 100644
+--- a/logcat/logcat_test.cpp
++++ b/logcat/logcat_test.cpp
 @@ -24,7 +24,6 @@
  #include <stdio.h>
  #include <stdlib.h>
@@ -163,7 +174,7 @@ index dc1df96..c26fe1b 100644
  #include <sys/types.h>
  #include <sys/wait.h>
 diff --git a/logd/LogListener.cpp b/logd/LogListener.cpp
-index a6ab50b8..641def0f 100644
+index 5b67e83..79b9f52 100644
 --- a/logd/LogListener.cpp
 +++ b/logd/LogListener.cpp
 @@ -15,7 +15,6 @@
@@ -175,7 +186,7 @@ index a6ab50b8..641def0f 100644
  #include <sys/socket.h>
  #include <sys/types.h>
 diff --git a/logd/LogUtils.h b/logd/LogUtils.h
-index c0f62d39..5c759793 100644
+index c0f62d3..5c75979 100644
 --- a/logd/LogUtils.h
 +++ b/logd/LogUtils.h
 @@ -16,7 +16,6 @@
@@ -187,7 +198,7 @@ index c0f62d39..5c759793 100644
  
  #include <private/android_logger.h>
 diff --git a/logd/libaudit/include/libaudit.h b/logd/libaudit/include/libaudit.h
-index 27b08669..872d6996 100644
+index 05655cb..be24274 100644
 --- a/logd/libaudit/include/libaudit.h
 +++ b/logd/libaudit/include/libaudit.h
 @@ -20,14 +20,15 @@
@@ -211,8 +222,11 @@ index 27b08669..872d6996 100644
 @@ -111,4 +112,6 @@ extern int audit_rate_limit(int fd, uint32_t limit);
   */
  extern int audit_log_android_avc_message(int fd, const char* msg);
-
+ 
 -__END_DECLS
 +#ifdef __cplusplus
 +}
 +#endif
+-- 
+2.53.0
+

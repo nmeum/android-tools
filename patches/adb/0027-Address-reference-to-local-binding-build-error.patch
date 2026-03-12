@@ -1,0 +1,31 @@
+From 5b5b58251c44b61682c9fcbfb33439bdf2d11b9c Mon Sep 17 00:00:00 2001
+From: LuK1337 <priv.luk@gmail.com>
+Date: Thu, 12 Mar 2026 22:32:37 +0100
+Subject: [PATCH] Address "reference to local binding" build error
+
+client/incremental.cpp:390:76: error: reference to local binding 'pipe_read_fd' declared in enclosing function 'incremental::start_inc_server_and_stream_signed_files'
+    auto read_fd_cleaner = android::base::make_scope_guard([&] { adb_close(pipe_read_fd); });
+                                                                           ^
+client/incremental.cpp:391:77: error: reference to local binding 'pipe_write_fd' declared in enclosing function 'incremental::start_inc_server_and_stream_signed_files'
+    auto write_fd_cleaner = android::base::make_scope_guard([&] { adb_close(pipe_write_fd); });
+---
+ client/incremental.cpp | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/client/incremental.cpp b/client/incremental.cpp
+index 2a48fcc..d63a6d1 100644
+--- a/client/incremental.cpp
++++ b/client/incremental.cpp
+@@ -386,7 +386,8 @@ static std::optional<Process> start_inc_server_and_stream_signed_files(
+         *error = "adb: failed to create socket pair for child to print to parent";
+         return {};
+     }
+-    auto [pipe_read_fd, pipe_write_fd] = print_fds;
++    auto pipe_read_fd = print_fds[0];
++    auto pipe_write_fd = print_fds[1];
+     auto read_fd_cleaner = android::base::make_scope_guard([&] { adb_close(pipe_read_fd); });
+     auto write_fd_cleaner = android::base::make_scope_guard([&] { adb_close(pipe_write_fd); });
+     close_on_exec(pipe_read_fd);
+-- 
+2.53.0
+

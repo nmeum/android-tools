@@ -1,0 +1,50 @@
+From d70d08a5693860801a03d3607e039db82617df0f Mon Sep 17 00:00:00 2001
+From: Theodore Ts'o <tytso@mit.edu>
+Date: Mon, 24 Feb 2025 00:00:42 -0500
+Subject: [PATCH] misc: fix missing variable names in function prototype
+
+If libarchive support is not available or has been disable, the
+function __populate_fs_from_tar() just prints an error message, and
+doesn't use any of the function paramaters.  Newer versions of gcc
+won't complain about the missing function names, since newer C
+standards allow this, but it breaks on older versions of gcc.
+
+Also return the error code ENOTSUP instead of 1.
+
+https://github.com/tytso/e2fsprogs/issues/213
+
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+---
+ misc/create_inode_libarchive.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/misc/create_inode_libarchive.c b/misc/create_inode_libarchive.c
+index 9c8e53e4..9af74ba7 100644
+--- a/misc/create_inode_libarchive.c
++++ b/misc/create_inode_libarchive.c
+@@ -22,14 +22,17 @@
+ 
+ /* If ./configure was run with --without-libarchive, then only
+  * __populate_fs_from_tar() remains in this file and will return an error. */
+-errcode_t __populate_fs_from_tar(ext2_filsys, ext2_ino_t, const char *,
+-                                 ext2_ino_t, struct hdlinks_s *,
+-                                 struct file_info *,
+-                                 struct fs_ops_callbacks *) {
++errcode_t __populate_fs_from_tar(ext2_filsys fs EXT2FS_ATTR((unused)),
++				 ext2_ino_t root_ino EXT2FS_ATTR((unused)),
++				 const char *source_tar EXT2FS_ATTR((unused)),
++				 ext2_ino_t root EXT2FS_ATTR((unused)),
++				 struct hdlinks_s *hdlinks EXT2FS_ATTR((unused)),
++				 struct file_info *target EXT2FS_ATTR((unused)),
++				 struct fs_ops_callbacks *fs_callbacks EXT2FS_ATTR((unused))) {
+   com_err(__func__, 0,
+           _("you need to compile e2fsprogs without --without-libarchive"
+             "be able to process tarballs"));
+-  return 1;
++  return ENOTSUP;
+ }
+ 
+ #else
+-- 
+2.53.0
+

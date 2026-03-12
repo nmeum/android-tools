@@ -1,0 +1,30 @@
+From e13dd7cbf44f30fcfd97a96ea4bca60f817de977 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
+Date: Tue, 27 Feb 2018 17:48:49 +0100
+Subject: [PATCH] Define clang-only nullability specifiers when __clang__ is
+ not defined
+
+---
+ libutils/Threads.cpp | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/libutils/Threads.cpp b/libutils/Threads.cpp
+index 111d46af..2c8cb850 100644
+--- a/libutils/Threads.cpp
++++ b/libutils/Threads.cpp
+@@ -42,6 +42,12 @@
+ # define __android_unused __attribute__((__unused__))
+ #endif
+ 
++// Clang-only nullability specifiers
++#ifndef __clang__
++#define _Nonnull
++#define _Nullable
++#endif
++
+ /*
+  * ===========================================================================
+  *      Thread wrappers
+-- 
+2.53.0
+

@@ -1,40 +1,25 @@
-From 3e2a37b3886200951a7c3bebe149219c67198df6 Mon Sep 17 00:00:00 2001
+From dc91693fd1c4190fcae4c681a401118e33028480 Mon Sep 17 00:00:00 2001
 From: jershell <jershell@mail.ru>
 Date: Mon, 6 Jun 2022 16:29:40 +0300
 Subject: [PATCH] fix for Fix-compilation-with-libusb
 
 ---
- client/usb_libusb.cpp | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ client/usb_libusb_device.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/client/usb_libusb.cpp b/client/usb_libusb.cpp
-index e0b0104a..a66474b3 100644
---- a/client/usb_libusb.cpp
-+++ b/client/usb_libusb.cpp
-@@ -295,7 +295,7 @@ struct LibusbConnection : public Connection {
-         read->active = true;
-         int rc = libusb_submit_transfer(read->transfer);
-         if (rc != 0) {
--            LOG(ERROR) << "libusb_submit_transfer failed: " << libusb_strerror(rc);
-+            LOG(ERROR) << "libusb_submit_transfer failed: " << libusb_strerror(static_cast<libusb_error>(rc));
-         }
+diff --git a/client/usb_libusb_device.cpp b/client/usb_libusb_device.cpp
+index dd51963..d5d162d 100644
+--- a/client/usb_libusb_device.cpp
++++ b/client/usb_libusb_device.cpp
+@@ -459,7 +459,7 @@ bool LibUsbDevice::OpenDeviceHandle() {
+ 
+     int rc = libusb_open(device_, &device_handle_);
+     if (rc != 0) {
+-        VLOG(USB) << "Unable to open device: " << GetSerial() << " :" << libusb_strerror(rc);
++        VLOG(USB) << "Unable to open device: " << GetSerial() << " :" << libusb_strerror(static_cast<libusb_error>(rc));
+         return false;
      }
  
-@@ -318,7 +318,7 @@ struct LibusbConnection : public Connection {
-         if (rc == 0) {
-             writes_[write->id] = std::move(write);
-         } else {
--            LOG(ERROR) << "libusb_submit_transfer failed: " << libusb_strerror(rc);
-+            LOG(ERROR) << "libusb_submit_transfer failed: " << libusb_strerror(static_cast<libusb_error>(rc));
-             libusb_free_transfer(write->transfer);
-         }
-     }
-@@ -503,7 +503,7 @@ struct LibusbConnection : public Connection {
-         int rc = libusb_open(device_.get(), &handle_raw);
-         if (rc != 0) {
-             // TODO: Handle no permissions.
--            LOG_ERR(error, "failed to open device: %s", libusb_strerror(rc));
-+            LOG_ERR(error, "failed to open device: %s", libusb_strerror(static_cast<libusb_error>(rc)));
-             return false;
-         }
- 
+-- 
+2.53.0
+

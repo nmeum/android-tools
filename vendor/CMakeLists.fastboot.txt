@@ -47,6 +47,7 @@ add_library(libselinux STATIC
 	selinux/libselinux/src/booleans.c
 	selinux/libselinux/src/callbacks.c
 	selinux/libselinux/src/freecon.c
+	selinux/libselinux/src/hashtab.c
 	selinux/libselinux/src/label_backends_android.c
 	selinux/libselinux/src/label.c
 	selinux/libselinux/src/label_support.c
