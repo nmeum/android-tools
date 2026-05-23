@@ -1,0 +1,86 @@
+name: Release fastboot (macOS)
+
+on:
+  pull_request:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  macos:
+    name: Build fastboot on ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-15-intel
+            artifact: fastboot-macos-x86_64
+          - os: macos-15
+            artifact: fastboot-macos-arm64
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write
+
+    steps:
+      # github actions overwrites brew's python. Force it to reassert itself, by running in a separate step.
+      # Borrowed from https://github.com/mesonbuild/meson/blob/master/.github/workflows/macos.yml#L87-L92
+      - name: unbreak python in github actions
+        run: |
+          find /usr/local/bin -lname '*/Library/Frameworks/Python.framework/*' -delete
+          sudo rm -rf /Library/Frameworks/Python.framework/
+          brew install --force python3 && brew unlink python3 && brew unlink python3 && brew link --overwrite python3
+
+      - name: Install dependencies
+        run: |
+          rm -rf /opt/homebrew/include/openssl /usr/local/opt/openssl /usr/local/include/openssl
+          brew install --overwrite --quiet brotli cmake go googletest lz4 \
+            ninja pcre2 protobuf zstd
+
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set git identity
+        run: |
+          git config --global user.email "ci@smlight.tech"
+          git config --global user.name "SMLIGHT CI"
+
+      - name: Vendor Go modules
+        run: |
+          cd vendor/boringssl
+          go mod vendor
+
+      - name: Configure
+        run: |
+          cmake -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX=$HOME/android-tools \
+            -DANDROID_TOOLS_USE_BUNDLED_FMT=ON \
+            -DANDROID_TOOLS_USE_BUNDLED_LIBUSB=ON
+
+      - name: Build fastboot
+        run: cmake --build build --target fastboot --parallel
+
+      - name: Smoke test
+        run: ./build/vendor/fastboot --version
+
+      - name: Rename binary
+        run: |
+          strip build/vendor/fastboot
+          cp build/vendor/fastboot ${{ matrix.artifact }}
+
+      - name: Print sha256
+        run: shasum -a 256 ${{ matrix.artifact }}
+
+      - name: Upload artifact (workflow_dispatch only)
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.artifact }}
+
+      - name: Attach binary to GitHub Release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v3
+        with:
+          files: ${{ matrix.artifact }}

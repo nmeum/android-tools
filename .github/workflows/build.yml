@@ -107,54 +107,51 @@ jobs:
           /usr/local/bin/sload_f2fs -V
 
   macos:
-    if: false  # TODO: enable when macOS support is ready
+    name: Build fastboot on ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-14, macos-15]
+        include:
+          - os: macos-15-intel
+          - os: macos-15
     runs-on: ${{ matrix.os }}
-    needs: [upload-src]
+
     steps:
-      # github actions overwrites brew's python. Force it to reassert itself, by running in a separate step.
-      # Borrowed from https://github.com/mesonbuild/meson/blob/master/.github/workflows/macos.yml#L87-L92
       - name: unbreak python in github actions
         run: |
           find /usr/local/bin -lname '*/Library/Frameworks/Python.framework/*' -delete
           sudo rm -rf /Library/Frameworks/Python.framework/
           brew install --force python3 && brew unlink python3 && brew unlink python3 && brew link --overwrite python3
-      - name: prep macos
+
+      - name: Install dependencies
         run: |
           rm -rf /opt/homebrew/include/openssl /usr/local/opt/openssl /usr/local/include/openssl
           brew install --overwrite --quiet brotli cmake go googletest lz4 \
-          ninja pcre2 protobuf zstd
+            ninja pcre2 protobuf zstd
 
-      - name: download source
-        uses: actions/download-artifact@v4
+      - uses: actions/checkout@v4
         with:
-          name: package_source
+          submodules: recursive
 
-      - name: build & install
+      - name: Set git identity
         run: |
-          tar -xf android-tools-*.tar.xz
-          cd android-tools-*/
-          mkdir build && cd build
-          cmake \
-            -DCMAKE_C_FLAGS="$CFLAGS" \
-            -DCMAKE_CXX_FLAGS="$CXXFLAGS" \
+          git config --global user.email "ci@smlight.tech"
+          git config --global user.name "SMLIGHT CI"
+
+      - name: Vendor Go modules
+        run: |
+          cd vendor/boringssl
+          go mod vendor
+
+      - name: Configure
+        run: |
+          cmake -B build -G Ninja \
             -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_INSTALL_PREFIX=$HOME/android-tools \
             -DANDROID_TOOLS_USE_BUNDLED_FMT=ON \
-            -DANDROID_TOOLS_USE_BUNDLED_LIBUSB=ON \
-            -GNinja \
-            ..
-          ninja --verbose
-          echo -e "\n### make install ###\n"
-          cmake --install .
-          echo -e "\n### all done ###\n"
+            -DANDROID_TOOLS_USE_BUNDLED_LIBUSB=ON
 
-      - name: check
-        run: |
-          $HOME/android-tools/bin/adb --version
-          $HOME/android-tools/bin/fastboot --version
-          $HOME/android-tools/bin/make_f2fs -V
-          $HOME/android-tools/bin/sload_f2fs -V
+      - name: Build fastboot
+        run: cmake --build build --target fastboot --parallel
+
+      - name: Check
+        run: ./build/vendor/fastboot --version
