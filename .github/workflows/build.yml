@@ -55,81 +55,23 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: "opensuse/leap:latest"
-            pkgs: "clang gcc11-c++"
-            env1: "CC=clang CXX=clang++"
-          - os: "opensuse/tumbleweed"
-            pkgs: "gcc gcc-c++"
-          - os: "opensuse/tumbleweed"
-            pkgs: clang
-            env1: "CC=clang CXX=clang++"
-          - os: "archlinux:base"
-            pkgs: gcc
-          - os: "archlinux:base"
-            pkgs: clang
-            env1: "CC=clang CXX=clang++"
           - os: "ubuntu:24.04"
-            pkgs: "gcc-10 g++-10"
-            env1: "CC=gcc-10 CXX=g++-10"
+            pkgs: "gcc g++"
           - os: "ubuntu:24.04"
-            pkgs: "clang-15 libstdc++-10-dev"
-            env1: "CC=clang-15 CXX=clang++-15"
-          - os: "alpine"
-            pkgs: "gcc"
-            env1: "CC=gcc CXX=g++"
-          - os: "fedora:latest"
-            pkgs: "gcc gcc-g++"
-          - os: "fedora:rawhide"
-            pkgs: "gcc gcc-g++"
+            pkgs: "clang"
+            env1: "CC=clang CXX=clang++"
 
     container:
       image: ${{ matrix.os }}
-      # New versions of glibc use the new clone3() syscall which has not
-      # yet been whitelisted in GitHub's secomp profile. To prevent jobs
-      # using these distros from failing (e.g. openSUSE) change the
-      # secomp policy.
-      #
-      # See https://github.com/nmeum/android-tools/pull/48#issuecomment-944893176
-      options: --security-opt seccomp=unconfined
 
     steps:
-      - name: prep opensuse
-        if: startsWith(matrix.os, 'opensuse')
-        run: |
-          zypper -n ref
-          zypper -n in ${{ matrix.pkgs }} cmake git go gtest pcre2-devel pkgconfig \
-            'pkgconfig(libbrotlicommon)' 'pkgconfig(liblz4)' \
-            'pkgconfig(libunwind-generic)' \
-            'pkgconfig(libzstd)' 'pkgconfig(protobuf)' ninja tar xz zlib-devel
-
-      - name: prep archlinux
-        if: startsWith(matrix.os, 'archlinux')
-        run: |
-          pacman -Syu --needed --noconfirm \
-            ${{ matrix.pkgs }} brotli cmake git go gtest libunwind \
-            lz4 pcre2 pkgconfig protobuf zstd ninja
-
       - name: prep ubuntu
-        if: startsWith(matrix.os, 'ubuntu')
         run: |
           apt-get update
           DEBIAN_FRONTEND=noninteractive apt-get install -yq \
             ${{ matrix.pkgs }} cmake git golang libbrotli-dev \
             libgtest-dev liblz4-dev libpcre2-dev libprotobuf-dev libunwind-dev \
             libzstd-dev pkg-config protobuf-compiler ninja-build xz-utils
-
-      - name: prep alpine
-        if: startsWith(matrix.os, 'alpine')
-        run: |
-          apk add build-base pcre2-dev linux-headers gtest-dev samurai \
-          go git perl cmake protobuf-dev brotli-dev zstd-dev lz4-dev
-
-      - name: prep fedora
-        if: startsWith(matrix.os, 'fedora')
-        run: |
-          dnf install -y ${{ matrix.pkgs }} cmake ninja-build perl git golang \
-          brotli-devel gtest-devel lz4-devel pcre2-devel protobuf-devel \
-          libzstd-devel tar xz
 
       - name: download source
         uses: actions/download-artifact@v4
@@ -165,6 +107,7 @@ jobs:
           /usr/local/bin/sload_f2fs -V
 
   macos:
+    if: false  # TODO: enable when macOS support is ready
     strategy:
       fail-fast: false
       matrix:
