@@ -1,10 +1,4 @@
-# Builds a fastboot binary for Linux x86_64 and attaches it to a GitHub Release.
-#
-# To publish a new build:
-#   git tag v35.0.2-smlight.1   # (or increment the smlight suffix for patches)
-#   git push origin <tag>
-# Then create a GitHub Release from that tag — the binary will be attached automatically.
-# You can also trigger a test build without a release via workflow_dispatch (artifact only).
+# Builds a fastboot binary for Linux x86_64 and aarch64 and attaches them to a GitHub Release.
 
 name: Release fastboot
 
@@ -15,10 +9,20 @@ on:
 
 jobs:
   build:
-    name: Build fastboot (Linux x86_64 static)
-    runs-on: ubuntu-latest
+    name: Build fastboot (${{ matrix.arch }})
+    runs-on: ${{ matrix.runs-on }}
     permissions:
       contents: write
+
+    strategy:
+      matrix:
+        include:
+          - arch: x86_64
+            artifact: fastboot-linux-x86_64
+            runs-on: ubuntu-latest
+          - arch: aarch64
+            artifact: fastboot-linux-aarch64
+            runs-on: ubuntu-24.04-arm
 
     steps:
       - uses: actions/checkout@v6
@@ -67,20 +71,20 @@ jobs:
       - name: Rename binary
         run: |
           strip build/vendor/fastboot
-          cp build/vendor/fastboot fastboot-linux-x86_64
+          cp build/vendor/fastboot ${{ matrix.artifact }}
 
       - name: Print sha256
-        run: sha256sum fastboot-linux-x86_64
+        run: sha256sum ${{ matrix.artifact }}
 
       - name: Upload artifact (workflow_dispatch only)
         if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v7
         with:
-          name: fastboot-linux-x86_64
-          path: fastboot-linux-x86_64
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.artifact }}
 
       - name: Attach binary to GitHub Release
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v3
         with:
-          files: fastboot-linux-x86_64
+          files: ${{ matrix.artifact }}
