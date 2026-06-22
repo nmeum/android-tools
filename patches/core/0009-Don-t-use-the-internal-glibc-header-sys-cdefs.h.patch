@@ -1,4 +1,4 @@
-From 4a9044f321dc4b47e92a29ca94f997af8bebd4fb Mon Sep 17 00:00:00 2001
+From c60f1ccf2af5aa38ed95cb20f3d7ea3b04144689 Mon Sep 17 00:00:00 2001
 From: John Zimmermann <me@johnnynator.dev>
 Date: Thu, 18 Mar 2021 12:22:51 +0100
 Subject: [PATCH] Don't use the internal glibc header sys/cdefs.h
@@ -49,7 +49,7 @@ https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-
  34 files changed, 165 insertions(+), 81 deletions(-)
 
 diff --git a/debuggerd/include/debuggerd/client.h b/debuggerd/include/debuggerd/client.h
-index e7401cc4..61abd284 100644
+index e7401cc4e2..61abd284b1 100644
 --- a/debuggerd/include/debuggerd/client.h
 +++ b/debuggerd/include/debuggerd/client.h
 @@ -17,7 +17,6 @@
@@ -61,7 +61,7 @@ index e7401cc4..61abd284 100644
  
  #include <android-base/unique_fd.h>
 diff --git a/debuggerd/include/debuggerd/handler.h b/debuggerd/include/debuggerd/handler.h
-index 954f049a..48b3b59e 100644
+index 954f049a6f..48b3b59e43 100644
 --- a/debuggerd/include/debuggerd/handler.h
 +++ b/debuggerd/include/debuggerd/handler.h
 @@ -20,11 +20,12 @@
@@ -88,19 +88,19 @@ index 954f049a..48b3b59e 100644
 +}
 +#endif
 diff --git a/debuggerd/util.h b/debuggerd/util.h
-index 535b0f77..8308d6e7 100644
+index a8f9895956..7e5d2867e0 100644
 --- a/debuggerd/util.h
 +++ b/debuggerd/util.h
-@@ -20,7 +20,6 @@
- #include <string>
+@@ -22,7 +22,6 @@
  #include <vector>
  
+ #include <stdint.h>
 -#include <sys/cdefs.h>
  #include <sys/types.h>
  
  std::vector<std::string> get_command_line(pid_t pid);
 diff --git a/init/keychords.cpp b/init/keychords.cpp
-index adec3832..40e85248 100644
+index adec383295..40e8524899 100644
 --- a/init/keychords.cpp
 +++ b/init/keychords.cpp
 @@ -19,7 +19,6 @@
@@ -112,7 +112,7 @@ index adec3832..40e85248 100644
  #include <sys/ioctl.h>
  #include <sys/types.h>
 diff --git a/init/reboot.cpp b/init/reboot.cpp
-index 959232aa..45f849fc 100644
+index 1f2381d85b..bc3c59b92f 100644
 --- a/init/reboot.cpp
 +++ b/init/reboot.cpp
 @@ -27,7 +27,6 @@
@@ -124,7 +124,7 @@ index 959232aa..45f849fc 100644
  #include <sys/mount.h>
  #include <sys/stat.h>
 diff --git a/libasyncio/include/asyncio/AsyncIO.h b/libasyncio/include/asyncio/AsyncIO.h
-index 9620d2a8..005fc664 100644
+index 9620d2a843..005fc6648f 100644
 --- a/libasyncio/include/asyncio/AsyncIO.h
 +++ b/libasyncio/include/asyncio/AsyncIO.h
 @@ -20,7 +20,6 @@
@@ -136,7 +136,7 @@ index 9620d2a8..005fc664 100644
  #include <time.h>
  #include <unistd.h>
 diff --git a/libcutils/android_get_control_env.h b/libcutils/android_get_control_env.h
-index a8302691..40edc2d3 100644
+index a830269183..40edc2d37a 100644
 --- a/libcutils/android_get_control_env.h
 +++ b/libcutils/android_get_control_env.h
 @@ -16,11 +16,14 @@
@@ -158,7 +158,7 @@ index a8302691..40edc2d3 100644
 +}
 +#endif
 diff --git a/libcutils/include/cutils/android_reboot.h b/libcutils/include/cutils/android_reboot.h
-index 24e32d56..56a31bc7 100644
+index 24e32d560a..56a31bc7a4 100644
 --- a/libcutils/include/cutils/android_reboot.h
 +++ b/libcutils/include/cutils/android_reboot.h
 @@ -16,9 +16,10 @@
@@ -183,7 +183,7 @@ index 24e32d56..56a31bc7 100644
 +}
 +#endif
 diff --git a/libcutils/include/cutils/bitops.h b/libcutils/include/cutils/bitops.h
-index 38d28403..79193b58 100644
+index 38d284039a..79193b5895 100644
 --- a/libcutils/include/cutils/bitops.h
 +++ b/libcutils/include/cutils/bitops.h
 @@ -20,9 +20,10 @@
@@ -210,7 +210,7 @@ index 38d28403..79193b58 100644
  
  #endif /* __CUTILS_BITOPS_H */
 diff --git a/libcutils/include/cutils/klog.h b/libcutils/include/cutils/klog.h
-index 5ae6216e..8006be73 100644
+index 5ae6216eb0..8006be7309 100644
 --- a/libcutils/include/cutils/klog.h
 +++ b/libcutils/include/cutils/klog.h
 @@ -17,11 +17,12 @@
@@ -240,7 +240,7 @@ index 5ae6216e..8006be73 100644
  #define KLOG_ERROR_LEVEL   3
  #define KLOG_WARNING_LEVEL 4
 diff --git a/libcutils/include/cutils/partition_utils.h b/libcutils/include/cutils/partition_utils.h
-index 8bc9b48b..ff1d13a0 100644
+index 8bc9b48b30..ff1d13a064 100644
 --- a/libcutils/include/cutils/partition_utils.h
 +++ b/libcutils/include/cutils/partition_utils.h
 @@ -17,12 +17,15 @@
@@ -263,7 +263,7 @@ index 8bc9b48b..ff1d13a0 100644
  
  #endif /* __CUTILS_PARTITION_WIPED_H__ */
 diff --git a/libcutils/include/cutils/properties.h b/libcutils/include/cutils/properties.h
-index 78d8bc65..9f872120 100644
+index 78d8bc6544..9f87212036 100644
 --- a/libcutils/include/cutils/properties.h
 +++ b/libcutils/include/cutils/properties.h
 @@ -16,7 +16,6 @@
@@ -275,7 +275,7 @@ index 78d8bc65..9f872120 100644
  #include <stdint.h>
  
 diff --git a/libcutils/include/cutils/str_parms.h b/libcutils/include/cutils/str_parms.h
-index aa1435a0..160792a3 100644
+index aa1435a080..160792a372 100644
 --- a/libcutils/include/cutils/str_parms.h
 +++ b/libcutils/include/cutils/str_parms.h
 @@ -18,9 +18,10 @@
@@ -302,7 +302,7 @@ index aa1435a0..160792a3 100644
  
  #endif /* __CUTILS_STR_PARMS_H */
 diff --git a/libcutils/include/cutils/trace.h b/libcutils/include/cutils/trace.h
-index 4cbc4e6d..83f407ce 100644
+index 4cbc4e6d4d..83f407cea3 100644
 --- a/libcutils/include/cutils/trace.h
 +++ b/libcutils/include/cutils/trace.h
 @@ -27,12 +27,13 @@ using namespace std;
@@ -332,7 +332,7 @@ index 4cbc4e6d..83f407ce 100644
  
  #endif // _LIBS_CUTILS_TRACE_H
 diff --git a/libcutils/include/private/canned_fs_config.h b/libcutils/include/private/canned_fs_config.h
-index ad4de4ce..caf4b618 100644
+index ad4de4ce6c..caf4b6186a 100644
 --- a/libcutils/include/private/canned_fs_config.h
 +++ b/libcutils/include/private/canned_fs_config.h
 @@ -17,12 +17,15 @@
@@ -355,7 +355,7 @@ index ad4de4ce..caf4b618 100644
 +}
 +#endif
 diff --git a/libcutils/include/private/fs_config.h b/libcutils/include/private/fs_config.h
-index 9a727bc5..1b96e2d3 100644
+index 9a727bc581..1b96e2d399 100644
 --- a/libcutils/include/private/fs_config.h
 +++ b/libcutils/include/private/fs_config.h
 @@ -24,14 +24,15 @@
@@ -385,7 +385,7 @@ index 9a727bc5..1b96e2d3 100644
 +}
 +#endif
 diff --git a/libnetutils/include/netutils/ifc.h b/libnetutils/include/netutils/ifc.h
-index ee896ac0..3816f337 100644
+index ee896ac086..3816f3371d 100644
 --- a/libnetutils/include/netutils/ifc.h
 +++ b/libnetutils/include/netutils/ifc.h
 @@ -19,9 +19,10 @@
@@ -412,7 +412,7 @@ index ee896ac0..3816f337 100644
  
  #endif /* _NETUTILS_IFC_H_ */
 diff --git a/libpackagelistparser/include/packagelistparser/packagelistparser.h b/libpackagelistparser/include/packagelistparser/packagelistparser.h
-index 9bd212af..88d4b22e 100644
+index 9bd212af3b..88d4b22ef0 100644
 --- a/libpackagelistparser/include/packagelistparser/packagelistparser.h
 +++ b/libpackagelistparser/include/packagelistparser/packagelistparser.h
 @@ -19,7 +19,9 @@
@@ -435,7 +435,7 @@ index 9bd212af..88d4b22e 100644
 +}
 +#endif
 diff --git a/libprocessgroup/cgrouprc/include/android/cgrouprc.h b/libprocessgroup/cgrouprc/include/android/cgrouprc.h
-index 6fc2659c..d9945aef 100644
+index 6fc2659c15..d9945aef93 100644
 --- a/libprocessgroup/cgrouprc/include/android/cgrouprc.h
 +++ b/libprocessgroup/cgrouprc/include/android/cgrouprc.h
 @@ -16,10 +16,11 @@
@@ -461,7 +461,7 @@ index 6fc2659c..d9945aef 100644
 +}
 +#endif
 diff --git a/libstats/push_compat/statsd_writer.h b/libstats/push_compat/statsd_writer.h
-index f030b96c..ffd38ea4 100644
+index f030b96c7b..ffd38ea4fb 100644
 --- a/libstats/push_compat/statsd_writer.h
 +++ b/libstats/push_compat/statsd_writer.h
 @@ -21,7 +21,9 @@
@@ -486,7 +486,7 @@ index f030b96c..ffd38ea4 100644
  
  #endif  // ANDROID_STATS_LOG_STATS_WRITER_H
 diff --git a/libsuspend/autosuspend_ops.h b/libsuspend/autosuspend_ops.h
-index b0024c8b..ea0eafd0 100644
+index b0024c8bb2..ea0eafd00e 100644
 --- a/libsuspend/autosuspend_ops.h
 +++ b/libsuspend/autosuspend_ops.h
 @@ -24,8 +24,12 @@ struct autosuspend_ops {
@@ -505,7 +505,7 @@ index b0024c8b..ea0eafd0 100644
  
  #endif
 diff --git a/libsuspend/include/suspend/autosuspend.h b/libsuspend/include/suspend/autosuspend.h
-index 21f4d61b..dbbca161 100644
+index 21f4d61bf8..dbbca161c1 100644
 --- a/libsuspend/include/suspend/autosuspend.h
 +++ b/libsuspend/include/suspend/autosuspend.h
 @@ -17,10 +17,11 @@
@@ -533,7 +533,7 @@ index 21f4d61b..dbbca161 100644
  
  #endif
 diff --git a/libsync/include/android/sync.h b/libsync/include/android/sync.h
-index 32bb878b..59a8f9fa 100644
+index 32bb878baa..59a8f9fadf 100644
 --- a/libsync/include/android/sync.h
 +++ b/libsync/include/android/sync.h
 @@ -39,11 +39,15 @@
@@ -555,7 +555,7 @@ index 32bb878b..59a8f9fa 100644
  
  #endif /* __SYS_CORE_SYNC_H */
 diff --git a/libsync/include/ndk/sync.h b/libsync/include/ndk/sync.h
-index 38ccb686..04c8e07a 100644
+index 38ccb686c1..04c8e07adb 100644
 --- a/libsync/include/ndk/sync.h
 +++ b/libsync/include/ndk/sync.h
 @@ -27,11 +27,12 @@
@@ -585,7 +585,7 @@ index 38ccb686..04c8e07a 100644
  #endif /* ANDROID_SYNC_H */
  
 diff --git a/libsync/sw_sync.h b/libsync/sw_sync.h
-index fda1c4c5..395c3807 100644
+index fda1c4c57c..395c38072c 100644
 --- a/libsync/sw_sync.h
 +++ b/libsync/sw_sync.h
 @@ -19,7 +19,9 @@
@@ -610,7 +610,7 @@ index fda1c4c5..395c3807 100644
  
  #endif /* __SYS_CORE_SW_SYNC_H */
 diff --git a/libsystem/include/system/camera.h b/libsystem/include/system/camera.h
-index 2ca90c39..c42f5596 100644
+index 2ca90c395b..c42f559667 100644
 --- a/libsystem/include/system/camera.h
 +++ b/libsystem/include/system/camera.h
 @@ -18,13 +18,14 @@
@@ -641,7 +641,7 @@ index 2ca90c39..c42f5596 100644
  
  #endif /* SYSTEM_CORE_INCLUDE_ANDROID_CAMERA_H */
 diff --git a/libsystem/include/system/radio.h b/libsystem/include/system/radio.h
-index acf3ea78..dfd254fc 100644
+index acf3ea787a..dfd254fc6d 100644
 --- a/libsystem/include/system/radio.h
 +++ b/libsystem/include/system/radio.h
 @@ -20,7 +20,6 @@
@@ -653,7 +653,7 @@ index acf3ea78..dfd254fc 100644
  
  
 diff --git a/libutils/Singleton_test.h b/libutils/Singleton_test.h
-index c77d9ffe..00bd5624 100644
+index c77d9ffe66..00bd56242c 100644
 --- a/libutils/Singleton_test.h
 +++ b/libutils/Singleton_test.h
 @@ -17,7 +17,6 @@
@@ -685,7 +685,7 @@ index c77d9ffe..00bd5624 100644
  }
  
 diff --git a/libvendorsupport/include/vendorsupport/api_level.h b/libvendorsupport/include/vendorsupport/api_level.h
-index 24469873..3fc0ab4d 100644
+index 2446987364..3fc0ab4dba 100644
 --- a/libvendorsupport/include/vendorsupport/api_level.h
 +++ b/libvendorsupport/include/vendorsupport/api_level.h
 @@ -14,9 +14,10 @@
@@ -710,7 +710,7 @@ index 24469873..3fc0ab4d 100644
 +}
 +#endif
 diff --git a/llkd/include/llkd.h b/llkd/include/llkd.h
-index 0822a3e2..a4e3037c 100644
+index 0822a3e2bf..a4e3037c18 100644
 --- a/llkd/include/llkd.h
 +++ b/llkd/include/llkd.h
 @@ -22,9 +22,10 @@
@@ -757,7 +757,7 @@ index 0822a3e2..a4e3037c 100644
  
  /* clang-format off */
 diff --git a/llkd/libllkd.cpp b/llkd/libllkd.cpp
-index 42602e9e..ed348bb8 100644
+index 42602e9ee0..ed348bb855 100644
 --- a/llkd/libllkd.cpp
 +++ b/llkd/libllkd.cpp
 @@ -25,7 +25,6 @@
@@ -769,7 +769,7 @@ index 42602e9e..ed348bb8 100644
  #include <sys/prctl.h>
  #include <sys/stat.h>     // lstat()
 diff --git a/trusty/gatekeeper/trusty_gatekeeper_ipc.h b/trusty/gatekeeper/trusty_gatekeeper_ipc.h
-index 47ba33b3..f546076a 100644
+index 47ba33b38a..f546076a80 100644
 --- a/trusty/gatekeeper/trusty_gatekeeper_ipc.h
 +++ b/trusty/gatekeeper/trusty_gatekeeper_ipc.h
 @@ -14,7 +14,9 @@
@@ -792,7 +792,7 @@ index 47ba33b3..f546076a 100644
 +}
 +#endif
 diff --git a/trusty/keymaster/include/trusty_keymaster/ipc/trusty_keymaster_ipc.h b/trusty/keymaster/include/trusty_keymaster/ipc/trusty_keymaster_ipc.h
-index 15241f4a..94936b80 100644
+index 15241f4ab3..94936b80ce 100644
 --- a/trusty/keymaster/include/trusty_keymaster/ipc/trusty_keymaster_ipc.h
 +++ b/trusty/keymaster/include/trusty_keymaster/ipc/trusty_keymaster_ipc.h
 @@ -20,7 +20,9 @@
@@ -817,12 +817,12 @@ index 15241f4a..94936b80 100644
  
  #endif  // TRUSTY_KEYMASTER_TRUSTY_KEYMASTER_IPC_H_
 diff --git a/trusty/storage/lib/include/trusty/lib/storage.h b/trusty/storage/lib/include/trusty/lib/storage.h
-index 43356198..57dedac0 100644
+index d9097e6225..e1956cd816 100644
 --- a/trusty/storage/lib/include/trusty/lib/storage.h
 +++ b/trusty/storage/lib/include/trusty/lib/storage.h
-@@ -21,7 +21,9 @@
+@@ -35,7 +35,9 @@
  
- #define STORAGE_MAX_NAME_LENGTH_BYTES 159
+ #define STORAGE_MAX_NAME_LENGTH_BYTES STORAGE_MAX_NAME_SIZE
  
 -__BEGIN_DECLS
 +#ifdef __cplusplus
@@ -831,7 +831,7 @@ index 43356198..57dedac0 100644
  
  typedef uint32_t storage_session_t;
  typedef uint64_t file_handle_t;
-@@ -151,4 +153,6 @@ int storage_get_file_size(file_handle_t handle, storage_off_t *size);
+@@ -165,4 +167,6 @@ int storage_get_file_size(file_handle_t handle, storage_off_t *size);
  int storage_end_transaction(storage_session_t session, bool complete);
  
  
@@ -840,5 +840,5 @@ index 43356198..57dedac0 100644
 +}
 +#endif
 -- 
-2.53.0
+2.54.0
 

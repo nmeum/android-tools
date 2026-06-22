@@ -1,19 +1,20 @@
-From 523cd5315e0748a40ad0febba4e6c472253a7097 Mon Sep 17 00:00:00 2001
+From b54cab3861198ffcb8c6330cae0e14070fab3467 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?=C4=90o=C3=A0n=20Tr=E1=BA=A7n=20C=C3=B4ng=20Danh?=
  <congdanhqx@gmail.com>
 Date: Sun, 1 Nov 2020 15:51:35 +0700
 Subject: [PATCH] adb: disable mDNS
 
 ---
- adb.cpp         | 15 ---------------
- socket_spec.cpp | 24 +-----------------------
- 2 files changed, 1 insertion(+), 38 deletions(-)
+ adb.cpp                | 15 ---------------
+ client/commandline.cpp |  2 ++
+ socket_spec.cpp        | 25 +------------------------
+ 3 files changed, 3 insertions(+), 39 deletions(-)
 
 diff --git a/adb.cpp b/adb.cpp
-index ae57b00..6321981 100644
+index a4794e9..30e668d 100644
 --- a/adb.cpp
 +++ b/adb.cpp
-@@ -1253,21 +1253,6 @@ void adb_set_reject_kill_server(bool value) {
+@@ -1257,21 +1257,6 @@ bool is_usb_enabled() {
  }
  
  static bool handle_mdns_request(std::string_view service, int reply_fd) {
@@ -35,11 +36,24 @@ index ae57b00..6321981 100644
      return false;
  }
  
+diff --git a/client/commandline.cpp b/client/commandline.cpp
+index 4f43fb9..abe38dc 100644
+--- a/client/commandline.cpp
++++ b/client/commandline.cpp
+@@ -1950,6 +1950,8 @@ int adb_commandline(int argc, const char** argv) {
+         ReadOrderlyShutdown(fd);
+         return 0;
+     } else if (!strcmp(argv[0], "mdns")) {
++        error_exit("mdns is not supported by this version of adb.");
++
+         --argc;
+         if (argc < 1) error_exit("mdns requires an argument");
+         ++argv;
 diff --git a/socket_spec.cpp b/socket_spec.cpp
-index 5053e36..b01cb5b 100644
+index 391bfdb..3c0e2d0 100644
 --- a/socket_spec.cpp
 +++ b/socket_spec.cpp
-@@ -222,29 +222,7 @@ bool socket_spec_connect(unique_fd* fd, std::string_view address, int* port, std
+@@ -228,30 +228,7 @@ bool socket_spec_connect(unique_fd* fd, std::string_view address, int* port,
          if (tcp_host_is_local(hostname)) {
              fd->reset(network_loopback_client(port_value, SOCK_STREAM, error));
          } else {
@@ -54,8 +68,9 @@ index 5053e36..b01cb5b 100644
 -                    // use the mdns instance name, so we can adjust to address changes on
 -                    // reconnects.
 -                    port_value = mdns_info->port;
--                    if (serial) {
--                        *serial = std::format("{}.{}", mdns_info->instance, mdns_info->service);
+-                    if (transport_name) {
+-                        *transport_name =
+-                                std::format("{}.{}", mdns_info->instance, mdns_info->service);
 -                    }
 -                }
 -            } else {
@@ -71,5 +86,5 @@ index 5053e36..b01cb5b 100644
  
          if (fd->get() > 0) {
 -- 
-2.53.0
+2.55.0
 

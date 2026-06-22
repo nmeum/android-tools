@@ -56,7 +56,8 @@ if(APPLE)
 		adb/client/usb_osx.cpp)
 else()
 	list(APPEND libadb_SOURCES
-		adb/client/usb_linux.cpp)
+		adb/client/usb_linux.cpp
+		adb/client/usb_linux_netlink.cpp)
 endif()
 
 add_library(libadb STATIC ${libadb_SOURCES})
@@ -139,6 +140,7 @@ set(libcutils_SOURCES
 	core/libcutils/socket_local_client_unix.cpp
 	core/libcutils/socket_local_server_unix.cpp
 	core/libcutils/socket_network_client_unix.cpp
+	core/libcutils/sockets_utils.cpp
 	core/libcutils/sockets_unix.cpp
 	core/libcutils/sockets.cpp
 	core/libcutils/str_parms.cpp

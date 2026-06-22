@@ -1,0 +1,27 @@
+From 1a6279eb56075ca9566f169af23b867811d04c01 Mon Sep 17 00:00:00 2001
+From: LuK1337 <priv.luk@gmail.com>
+Date: Mon, 22 Jun 2026 23:46:08 +0200
+Subject: [PATCH] Add __builtin_align_up() macro when builtin is not available
+
+---
+ partition_tools/lpmake.cc | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/partition_tools/lpmake.cc b/partition_tools/lpmake.cc
+index 71e5741..67b988a 100644
+--- a/partition_tools/lpmake.cc
++++ b/partition_tools/lpmake.cc
+@@ -49,6 +49,10 @@ static constexpr int EX_CANTCREAT = 3;
+ static constexpr int O_BINARY = 0;
+ #endif
+ 
++#if !__has_builtin(__builtin_align_up)
++#define __builtin_align_up(__value, __alignment) (((__value) + (__alignment)-1) & ~((__alignment)-1))
++#endif
++
+ /* Prints program usage to |where|. */
+ static int usage(int /* argc */, char* argv[]) {
+     fprintf(stderr,
+-- 
+2.54.0
+

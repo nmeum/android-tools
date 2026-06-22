@@ -1,0 +1,37 @@
+From a617f762fd339da4185275eedbe0914609912805 Mon Sep 17 00:00:00 2001
+From: LuK1337 <priv.luk@gmail.com>
+Date: Tue, 23 Jun 2026 00:36:20 +0200
+Subject: [PATCH] Drop dependency on resize_and_overwrite()
+
+---
+ file.cpp | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/file.cpp b/file.cpp
+index c03d7e1..0f8539d 100644
+--- a/file.cpp
++++ b/file.cpp
+@@ -222,14 +222,17 @@ bool ReadFdToString(borrowed_fd fd, std::string* content) {
+     // Since we know the file size here we can perform one large allocation up front to avoid
+     // reallocations and copies that would occur as the string size grows as data is read.
+     ssize_t n;
+-    content->resize_and_overwrite(sb.st_size, [&n, &fd](char* buf, size_t size) noexcept {
++    content->resize(sb.st_size);
++    {
++      auto buf = content->data();
++      auto size = content->size();
+       std::string::size_type bytes_read = 0;
+       while (bytes_read < size &&
+              (n = TEMP_FAILURE_RETRY(read(fd.get(), buf + bytes_read, size - bytes_read))) > 0) {
+         bytes_read += n;
+       }
+-      return bytes_read;
+-    });
++      content->resize(bytes_read);
++    }
+ 
+     // Shrink the string capacity to fit the file, but if the capacity is only
+     // slightly larger than needed, avoid reallocating.
+-- 
+2.54.0
+
