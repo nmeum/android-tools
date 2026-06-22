@@ -1,4 +1,4 @@
-From 2617c39ef3be43e477bea2d47d95e2540e000029 Mon Sep 17 00:00:00 2001
+From 751b1ca68150832f438c5736d0d620e144060a4e Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Fri, 28 May 2021 11:26:01 +0200
 Subject: [PATCH] Don't use the internal glibc header sys/cdefs.h
@@ -11,7 +11,7 @@ https://wiki.musl-libc.org/faq.html#Q:-When-compiling-something-against-musl,-I-
  3 files changed, 18 insertions(+), 9 deletions(-)
 
 diff --git a/pairing_auth/include/adb/pairing/pairing_auth.h b/pairing_auth/include/adb/pairing/pairing_auth.h
-index ee0412fb..83f40a9f 100644
+index ee0412f..83f40a9 100644
 --- a/pairing_auth/include/adb/pairing/pairing_auth.h
 +++ b/pairing_auth/include/adb/pairing/pairing_auth.h
 @@ -18,13 +18,14 @@
@@ -40,7 +40,7 @@ index ee0412fb..83f40a9f 100644
 +}
 +#endif
 diff --git a/pairing_connection/include/adb/pairing/pairing_connection.h b/pairing_connection/include/adb/pairing/pairing_connection.h
-index 98764171..8e63db7b 100644
+index 9876417..8e63db7 100644
 --- a/pairing_connection/include/adb/pairing/pairing_connection.h
 +++ b/pairing_connection/include/adb/pairing/pairing_connection.h
 @@ -18,7 +18,6 @@
@@ -71,7 +71,7 @@ index 98764171..8e63db7b 100644
 +}
 +#endif
 diff --git a/pairing_connection/include/adb/pairing/pairing_server.h b/pairing_connection/include/adb/pairing/pairing_server.h
-index 9e7b69fc..babff948 100644
+index 2a8ab17..b6e92af 100644
 --- a/pairing_connection/include/adb/pairing/pairing_server.h
 +++ b/pairing_connection/include/adb/pairing/pairing_server.h
 @@ -18,7 +18,6 @@
@@ -93,11 +93,14 @@ index 9e7b69fc..babff948 100644
  
  // PairingServerCtx is a wrapper around the #PairingConnectionCtx APIs,
  // which handles multiple client connections.
-@@ -106,4 +107,6 @@ PairingServerCtx* pairing_server_new_no_cert(const uint8_t* pswd, size_t pswd_le
- // @param ctx the PairingServerCtx instance to destroy.
- void pairing_server_destroy(PairingServerCtx* ctx) __INTRODUCED_IN(30);
+@@ -130,4 +131,6 @@ __attribute__((weak)) uint16_t pairing_server_get_port(PairingServerCtx* ctx) __
+ // up.
+ __attribute__((weak)) void pairing_server_stop_listening(PairingServerCtx* ctx) __INTRODUCED_IN(37);
  
 -__END_DECLS
 +#ifdef __cplusplus
 +}
 +#endif
+-- 
+2.54.0
+

@@ -1,0 +1,53 @@
+From cc397a39c4af63057b641237c4f1177f780418d5 Mon Sep 17 00:00:00 2001
+From: LuK1337 <priv.luk@gmail.com>
+Date: Mon, 22 Jun 2026 23:51:29 +0200
+Subject: [PATCH] Address JsonPrintOptions initialization errors
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+error: designated initializers cannot be used with a non-aggregate type
+‘google::protobuf::util::JsonPrintOptions’
+---
+ libjsonpb/verify/verify.cpp | 6 +++---
+ partition_tools/lpdump.cc   | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/libjsonpb/verify/verify.cpp b/libjsonpb/verify/verify.cpp
+index 017aa9c..74e883e 100644
+--- a/libjsonpb/verify/verify.cpp
++++ b/libjsonpb/verify/verify.cpp
+@@ -201,10 +201,10 @@ android::base::Result<std::string> FormatJson(const std::string& json,
+     return android::base::Error() << res;
+   }
+   std::string ret;
++  JsonPrintOptions json_options;
++  json_options.add_whitespace = true;
+   res = google::protobuf::util::MessageToJsonString(*scratch_space, &ret,
+-                                                    JsonPrintOptions{
+-                                                        .add_whitespace = true,
+-                                                    });
++                                                    json_options);
+   if (!res.ok()) {
+     return android::base::Error() << res;
+   }
+diff --git a/partition_tools/lpdump.cc b/partition_tools/lpdump.cc
+index f1fadbd..34cb07a 100644
+--- a/partition_tools/lpdump.cc
++++ b/partition_tools/lpdump.cc
+@@ -287,9 +287,9 @@ static int PrintJson(const LpMetadata* metadata, std::ostream& cout,
+ #endif
+ 
+     std::string json;
+-    auto status = MessageToJsonString(proto, &json, JsonPrintOptions{
+-        .add_whitespace = true,
+-    });
++    JsonPrintOptions json_options;
++    json_options.add_whitespace = true;
++    auto status = MessageToJsonString(proto, &json, json_options);
+     if (!status.ok()) {
+         cerr << status << "\n";
+         return EX_SOFTWARE;
+-- 
+2.54.0
+

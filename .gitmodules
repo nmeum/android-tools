@@ -58,3 +58,7 @@
 	shallow = true
 	path = vendor/libusb
 	url = https://android.googlesource.com/platform/external/libusb.git
+[submodule "vendor/fs_mgr"]
+	shallow = true
+	path = vendor/fs_mgr
+	url = https://android.googlesource.com/platform/system/fs/fs_mgr.git

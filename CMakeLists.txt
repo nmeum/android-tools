@@ -27,8 +27,8 @@ set(ANDROID_MKE2FS_NAME "mke2fs.android")
 
 # Version of android-tools and the version of boringssl being used.
 # See: https://android.googlesource.com/platform/external/boringssl/+/platform-tools-${ANDROID_VERSION}/BORINGSSL_REVISION
-set(ANDROID_VERSION 36.0.1)
-set(BORINGSSL_VERSION 40e035a9e5d721b3b7c15c46259d782ffe7d9e96)
+set(ANDROID_VERSION 37.0.0)
+set(BORINGSSL_VERSION d32c35e573fc9c8dbe0436805cd557065892de4c)
 
 # Vendor string used in version outputs.
 set(ANDROID_VENDOR android-tools)

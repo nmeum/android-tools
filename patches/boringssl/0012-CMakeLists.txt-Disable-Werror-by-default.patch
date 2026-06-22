@@ -1,4 +1,4 @@
-From ce1286d9d69aa7c89c2bd464b77a18ec3fdca0f3 Mon Sep 17 00:00:00 2001
+From 058d34356a8e0b62613c6f3c4dbc793c2ddbf986 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
 Date: Sat, 21 May 2022 11:47:32 +0200
 Subject: [PATCH] CMakeLists.txt: Disable -Werror by default
@@ -10,18 +10,18 @@ to new warnings introduced by GCC upstream.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c86687aea..51e0b4cf7 100644
+index 69172231d..74b7f59a5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -124,7 +124,7 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
+@@ -461,7 +461,7 @@ endif()
+ #
+ # TODO(crbug.com/389897612): Should these be set on a per-target basis?
  if(CMAKE_COMPILER_IS_GNUCXX OR CLANG)
-   # Note clang-cl is odd and sets both CLANG and MSVC. We base our configuration
-   # primarily on our normal Clang one.
--  set(C_CXX_FLAGS "-fno-strict-aliasing -Werror -Wformat=2 -Wsign-compare -Wwrite-strings -Wvla -Wshadow -Wtype-limits -Wmissing-field-initializers")
-+  set(C_CXX_FLAGS "-fno-strict-aliasing -Wformat=2 -Wsign-compare -Wwrite-strings -Wvla -Wshadow -Wtype-limits -Wmissing-field-initializers")
-   if(MSVC)
-     # clang-cl sets different default warnings than clang. It also treats -Wall
-     # as -Weverything, to match MSVC. Instead -W3 is the alias for -Wall.
+-  set(C_CXX_WARNINGS -Werror -Wformat=2 -Wmissing-field-initializers -Wshadow
++  set(C_CXX_WARNINGS -Wformat=2 -Wmissing-field-initializers -Wshadow
+       -Wsign-compare -Wtype-limits -Wvla -Wwrite-strings -Wimplicit-fallthrough)
+   set(C_WARNINGS -Wold-style-definition -Wstrict-prototypes)
+   set(CXX_WARNING -Wnon-virtual-dtor)
 -- 
 2.54.0
 
