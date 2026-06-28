@@ -1,20 +1,21 @@
-From 481ad29f9ac31c352d78d3bbab805921823f4fde Mon Sep 17 00:00:00 2001
+From 7d27b1d2159d349f7f15a0b29c022bb5eb001fa0 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?=C4=90o=C3=A0n=20Tr=E1=BA=A7n=20C=C3=B4ng=20Danh?=
  <congdanhqx@gmail.com>
 Date: Sun, 1 Nov 2020 15:51:35 +0700
 Subject: [PATCH] adb: disable mDNS
 
 ---
- adb.cpp         | 15 ---------------
- client/main.cpp |  2 --
- socket_spec.cpp | 25 +------------------------
- 3 files changed, 1 insertion(+), 41 deletions(-)
+ adb.cpp                | 15 ---------------
+ client/commandline.cpp | 26 --------------------------
+ client/main.cpp        |  2 --
+ socket_spec.cpp        | 25 +------------------------
+ 4 files changed, 1 insertion(+), 67 deletions(-)
 
 diff --git a/adb.cpp b/adb.cpp
-index c1bb8f42..cbabfe8f 100644
+index eb729f5..1be30eb 100644
 --- a/adb.cpp
 +++ b/adb.cpp
-@@ -1131,21 +1131,6 @@ void adb_set_reject_kill_server(bool value) {
+@@ -1228,21 +1228,6 @@ void adb_set_reject_kill_server(bool value) {
  }
  
  static bool handle_mdns_request(std::string_view service, int reply_fd) {
@@ -36,8 +37,59 @@ index c1bb8f42..cbabfe8f 100644
      return false;
  }
  
+diff --git a/client/commandline.cpp b/client/commandline.cpp
+index 6620836..36fb3d6 100644
+--- a/client/commandline.cpp
++++ b/client/commandline.cpp
+@@ -135,8 +135,6 @@ static void help() {
+         "       localfilesystem:<unix domain socket name>\n"
+         " reverse --remove REMOTE  remove specific reverse socket connection\n"
+         " reverse --remove-all     remove all reverse socket connections from device\n"
+-        " mdns check               check if mdns discovery is available\n"
+-        " mdns services            list all discovered services\n"
+         "\n"
+         "file transfer:\n"
+         " push [--sync] [-z ALGORITHM] [-Z] LOCAL... REMOTE\n"
+@@ -255,7 +253,6 @@ static void help() {
+         " $ANDROID_SERIAL          serial number to connect to (see -s)\n"
+         " $ANDROID_LOG_TAGS        tags to be used by logcat (see logcat --help)\n"
+         " $ADB_LOCAL_TRANSPORT_MAX_PORT max emulator scan port (default 5585, 16 emus)\n"
+-        " $ADB_MDNS_AUTO_CONNECT   comma-separated list of mdns services to allow auto-connect (default adb-tls-connect)\n"
+         "\n"
+         "Online documentation: https://android.googlesource.com/platform/packages/modules/adb/+/refs/heads/main/docs/user/adb.1.md\n"
+         "\n"
+@@ -1963,29 +1960,6 @@ int adb_commandline(int argc, const char** argv) {
+ 
+         ReadOrderlyShutdown(fd);
+         return 0;
+-    } else if (!strcmp(argv[0], "mdns")) {
+-        --argc;
+-        if (argc < 1) error_exit("mdns requires an argument");
+-        ++argv;
+-
+-        std::string error;
+-        if (!adb_check_server_version(&error)) {
+-            error_exit("failed to check server version: %s", error.c_str());
+-        }
+-
+-        std::string query = "host:mdns:";
+-        if (!strcmp(argv[0], "check")) {
+-            if (argc != 1) error_exit("mdns %s doesn't take any arguments", argv[0]);
+-            query += "check";
+-        } else if (!strcmp(argv[0], "services")) {
+-            if (argc != 1) error_exit("mdns %s doesn't take any arguments", argv[0]);
+-            query += "services";
+-            printf("List of discovered mdns services\n");
+-        } else {
+-            error_exit("unknown mdns command [%s]", argv[0]);
+-        }
+-
+-        return adb_query_command(query);
+     }
+     /* do_sync_*() commands */
+     else if (!strcmp(argv[0], "ls")) {
 diff --git a/client/main.cpp b/client/main.cpp
-index c14b3463..552042e1 100644
+index 79a3345..fe6d20b 100644
 --- a/client/main.cpp
 +++ b/client/main.cpp
 @@ -68,11 +68,9 @@ void adb_server_cleanup() {
@@ -53,10 +105,10 @@ index c14b3463..552042e1 100644
  
  static void intentionally_leak() {
 diff --git a/socket_spec.cpp b/socket_spec.cpp
-index c93b0230..4d3aa28d 100644
+index 5f0cb3f..b3a80eb 100644
 --- a/socket_spec.cpp
 +++ b/socket_spec.cpp
-@@ -195,30 +195,7 @@ bool socket_spec_connect(unique_fd* fd, std::string_view address, int* port, std
+@@ -204,30 +204,7 @@ bool socket_spec_connect(unique_fd* fd, std::string_view address, int* port, std
          if (tcp_host_is_local(hostname)) {
              fd->reset(network_loopback_client(port_value, SOCK_STREAM, error));
          } else {
@@ -88,3 +140,6 @@ index c93b0230..4d3aa28d 100644
          }
  
          if (fd->get() > 0) {
+-- 
+2.54.0
+
