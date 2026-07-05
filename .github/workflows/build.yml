@@ -19,7 +19,7 @@ jobs:
         with:
           go-version: "1.24" # from vendor/boringssl/go.mod
       - name: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           submodules: true
       - name: git config
@@ -47,7 +47,7 @@ jobs:
             printf "$x " && $x ${{ github.workspace }}/build/android-tools-*.tar.xz | cut -d " " -f 1
           done
       - name: upload package_source
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: package_source
           path: ${{ github.workspace }}/build/android-tools-*.tar.xz
@@ -136,7 +136,7 @@ jobs:
           libzstd-devel tar xz
 
       - name: download source
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: package_source
 
@@ -190,7 +190,7 @@ jobs:
           ninja pcre2 protobuf zstd
 
       - name: download source
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: package_source
 
