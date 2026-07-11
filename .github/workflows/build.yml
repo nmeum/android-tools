@@ -52,7 +52,7 @@ jobs:
       matrix:
         include:
           - os: "opensuse/leap:latest"
-            pkgs: "clang"
+            pkgs: "clang gcc"
             env1: "CC=clang CXX=clang++"
           - os: "opensuse/tumbleweed"
             pkgs: "gcc gcc-c++"
