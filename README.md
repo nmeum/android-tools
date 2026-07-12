@@ -61,7 +61,6 @@ Additionally the following software is required at compile-time:
 
 1. A C and C++ compiler (either [GCC][gcc] >= 10.X or [clang][clang])
 2. [CMake][cmake]
-3. [Perl][perl]
 
 *Currently the build system doesn't check whether all of these are installed.*
 
@@ -109,7 +108,6 @@ have been copied from Anatol's ruby script.
 [gcc]: https://gcc.gnu.org/
 [clang]: https://clang.llvm.org/
 [cmake]: https://cmake.org/
-[perl]: https://www.perl.org/
 [protobuf]: https://github.com/protocolbuffers/protobuf
 [brotli]: https://github.com/google/brotli
 [zstd]: https://facebook.github.io/zstd/

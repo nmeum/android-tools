@@ -93,7 +93,7 @@ jobs:
         if: startsWith(matrix.os, 'opensuse')
         run: |
           zypper -n ref
-          zypper -n in ${{ matrix.pkgs }} cmake git gtest pcre2-devel pkgconfig \
+          zypper -n in ${{ matrix.pkgs }} cmake gtest pcre2-devel pkgconfig \
             'pkgconfig(libbrotlicommon)' 'pkgconfig(liblz4)' \
             'pkgconfig(libunwind-generic)' \
             'pkgconfig(libzstd)' 'pkgconfig(protobuf)' ninja tar xz zlib-devel
@@ -102,7 +102,7 @@ jobs:
         if: startsWith(matrix.os, 'archlinux')
         run: |
           pacman -Syu --needed --noconfirm \
-            ${{ matrix.pkgs }} brotli cmake git gtest libunwind \
+            ${{ matrix.pkgs }} brotli cmake gtest libunwind \
             lz4 pcre2 pkgconfig protobuf zstd ninja
 
       - name: prep ubuntu
@@ -110,7 +110,7 @@ jobs:
         run: |
           apt-get update
           DEBIAN_FRONTEND=noninteractive apt-get install -yq \
-            ${{ matrix.pkgs }} cmake git libbrotli-dev \
+            ${{ matrix.pkgs }} cmake libbrotli-dev \
             libgtest-dev liblz4-dev libpcre2-dev libprotobuf-dev libunwind-dev \
             libzstd-dev pkg-config protobuf-compiler ninja-build xz-utils
 
@@ -118,12 +118,12 @@ jobs:
         if: startsWith(matrix.os, 'alpine')
         run: |
           apk add build-base pcre2-dev linux-headers gtest-dev samurai \
-          git perl cmake protobuf-dev brotli-dev zstd-dev lz4-dev
+          cmake protobuf-dev brotli-dev zstd-dev lz4-dev
 
       - name: prep fedora
         if: startsWith(matrix.os, 'fedora')
         run: |
-          dnf install -y ${{ matrix.pkgs }} cmake ninja-build perl git \
+          dnf install -y ${{ matrix.pkgs }} cmake ninja-build \
           brotli-devel gtest-devel lz4-devel pcre2-devel protobuf-devel \
           libzstd-devel tar xz
 
