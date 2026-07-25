@@ -46,7 +46,7 @@ add_subdirectory(vendor)
 set(CPACK_SOURCE_GENERATOR "TXZ")
 set(CPACK_SOURCE_PACKAGE_FILE_NAME "${PROJECT_NAME}-${ANDROID_VERSION}")
 set(CPACK_SOURCE_IGNORE_FILES "/patches/" "/build/" "/.git/" "/.github/" "/tests/"
-	"/testdata/" "/extras/simpleperf/scripts/" "/extras/simpleperf/demo/"
+	"/test/" "/testdata/" "/extras/simpleperf/scripts/" "/extras/simpleperf/demo/"
 	"aes_128_gcm.txt" "aes_256_gcm.txt"
 	"/fuzz/"
 	"/wycheproof_testvectors/"

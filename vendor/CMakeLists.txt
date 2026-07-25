@@ -75,6 +75,7 @@ if(ANDROID_TOOLS_PATCH_VENDOR AND EXISTS "${ANDROID_PATCH_DIR}/")
 	endforeach(v)
 endif()
 
+set(BUILD_TESTING OFF CACHE BOOL "Enable building tests")
 add_subdirectory(boringssl EXCLUDE_FROM_ALL)
 
 if(ANDROID_TOOLS_USE_BUNDLED_FMT)
