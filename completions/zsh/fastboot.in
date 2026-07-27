@@ -1,0 +1,15 @@
+#compdef fastboot
+
+# Zsh completions for fastboot.
+# See https://github.com/nmeum/android-tools/issues/22
+
+# Zsh needs bashcompinit called to support bash-style completion.
+if ! declare -f complete >/dev/null; then
+	autoload -U bashcompinit && bashcompinit
+fi
+
+function check_type() {
+	type "$1"
+}
+
+source "@COMPLETION_COMMON_DIR@/fastboot"
