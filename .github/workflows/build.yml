@@ -41,8 +41,8 @@ jobs:
       - name: upload package_source
         uses: actions/upload-artifact@v7
         with:
-          name: package_source
           path: ${{ github.workspace }}/build/android-tools-*.tar.xz
+          archive: false
 
   linux:
     runs-on: ubuntu-latest
@@ -130,7 +130,7 @@ jobs:
       - name: download source
         uses: actions/download-artifact@v8
         with:
-          name: package_source
+          pattern: android-tools-*.tar.xz
 
       - name: build & install
         run: |
@@ -183,7 +183,7 @@ jobs:
       - name: download source
         uses: actions/download-artifact@v8
         with:
-          name: package_source
+          pattern: android-tools-*.tar.xz
 
       - name: build & install
         run: |
