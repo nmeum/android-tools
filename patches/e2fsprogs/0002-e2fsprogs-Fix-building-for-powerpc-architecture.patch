@@ -1,0 +1,57 @@
+From c2f0d29cd17f44e049cdb3679be7d31e8a2f0062 Mon Sep 17 00:00:00 2001
+From: Biswapriyo Nath <nathbappai@gmail.com>
+Date: Mon, 27 Jul 2026 06:30:19 +0000
+Subject: [PATCH] e2fsprogs: Fix building for powerpc architecture
+
+This fixes the following compiler error.
+
+/usr/include/asm-generic/int-l64.h:29:25: error: conflicting types for '__s64'; have 'long int'
+   29 | typedef __signed__ long __s64;
+      |                         ^~~~~
+
+Patch-Source: https://github.com/chimera-linux/cports/commit/2307675323dc626381c67e1f738bb917a8ed6ab2
+---
+ contrib/android/basefs_allocator.h | 1 +
+ contrib/android/fsmap.h            | 1 +
+ contrib/android/perms.h            | 1 +
+ 3 files changed, 3 insertions(+)
+
+diff --git a/contrib/android/basefs_allocator.h b/contrib/android/basefs_allocator.h
+index 6d1c65e30954..e3d8ec28db19 100644
+--- a/contrib/android/basefs_allocator.h
++++ b/contrib/android/basefs_allocator.h
+@@ -2,6 +2,7 @@
+ # define BASE_FS_ALLOCATOR_H
+ 
+ # include <time.h>
++# include <linux/types.h>
+ # include <ext2fs/ext2fs.h>
+ 
+ errcode_t base_fs_alloc_load(ext2_filsys fs, const char *file,
+diff --git a/contrib/android/fsmap.h b/contrib/android/fsmap.h
+index 9f84a71826ff..06a2ee14c825 100644
+--- a/contrib/android/fsmap.h
++++ b/contrib/android/fsmap.h
+@@ -8,6 +8,7 @@
+ # include <stdint.h>
+ # include <stdbool.h>
+ # include <sys/types.h>
++# include <linux/types.h>
+ # include <ext2fs/ext2fs.h>
+ 
+ struct fsmap_format {
+diff --git a/contrib/android/perms.h b/contrib/android/perms.h
+index 9ea3f95c0761..2582182a9a18 100644
+--- a/contrib/android/perms.h
++++ b/contrib/android/perms.h
+@@ -1,6 +1,7 @@
+ #ifndef ANDROID_PERMS_H
+ # define ANDROID_PERMS_H
+ 
++# include <linux/types.h>
+ # include <ext2fs/ext2fs.h>
+ 
+ typedef void (*fs_config_f)(const char *path, int dir,
+-- 
+2.55.0
+

@@ -1,0 +1,41 @@
+From 1ea444e35c0150032932d48a00011da102310083 Mon Sep 17 00:00:00 2001
+From: Biswapriyo Nath <nathbappai@gmail.com>
+Date: Tue, 28 Jul 2026 10:18:18 +0000
+Subject: [PATCH] boringssl: Add support for powerpc architecture
+
+Reverts: https://github.com/google/boringssl/commit/7d2338d000eb1468a5bbf78e91854236e18fb9e4
+---
+ crypto/rand/getrandom_fillin.h | 2 ++
+ include/openssl/target.h       | 3 +++
+ 2 files changed, 5 insertions(+)
+
+diff --git a/crypto/rand/getrandom_fillin.h b/crypto/rand/getrandom_fillin.h
+index e7db757b5e87..8db9285c195a 100644
+--- a/crypto/rand/getrandom_fillin.h
++++ b/crypto/rand/getrandom_fillin.h
+@@ -32,6 +32,8 @@
+ #define EXPECTED_NR_getrandom 384
+ #elif defined(OPENSSL_LOONG64)
+ #define EXPECTED_NR_getrandom 278
++#elif defined(OPENSSL_PPC64LE)
++#define EXPECTED_NR_getrandom 359
+ #elif defined(OPENSSL_RISCV64)
+ #define EXPECTED_NR_getrandom 278
+ #endif
+diff --git a/include/openssl/target.h b/include/openssl/target.h
+index ae0a39bc6859..2ebc0ad91987 100644
+--- a/include/openssl/target.h
++++ b/include/openssl/target.h
+@@ -43,6 +43,9 @@
+ #elif defined(__MIPSEL__) && defined(__LP64__)
+ #define OPENSSL_64_BIT
+ #define OPENSSL_MIPS64
++#elif (defined(__PPC64__) || defined(__powerpc64__)) && defined(_LITTLE_ENDIAN)
++#define OPENSSL_64_BIT
++#define OPENSSL_PPC64LE
+ #elif defined(__riscv) && __SIZEOF_POINTER__ == 8
+ #define OPENSSL_64_BIT
+ #define OPENSSL_RISCV64
+-- 
+2.55.0
+
