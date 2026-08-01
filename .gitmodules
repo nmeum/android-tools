@@ -62,3 +62,7 @@
 	shallow = true
 	path = vendor/fs_mgr
 	url = https://android.googlesource.com/platform/system/fs/fs_mgr.git
+[submodule "vendor/corrosion"]
+	shallow = true
+	path = vendor/corrosion
+	url = https://github.com/corrosion-rs/corrosion.git

@@ -9,6 +9,20 @@ protobuf_generate_cpp(ADB_KNOWN_HOSTS_PROTO_SRCS ADB_KNOWN_HOSTS_PROTO_HDRS
 protobuf_generate_cpp(ADB_PAIRING_PROTO_SRCS ADB_PAIRING_PROTO_HDRS
 	adb/proto/pairing.proto)
 
+if(ANDROID_TOOLS_ADB_ENABLE_MDNS)
+	if(ANDROID_TOOLS_USE_BUNDLED_CORROSION)
+		add_subdirectory(corrosion)
+	else()
+		find_package(Corrosion CONFIG REQUIRED)
+		message(STATUS "Found Corrosion: ${Corrosion_DIR} (version ${Corrosion_VERSION})")
+	endif()
+
+	corrosion_import_crate(
+		MANIFEST_PATH adb/client/adbmdns/Cargo.toml
+		PROFILE release
+	)
+endif()
+
 # No fastdeploy because it requires deployagent.inc
 set(libadb_SOURCES
 	adb/client/adb_client.cpp
@@ -60,6 +74,12 @@ else()
 		adb/client/usb_linux_netlink.cpp)
 endif()
 
+if(ANDROID_TOOLS_ADB_ENABLE_MDNS)
+	list(APPEND libadb_SOURCES
+		adb/client/adbmdns/adbmdns.cpp
+		adb/adb_mdns.cpp)
+endif()
+
 add_library(libadb STATIC ${libadb_SOURCES})
 target_compile_definitions(libadb PRIVATE -D_GNU_SOURCE)
 target_compile_definitions(libadb PUBLIC -DADB_HOST=1)
@@ -79,6 +99,11 @@ target_include_directories(libadb PUBLIC
 if(ANDROID_TOOLS_USE_BUNDLED_LIBUSB)
 	target_compile_definitions(libadb PUBLIC ANDROID_TOOLS_USE_BUNDLED_LIBUSB)
 	target_include_directories(libadb PUBLIC libusb)
+endif()
+
+if(ANDROID_TOOLS_ADB_ENABLE_MDNS)
+	target_compile_definitions(libadb PUBLIC -DADB_MDNS=1)
+	target_link_libraries(libadb PUBLIC adbmdns_bridge)
 endif()
 
 target_link_libraries(libadb PUBLIC fmt::fmt)

@@ -1,0 +1,91 @@
+From 12c17993d461d0b6514815f69d14dff0d1fcf5f9 Mon Sep 17 00:00:00 2001
+From: LuK1337 <priv.luk@gmail.com>
+Date: Sat, 1 Aug 2026 20:21:01 +0200
+Subject: [PATCH] Rip out openscreen support
+
+Will be gone in the next ADB release anyway.
+---
+ adb.cpp                   |  6 +-----
+ client/mdns_utils.cpp     | 10 ----------
+ client/mdns_utils.h       |  2 --
+ client/transport_mdns.cpp | 10 +---------
+ 4 files changed, 2 insertions(+), 26 deletions(-)
+
+diff --git a/adb.cpp b/adb.cpp
+index 0d8be53..1197bdd 100644
+--- a/adb.cpp
++++ b/adb.cpp
+@@ -1371,11 +1371,7 @@ HostRequestResult handle_host_request(std::string_view service, TransportType ty
+         status.set_usb_backend_forced(getenv("ADB_LIBUSB") != nullptr);
+ 
+         if (mdns::is_enabled()) {
+-            if (mdns::should_use_openscreen()) {
+-                status.set_mdns_backend(adb::proto::AdbServerStatus::OPENSCREEN);
+-            } else {
+-                status.set_mdns_backend(adb::proto::AdbServerStatus::LIBADBMDNS);
+-            }
++            status.set_mdns_backend(adb::proto::AdbServerStatus::LIBADBMDNS);
+         } else {
+             status.set_mdns_backend(adb::proto::AdbServerStatus::MDNS_DISABLED);
+         }
+diff --git a/client/mdns_utils.cpp b/client/mdns_utils.cpp
+index e578c1a..74a9036 100644
+--- a/client/mdns_utils.cpp
++++ b/client/mdns_utils.cpp
+@@ -78,14 +78,4 @@ bool is_enabled() {
+     return !getenv("ADB_MDNS") || strcmp(getenv("ADB_MDNS"), "0") != 0;
+ }
+ 
+-// Historically, this env variable was a boolean used to disable openscreen.
+-// It has evolved into an enum to select the mdns backend
+-// 0 = Bonjour (deprecated)
+-// 1 = Openscreen
+-// 2 = Adbmdns
+-bool should_use_openscreen() {
+-    const char* mdns_osp = getenv("ADB_MDNS_OPENSCREEN");
+-    return mdns_osp != nullptr && strcmp(mdns_osp, "1") == 0;
+-}
+-
+ }  // namespace mdns
+diff --git a/client/mdns_utils.h b/client/mdns_utils.h
+index d106133..86b8fe9 100644
+--- a/client/mdns_utils.h
++++ b/client/mdns_utils.h
+@@ -53,6 +53,4 @@ std::optional<MdnsInstance> mdns_parse_instance_name(std::string_view name);
+ 
+ // Return true if mdns backend is enabled
+ bool is_enabled();
+-
+-bool should_use_openscreen();
+ }  // namespace mdns
+diff --git a/client/transport_mdns.cpp b/client/transport_mdns.cpp
+index 930c695..809f156 100644
+--- a/client/transport_mdns.cpp
++++ b/client/transport_mdns.cpp
+@@ -132,11 +132,7 @@ void OnServiceReceiverResult(const ServiceInfo& info, ServiceInfoState state) {
+ /////////////////////////////////////////////////////////////////////////////////
+ 
+ void init_mdns_transport_discovery() {
+-    if (mdns::should_use_openscreen()) {
+-        StartOpenScreenDiscovery();
+-    } else {
+-        StartAdbMdnsDiscovery();
+-    }
++    StartAdbMdnsDiscovery();
+ }
+ 
+ bool adb_secure_connect_by_service_name(const std::string& instance_name) {
+@@ -152,10 +148,6 @@ std::string mdns_check() {
+         return "ERROR: mdns discovery disabled";
+     }
+ 
+-    if (mdns::should_use_openscreen()) {
+-        return "mdns daemon version [Openscreen discovery 0.0.0]";
+-    }
+-
+     return "mdns daemon version [adb discovery 0.0.0]";
+ }
+ 
+-- 
+2.55.0
+
