@@ -1,0 +1,41 @@
+From 5f83bc5634b857b4503167ce46e1772d03e573ee Mon Sep 17 00:00:00 2001
+From: LuK1337 <priv.luk@gmail.com>
+Date: Sat, 1 Aug 2026 20:11:03 +0200
+Subject: [PATCH] adbmdns: Fix crate type, dependencies and lib name
+
+---
+ client/adbmdns/Cargo.toml | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/client/adbmdns/Cargo.toml b/client/adbmdns/Cargo.toml
+index 63e08e6..1446935 100644
+--- a/client/adbmdns/Cargo.toml
++++ b/client/adbmdns/Cargo.toml
+@@ -4,8 +4,9 @@ version = "0.1.0"
+ edition = "2024"
+ 
+ [lib]
+-name = "zeroconf"
++name = "adbmdns_bridge"
+ path = "adbmdns_bridge.rs"
++crate-type = ["staticlib"]
+ 
+ [dependencies]
+ socket2 = { version = "0.4.0", features = ["all"] }
+@@ -14,11 +15,11 @@ simple-dns = "0.11.0"
+ zerocopy = { version = "0.8.26", features = ["derive"] }
+ libc = "0.2.174"
+ anyhow = "1.0.99"
+-nix = { version = "0.29.0", features = ["socket", "uio"] }
++nix = { version = "0.29.0", features = ["net", "socket", "uio"] }
+ if-addrs = "0.14.0"
+ mio = { version = "1.1.0", features = ["net", "os-poll"] }
+ 
+-[dependencies.windows-sys]
++[target.'cfg(windows)'.dependencies.windows-sys]
+ version = "0.61.1"
+ features = [
+     "Win32_Foundation",
+-- 
+2.55.0
+

@@ -1,0 +1,53 @@
+From 6ae3fecc7f1c09a6d17aeab1b3a2855e9172e8ed Mon Sep 17 00:00:00 2001
+From: LuK1337 <priv.luk@gmail.com>
+Date: Sat, 1 Aug 2026 23:23:25 +0200
+Subject: [PATCH] adbmdns: Downgrade edition to 2021
+
+Required for Ubuntu 24.04.
+---
+ client/adbmdns/Cargo.toml                 | 2 +-
+ client/adbmdns/adbmdns_bridge.rs          | 2 +-
+ client/adbmdns/netwatch/netwatch_linux.rs | 1 +
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/client/adbmdns/Cargo.toml b/client/adbmdns/Cargo.toml
+index 3238484..18fbacd 100644
+--- a/client/adbmdns/Cargo.toml
++++ b/client/adbmdns/Cargo.toml
+@@ -3,7 +3,7 @@ cargo-features = ["edition2024"]
+ [package]
+ name = "adb_mdns"
+ version = "0.1.0"
+-edition = "2024"
++edition = "2021"
+ 
+ [lib]
+ name = "adbmdns_bridge"
+diff --git a/client/adbmdns/adbmdns_bridge.rs b/client/adbmdns/adbmdns_bridge.rs
+index 507b94a..52514fb 100644
+--- a/client/adbmdns/adbmdns_bridge.rs
++++ b/client/adbmdns/adbmdns_bridge.rs
+@@ -297,7 +297,7 @@ impl log::Log for AdbLogger {
+ /// 3. Accept NUL-terminated strings for all const char* parameters
+ /// 4. Accept a buffer of `num_ipv4s` 32-bit values in `ipv4s` (expected to be network order octets)
+ /// 5. Accept a buffer of bytes in `ipv6s` which is the size of `num_ipv6s` * 16 (expected to be a sequence of sequences of octets, flattened).
+-#[unsafe(no_mangle)]
++#[no_mangle]
+ pub unsafe extern "C" fn adbmdns_start(
+     log_callback: AdbLoggerCallback,
+     event_callback: EventCallback,
+diff --git a/client/adbmdns/netwatch/netwatch_linux.rs b/client/adbmdns/netwatch/netwatch_linux.rs
+index 18e1bdb..05ab96c 100644
+--- a/client/adbmdns/netwatch/netwatch_linux.rs
++++ b/client/adbmdns/netwatch/netwatch_linux.rs
+@@ -37,6 +37,7 @@ use nix::sys::socket::SockProtocol;
+ use nix::sys::socket::SockType;
+ use std::collections::HashMap;
+ use std::fmt;
++use std::mem::size_of;
+ use std::os::fd::AsRawFd;
+ use std::path::PathBuf;
+ use std::thread;
+-- 
+2.55.0
+
