@@ -4,6 +4,6 @@ add_custom_target(mkbootimg_symlink ALL COMMAND ${CMAKE_COMMAND} -E create_symli
 	../${MKBOOTIMG_SCRIPTS_DIR}/mkbootimg.py
 	${CMAKE_CURRENT_BINARY_DIR}/mkbootimg)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/mkbootimg DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(FILES mkbootimg/gki/generate_gki_certificate.py DESTINATION ${MKBOOTIMG_SCRIPTS_DIR}/gki)
+install(PROGRAMS mkbootimg/gki/generate_gki_certificate.py DESTINATION ${MKBOOTIMG_SCRIPTS_DIR}/gki)
 install(PROGRAMS mkbootimg/unpack_bootimg.py DESTINATION ${CMAKE_INSTALL_BINDIR} RENAME unpack_bootimg)
 install(PROGRAMS mkbootimg/repack_bootimg.py DESTINATION ${CMAKE_INSTALL_BINDIR} RENAME repack_bootimg)
