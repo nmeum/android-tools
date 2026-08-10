@@ -1,0 +1,68 @@
+From fa9d61d6f01dea4123d85e2195cc49842ad9fcd1 Mon Sep 17 00:00:00 2001
+From: meator <meator.dev@gmail.com>
+Date: Mon, 10 Aug 2026 16:16:39 +0200
+Subject: [PATCH] Fix compilation on musl
+
+sys/cdefs.h is a nonstandard header that generally should not be
+included. musl systems normally do not provide it, but Alpine CI runners
+transitively pull in the bsd-compat-headers package, which provides a
+small sys/cdefs.h replacement header for misbehaving programs which
+still want to include this header.
+
+The comment above this include indicates that this header is used only
+to pull in the __BIONIC__ macro on systems using the Android Bionic C
+library. libbase is Google's library for common code shared between
+several of their projects and platforms, so it makes sense that they
+would include such platform dependent logic.
+
+But it doesn't really make sense to build android-tools using the
+Android NDK for android, it is an assortment of client programs meant
+for computers. There are likely a bunch of other things that would break
+if android-tools was compiled and used for Android targets.
+
+Removing the header leads to __BIONIC__ not being defined, which is
+correct. Even for systems where sys/cdefs.h would be pulled in (glibc),
+the behavior would be the same, since android-tools won't be built on
+Bionic.
+
+I have checked test_utils.cpp, the source file including test_utils.h
+and the header file itself and it seems that sys/cdefs.h is truly
+included for __BIONIC__ only, no other features of sys/cdefs.h are used
+in the code so it is safe to remove this include. This may theoretically
+change in the future as android-tools updates pull in newer libbase, but
+I find that unlikely.
+
+Alternative solution (instead of this patch):
+
+Tell the build system to look for __BIONIC__ macro in sys/cdefs.h. If it
+finds it, make it define ANDROID_TOOLS_BIONIC or a similarly named
+macro, which will then be used in place of __BIONIC__ in test_utils.cpp,
+include/android-base/test_utils.h and other files which might need it.
+The build system should not define __BIONIC__ directly to avoid
+conflicts on Android systems. This means that the two files will have
+to be patched to replace __BIONIC__ with ANDROID_TOOLS_BIONIC.
+
+If the build system does not find __BIONIC__ defined in sys/cdefs.h or
+if the build system does not find the sys/cdefs.h header file, it should
+simply do nothing (mainly it should not define ANDROID_TOOLS_BIONIC).
+---
+ include/android-base/test_utils.h | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/include/android-base/test_utils.h b/include/android-base/test_utils.h
+index e57138f..1e3cfc6 100644
+--- a/include/android-base/test_utils.h
++++ b/include/android-base/test_utils.h
+@@ -16,9 +16,6 @@
+ 
+ #pragma once
+ 
+-// For __BIONIC__
+-#include <sys/cdefs.h>
+-
+ #if defined(__BIONIC__)
+ #include <malloc.h>
+ #include <stdio.h>
+-- 
+2.55.0
+
