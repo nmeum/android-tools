@@ -55,3 +55,32 @@ index 970e7cf27b4d..da2a8830317e 100644
  #if __has_include("google/protobuf/io/coded_stream.h")
  #include "google/protobuf/io/coded_stream.h"
  #endif
+
+From: Biswapriyo Nath <nathbappai@gmail.com>
+Date: Sun, 27 Sep 2026 18:11:30 +0200
+Subject: [PATCH] fix "'adb install' command shows a warning message"
+
+https://github.com/nmeum/android-tools/pull/213#issuecomment-5854080337
+---
+ client/adb_install.cpp  | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/client/adb_install.cpp b/client/adb_install.cpp
+--- a/client/adb_install.cpp
++++ b/client/adb_install.cpp
+@@ -14,6 +14,7 @@
+  * limitations under the License.
+  */
+ 
++#include "sysdeps.h"
+ #include "adb_install.h"
+ 
+ #include <fcntl.h>
+@@ -39,7 +40,6 @@
+ #include "commandline.h"
+ #include "fastdeploy.h"
+ #include "incremental.h"
+-#include "sysdeps.h"
+ 
+ using namespace std::literals;
+ 
