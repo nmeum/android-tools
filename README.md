@@ -61,6 +61,8 @@ Additionally the following software is required at compile-time:
 
 1. A C and C++ compiler (either [GCC][gcc] >= 10.X or [clang][clang])
 2. [CMake][cmake]
+3. [Rust][rust] (optional)
+4. [Corrosion][corrosion] (optional)
 
 *Currently the build system doesn't check whether all of these are installed.*
 
@@ -68,6 +70,7 @@ Additionally the following software is required at compile-time:
 
 Source tarballs containing an already patched version of all vendored
 dependencies are available on the [GitHub Release Page][release-page].
+Rust vendored dependencies are provided in a separate tarball.
 
 These tarballs should be used for packaging and general installation.
 After the tarball was downloaded and extracted android-tools can be
@@ -114,3 +117,5 @@ have been copied from Anatol's ruby script.
 [lz4]: https://github.com/lz4/lz4
 [android-tools-legacy]: https://github.com/anatol/android-platform-tools-build
 [anatol.pomozov]: https://github.com/anatol
+[rust]: https://rust-lang.org/
+[corrosion]: https://corrosion-rs.github.io/corrosion/
